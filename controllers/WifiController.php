@@ -10,7 +10,7 @@ use app\components\WifiPay;
 class WifiController extends Controller
 {
 	public $layout = false;  	//don't use the default theme layout 
-	public $enableCsrfValidation = false; // csrf validation equal false
+	public $enableCsrfValidation = false; // csrf validation can't work
     public function actionIndex()
     {
     	$wifi = new Wifi();
@@ -45,11 +45,40 @@ class WifiController extends Controller
     	$TenderType = Yii::$app->request->post('TenderType');
     	
     	//构造XML数据，接口对接
+    	//todo
     	
+    	//成功，返回OK
+//     	$result = '{"status":"OK"}';
+
     	
-    	
-    	
-    	$result = '{"status":"OK"}';
+    	//失败，返回FAIL
+    	$result = '{"status":"FAIL"}';
     	echo $result;
+    }
+    
+    
+    public function actionGetconnectpage()
+    {
+    	
+    }
+    
+    
+    
+    
+    
+    
+    public function actionTest()
+    {
+    	$postStr = "
+    			<DTSPostCharge>
+    				<Header Action='PMS' Comment='Pay by the Minute: CREW Rate  Start:3/22/2016 2:15:31 AM End:3/22/2016 2:28:28 AM IP:172.28.25.129' CreationDateTime='2016-03-22 06:47:40' DocumentDefinition='' MessageIdentifier='7b6e2866-f5e9-48c1-8b27-9568946e3eed' SourceApplication='WIFI'/>
+    				<Body>
+    					<PostCharge CheckNumber='L490282' Department='WIFI' FolioID='0000902524' PassportNO='H123456' Gratuity='' OriginatingSystemID='WIFI' SalesAmount='2.47' TaxAmount='' TenderType='03' TotalSales='2.47' TransactionDate='20160322' TransactionTime='02:47:40'/>
+    				</Body>
+    			</DTSPostCharge>
+    			";
+    	$postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
+    	
+    	var_dump($postObj->Body->PostCharge);
     }
 }

@@ -24,13 +24,14 @@ class Wifi
 	}
 	
 	
-	//获取wifi套餐
+	
+	//获取所有wifi套餐
 	public static function GetWifiItem($iso='zh_cn')
 	{
 		$sql = " SELECT a.wifi_id,a.sale_price,a.wifi_flow,b.wifi_name ,a.expiry_day 
 				FROM wifi_item a ,wifi_item_language b 
 				WHERE a.wifi_id = b.wifi_id 
-				AND a.status=0 AND b.iso='$iso'";
+				AND a.status=0 AND b.iso='$iso' AND a.status=0";
 		
 		$wifi_item = Yii::$app->db->createCommand($sql)->queryAll();
 		return $wifi_item;
