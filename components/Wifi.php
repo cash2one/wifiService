@@ -23,6 +23,7 @@ class Wifi
 		return $output;
 	}
 	
+	
 	//获取wifi套餐
 	public static function GetWifiItem($iso='zh_cn')
 	{
@@ -35,6 +36,7 @@ class Wifi
 		return $wifi_item;
 	}
 	
+
 	
 	
 }

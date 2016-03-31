@@ -4,14 +4,13 @@ namespace app\controllers;
 
 use Yii;
 use yii\web\Controller;
-use app\components;
 use app\components\Wifi;
-use app\components\WifiConnect;
+use app\components\WifiPay;
 
 class WifiController extends Controller
 {
 	public $layout = false;  	//don't use the default theme layout 
-	public $enableCsrfValidation = false;
+	public $enableCsrfValidation = false; // csrf validation equal false
     public function actionIndex()
     {
     	$wifi = new Wifi();
@@ -19,26 +18,38 @@ class WifiController extends Controller
         return $this->render('index',['wifi_items'=>$wifi_items]);
     }
     
-    public function actionPay()
-    {
-    	return $this->render('pay');
-    }
     
-    
-    public function actionGetname($iso = 'zh_cn')
+    //获取wifi信息
+    public function actionGetwifi($iso = 'zh_cn')
     {
-    	$result = array();
-    	$id = Yii::$app->request->post('id');
-    	if(isset($id)){
-    		$sql = " SELECT a.sale_price ,b.wifi_name 
-    				FROM wifi_item a ,wifi_item_language b 
-    				WHERE a.wifi_id = b.wifi_id AND a.wifi_id =$id AND iso='$iso' ";
-    		$wifi_item = Yii::$app->db->createCommand($sql)->queryOne();
- 
-    		$item = '"sale_price" : "'.$wifi_item['sale_price'].'","wifi_name":"'.$wifi_item['wifi_name'].'"}';
+    	$wifi_id = Yii::$app->request->post('wifi_id');
+    	
+    	
+    	if(isset($wifi_id)){
+    		$wifi_item = new WifiPay();
+    		$item = $wifi_item::GetWifiInfo($wifi_id,$iso);
+    	}else{
+    		$item = '';
     	}
     	
     	$result = '{"status":"OK","data":{'.$item.'}';
+    	echo $result;
+    }
+    
+    
+    //支付wifi套餐
+    public function actionPayment()
+    {
+    	$wifi_id = Yii::$app->request->post('wifi_id');
+    	$passport = Yii::$app->request->post('passport');
+    	$TenderType = Yii::$app->request->post('TenderType');
+    	
+    	//构造XML数据，接口对接
+    	
+    	
+    	
+    	
+    	$result = '{"status":"OK"}';
     	echo $result;
     }
 }
