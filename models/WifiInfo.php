@@ -12,6 +12,7 @@ use Yii;
  * @property string $wifi_code
  * @property string $wifi_password
  * @property integer $status_sale
+ * @property string $time
  */
 class WifiInfo extends \yii\db\ActiveRecord
 {
@@ -30,6 +31,7 @@ class WifiInfo extends \yii\db\ActiveRecord
     {
         return [
             [['wifi_id', 'status_sale'], 'integer'],
+            [['time'], 'safe'],
             [['wifi_code', 'wifi_password'], 'string', 'max' => 50]
         ];
     }
@@ -45,6 +47,7 @@ class WifiInfo extends \yii\db\ActiveRecord
             'wifi_code' => Yii::t('app', 'wifi登录帐号'),
             'wifi_password' => Yii::t('app', 'wifi登录密码'),
             'status_sale' => Yii::t('app', '出售状态：0 未出售，1已出售'),
+            'time' => Yii::t('app', '开通时间'),
         ];
     }
 }

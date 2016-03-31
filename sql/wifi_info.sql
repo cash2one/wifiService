@@ -8,5 +8,6 @@ CREATE TABLE `wifi_info` (
   	`wifi_code` varchar(50) DEFAULT NULL COMMENT 'wifi登录帐号',
   	`wifi_password` varchar(50) DEFAULT NULL COMMENT 'wifi登录密码',
   	`status_sale` tinyint(4) DEFAULT 0 COMMENT '出售状态：0 未出售，1已出售',
+  	`time` datetime DEFAULT NULL COMMENT '开通时间',
 	PRIMARY KEY (`wifi_info_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='wifi套餐信息表';

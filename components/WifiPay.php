@@ -1,5 +1,5 @@
 <?php
-namespace app\component;
+namespace app\components;
 
 
 class WifiPay 

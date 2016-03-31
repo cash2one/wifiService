@@ -41,7 +41,7 @@ class WifiItemLanguage extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'wifi_id' => Yii::t('app', 'Wifi ID'),
+            'wifi_id' => Yii::t('app', 'wifi id'),
             'wifi_name' => Yii::t('app', 'wifi名字'),
             'iso' => Yii::t('app', '中英文标:zh_cn,en'),
         ];

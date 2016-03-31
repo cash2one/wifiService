@@ -4,7 +4,7 @@
 DROP TABLE IF EXISTS `wifi_item_language`;
 CREATE TABLE `wifi_item_language` (
 	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-	`wifi_id` int(10)  DEFAULT NULL ,
+	`wifi_id` int(10)  DEFAULT NULL COMMENT 'wifi id',
   	`wifi_name` varchar(100) DEFAULT NULL COMMENT 'wifi名字',
   	`iso` varchar(20) DEFAULT 'zh_cn' COMMENT '中英文标:zh_cn,en',
 	PRIMARY KEY (`id`)
