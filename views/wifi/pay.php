@@ -7,7 +7,6 @@
 	<title>上网</title>
 	<meta charset="utf-8">
 	<meta name="viewport" id="viewport" content="width=device-width, initial-scale=1">
-	<!-- <link rel="stylesheet" type="text/css" href="/css/index.css"> -->
 	<?=Html::cssFile('@web/css/index.css')?>
 </head>
 <body>
@@ -51,9 +50,5 @@
 	</div>
 	<?=Html::jsFile('@web/js/jquery-2.2.2.min.js')?>
 	<?=Html::jsFile('@web/js/index.js')?>
-	<!-- 
-	<script type="text/javascript" src="js/jquery-2.2.2.min.js"></script>
-	<script type="text/javascript" src="js/index.js"></script>
-	 -->
 </body>
 </html>

@@ -5,6 +5,7 @@ $(document).ready(function(){
 
 //切换tab
 function tab() {
+	
 	changeWidthAndHeight();
 
 	$(window).resize(function(){
@@ -33,6 +34,7 @@ function tab() {
 		$("#InternetAccess_box .tab_content > div").css("width",$(window).width() + "px");
 		$(".tab_content > div").css("height", ($(window).height() - $(".tab_title").height()) + "px");
 	}
+	
 }
 
 
@@ -109,7 +111,7 @@ function GetNameAndShowConfirm(wifi_id)
 $("body").on("click","#payment",function(){
 	$.ajax({
 		url:"payment",
-		data:"wifi_id="+wifi_id+"&passport="+getQueryString("passport")+"&TenderType="+getQueryString("TenderType"),
+		data:"wifi_id="+wifi_id+"&PassportNO="+getQueryString("PassportNO")+"&Name="+getQueryString("Name")+"&TenderType="+getQueryString("TenderType"),
 		type:'POST',
 		dataType:'json',
 		success:function(response){
