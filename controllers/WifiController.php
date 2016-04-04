@@ -16,27 +16,34 @@ class WifiController extends Controller
 	
     public function actionIndex()
     {
-    	$wifi_items = Wifi::getWifiItem();
+    	$iso = Yii::$app->request->get('iso','zh_cn');
+    	$wifi_items = Wifi::getAllWifiItem($iso);
         return $this->render('index',['wifi_items'=>$wifi_items]);
     }
     
     
     
     //获取wifi信息
-    public function actionGetwifi($iso = 'zh_cn')
+    public function actionGetwifi()
     {
     	$wifi_id = Yii::$app->request->post('wifi_id');
+    	$iso = Yii::$app->request->post('iso');
+    	
+    	if($iso === 'null'){
+    		$iso = 'zh_cn';
+    	}
     	
     	if(isset($wifi_id)){
-    		$wifi_item = Wifi::getWifiInfo($wifi_id,$iso);
-    		$item = '"sale_price" : "'.$wifi_item['sale_price'].'","wifi_name":"'.$wifi_item['wifi_name'].'"}';
+    		$wifi_item = Wifi::getWifiItem($wifi_id,$iso);
+    		$item = '{"sale_price" : "'.$wifi_item['sale_price'].'","wifi_name":"'.$wifi_item['wifi_name'].'"}';
     	}else{
     		$item = '';
     	}
     	
-    	$result = '{"status":"OK","data":{'.$item.'}';
+    	$result = '{"status":"OK","data":'.$item.'}';
     	echo $result;
     }
+    
     
     
     
@@ -47,8 +54,9 @@ class WifiController extends Controller
     	$passport = Yii::$app->request->post('PassportNO');
     	$TenderType = Yii::$app->request->post('TenderType');
     	$name = Yii::$app->request->post('Name');
+    	$iso = Yii::$app->request->post('iso');
     	
-    	$wifi_item = Wifi::getWifiInfo($wifi_id);
+    	$wifi_item = Wifi::getWifiItem($wifi_id,$iso);
     	
     	
     	//---  test demo ------
@@ -62,8 +70,8 @@ class WifiController extends Controller
     	echo $result;
     	//---  test demo - - end ---
    	
-    	
-    	
+ /*   	
+   	
     	//构造XML数据，接口对接
     	//IBS的url地址    http://172.16.2.218:9560 
     	
@@ -71,7 +79,7 @@ class WifiController extends Controller
     	$balance = WifiPay::folioBalance();
     	
     	
-    	//2.判断余额是否充足，
+    	//2.判断余额是否充足
     	if($balance < $wifi_item['sale_price']){
     		// 如果余额不足，返回 '{"status":"FAIL"}'，
     		$result = '{"status":"FAIL"}';
@@ -86,12 +94,14 @@ class WifiController extends Controller
     			//4.判断 PostchargeResponse XML
     			$PostchargeResponse = Wifi::xmlUnparsed($postResponse);
     			$checkNumber = $PostchargeResponse->attributes()->CheckNumber;
-    			if($PostchargeResponse ){  //todo
+    			if($PostchargeResponse ){  
+    				// todo
     				// 如果error，就  返回 '{"status":"ERROR"}'，
     				$result = '{"status":"ERROR"}';
     			}else {
     				
     				//5.记录本地数据库的支付信息
+    				// 获取$amount  todo
     				$pay_log_id = Wifi::writePayLogToDB($checkNumber,$passport,$name,$amount);
     				 
     				//6.购买上网卡
@@ -109,7 +119,46 @@ class WifiController extends Controller
     	}
     	
     	echo $result;
+    	
+*/
     }
+    
+    
+    //获取游客购买的套餐
+    //todo
+    public function actionGetwifiitemstatus()
+    {
+    	$passport = Yii::$app->request->post('PassportNO');
+
+//     	$passport = '123456';  //fake data  ,  delete when the interface done.....  todo..
+    	
+    	
+    	$wifi_status = Wifi::getWifiItemStatus($passport);
+    	$item = '';
+    	
+    	$wifi_count = count($wifi_status);	//游客购买上网卡的数量
+    	$index = 1;	//计数标志，用于计算是否最后一条上网卡信息
+    	
+    	foreach ($wifi_status as $wifi){
+    		
+    		$wifi_item = Wifi::getWifiItem($wifi['wifi_info_id']);
+    		$wifi_info = Wifi::getWifiInfo($wifi['wifi_info_id']);
+    		if($index < $wifi_count ){
+    			//不是最后一条，在末尾加 ','
+    			$index++;
+    			$item .= '{"wifi_name" : "'.$wifi_item['wifi_name'].'","wifi_code":"'.$wifi_info['wifi_code'].'","wifi_info_id":"'.$wifi_info['wifi_info_id'].'","wifi_password":"'.$wifi_info['wifi_password'].'"},';
+    		}else{
+    			// 最后一条，不用加在末尾加 ','
+    			$item .= '{"wifi_name" : "'.$wifi_item['wifi_name'].'","wifi_code":"'.$wifi_info['wifi_code'].'","wifi_info_id":"'.$wifi_info['wifi_info_id'].'","wifi_password":"'.$wifi_info['wifi_password'].'"}';
+    		}
+    		
+    	}
+    
+    	$result = '{"status":"OK","data":['.$item.']}';
+    	echo $result;
+    }
+    
+    
     
     
     public function actionGetconnectpage()

@@ -18,7 +18,7 @@
 		<div class="tab_content">
 			<div>
 				<div class="content payment">
-					<p>尊敬的旅客( <?php echo Yii::$app->request->get('name',''); ?> )，您好！</p>
+					<p>尊敬的旅客( <?php echo Yii::$app->request->get('Name',''); ?> )，您好！</p>
 					<p>欢迎选购辉煌号邮轮Wifi套餐。</p>
 					<ul id="ul_wifi_item">
 					<?php foreach($wifi_items as $key => $wifi_item){ ?>
@@ -34,8 +34,9 @@
 				<div class="content connect">
 					<h3>当前有效套餐：</h3>
 					<ul>
+					
 						<li><label>
-							<input type="radio" name="wifi_connect" value="2"></input>Wifi套餐一：50元100M
+							<input type="radio" name="wifi_connect" value="1"></input>Wifi套餐一：XXXXX
 							<ul>
 								<li>账号：XXXXXXXX</li>
 								<li>密码：XXXXXXXX</li>

@@ -33,7 +33,7 @@ class WifiPay
 	//	</DTSPostChargeResponse>
 	
 
-	
+	//请求IBS系统查询余额
 	public static function folioBalance()
 	{
 		$url = "http://172.16.2.218:9560";

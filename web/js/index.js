@@ -12,6 +12,7 @@ function tab() {
 		changeWidthAndHeight();
 	});
 
+	//切换tab
 	$("body").on("click",".tab_title li",function(){
 		var index = $(".tab_title li").index($(this));
 		var left = index * $(window).width();
@@ -67,8 +68,8 @@ function GetNameAndShowConfirm(wifi_id)
 {
 	$.ajax({
         url: "getwifi",
-        data: 'wifi_id='+wifi_id,
-        type: 'POST',
+        data: 'wifi_id='+wifi_id+"&iso="+getQueryString("iso"),
+        type: 'post',
         dataType: 'json',
         success : function(response) {
             if(response.status == "OK"){
@@ -111,7 +112,7 @@ function GetNameAndShowConfirm(wifi_id)
 $("body").on("click","#payment",function(){
 	$.ajax({
 		url:"payment",
-		data:"wifi_id="+wifi_id+"&PassportNO="+getQueryString("PassportNO")+"&Name="+getQueryString("Name")+"&TenderType="+getQueryString("TenderType"),
+		data:"wifi_id="+wifi_id+"&PassportNO="+getQueryString("PassportNO")+"&Name="+getQueryString("Name")+"&TenderType="+getQueryString("TenderType")+"&iso="+getQueryString("iso"),
 		type:'POST',
 		dataType:'json',
 		success:function(response){
@@ -139,13 +140,33 @@ $("body").on("click","#payment",function(){
 function ShowConnectPage()
 {
 	$.ajax({
-        url: "",
-        data: 'passport='+wifi_id,
+        url: "getwifiitemstatus",
+        data: 'passport='+getQueryString("PassportNO"),
         type: 'POST',
         dataType: 'json',
         success : function(response) {
             if(response.status == "OK"){
-               
+            	//动态生成当前有效套餐
+            	var wifi_status = "<div class='content connect'><h3>当前有效套餐：</h3><ul>";
+            	$.each(response.data,function(index,item){
+            		wifi_status +=
+	    				"<li><label>"+
+	            		"<input type='radio' name='wifi_connect' value="+item.wifi_info_id+"></input>"+item.wifi_name+
+						"<ul>"+
+							"<li>账号："+item.wifi_code+"</li>"+
+							"<li>密码："+item.wifi_password+"</li>"+
+						"</ul>"+
+						"</label></li>"
+            	});
+            	wifi_status += "</ul></div>";
+            	$(".connect").replaceWith(wifi_status);
+            	
+            	//动态生成立即联网按钮
+            	$("#connect").replaceWith(
+	    			"<div class='btn'>"+
+					"<input id='connect' type='button' value='立即联网'></input>"+
+					"</div>"
+    			);
             }
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
