@@ -33,8 +33,7 @@
 			<div>
 				<div class="content connect">
 					<h3>当前有效套餐：</h3>
-					<ul>
-					
+					<ul id="ul_wifi_connect">
 						<li><label>
 							<input type="radio" name="wifi_connect" value="1"></input>Wifi套餐一：XXXXX
 							<ul>

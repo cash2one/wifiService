@@ -34,7 +34,7 @@
 					<h3>当前有效套餐：</h3>
 					<ul>
 						<li>
-							<input type="radio" name="1" value="2"></input>Wifi套餐一：50元100M
+							<input type="radio" name="1" value="2"></input>Wifi套餐X：XXXXX
 							<ul>
 								<li>账号：XXXXXXXX</li>
 								<li>密码：XXXXXXXX</li>

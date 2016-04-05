@@ -36,7 +36,8 @@ class WifiPay
 	//请求IBS系统查询余额
 	public static function folioBalance()
 	{
-		$url = "http://172.16.2.218:9560";
+// 		$url = "http://172.16.2.218:9560";
+		$url = Yii::$app->params->ibs_request_url;
 		$xml = "<?xml version='1.0' encoding='utf-8' ?>
 				<Body>
 				<PassportNO=''>

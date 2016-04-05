@@ -56,6 +56,10 @@ class WifiController extends Controller
     	$name = Yii::$app->request->post('Name');
     	$iso = Yii::$app->request->post('iso');
     	
+    	if($iso === 'null'){
+    		$iso = 'zh_cn';
+    	}
+    	
     	$wifi_item = Wifi::getWifiItem($wifi_id,$iso);
     	
     	
@@ -160,12 +164,24 @@ class WifiController extends Controller
     
     
     
-    
-    public function actionGetconnectpage()
+    //网络连接
+    public function actionWificonnect()
     {
+    	$wifi_code = Yii::$app->request->post('wifi_code');
+    	$wifi_password = Yii::$app->request->post('wifi_password');
     	
+    	$result = '{"status":"OK","data":{"wifi_code":"'.$wifi_code.'","wifi_password":"'.$wifi_password.'"}}';
+    	echo $result;
     }
     
+    
+    
+    //停用网络
+    public function actionLogoutwificonnect()
+    {
+    	$result = '{"status":"OK"}';
+    	echo $result;
+    }
     
     
     
