@@ -34,33 +34,35 @@ class WifiPay
 	
 
 	//请求IBS系统查询余额
-	public static function folioBalance()
+	public static function folioBalance($passport)
 	{
 // 		$url = "http://172.16.2.218:9560";
-		$url = Yii::$app->params->ibs_request_url;
+		$url = Yii::$app->params['ibs_request_url'];
 		$xml = "<?xml version='1.0' encoding='utf-8' ?>
 				<Body>
-				<PassportNO=''>
+				<PassportNO='$passport'>
 				</Body>
 				";
-		$balance  = Wifi::httpsRequest($url, $xml);
-		return $balance;
+		$balance  = Wifi::httpsRequest($url, $xml);  //返回值字段为 : PassportNO, BalanceDue
+		
+		return $balance['BalanceDue'];
 	}
 
 	
 	
 	//请求DTSPostCharge
-	public static function DTSPostCharge()
+	public static function DTSPostCharge($passport,$TenderType,$checkNumber,$price)
 	{
 		//http://172.16.2.218:9560
-		$url = " http://172.16.2.218:9560";
-		
+// 		$url = " http://172.16.2.218:9560";
+
+		$url = Yii::$app->params['ibs_request_url'];
 		//1.生成xml
 		$request = "<?xml version='1.0' encoding='utf-8' ?>
 				<DTSPostCharge>
-				<Header />
+				<Header Action='PMS'  />
 				<Body>
-					<PostCharge CheckNumber='' Department='' FolioID='' PassportNO='' Gratuity='' OriginatingSystemID='' SalesAmount='' TaxAmount='' TenderType='' TotalSales='' TransactionDate='' TransactionTime=''/>
+					<PostCharge  OriginatingSystemID='WIFI' Department='WIFI' CheckNumber='$checkNumber'  PassportNo='$passport'  TenderType='$TenderType'  Gratuity=''  SalesAmount='$price' TaxAmount=''  TotalSales='$price' />
 				</Body>
 				</DTSPostCharge>";
 		

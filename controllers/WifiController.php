@@ -62,7 +62,10 @@ class WifiController extends Controller
     	
     	$wifi_item = Wifi::getWifiItem($wifi_id,$iso);
     	
-    	
+    	$checkNumber = '1234'; //todo
+
+
+ /*   	 
     	//---  test demo ------
     	if($wifi_item['sale_price'] < 110){
     		//成功，返回OK
@@ -73,14 +76,14 @@ class WifiController extends Controller
     	}
     	echo $result;
     	//---  test demo - - end ---
-   	
- /*   	
-   	
+*/
+  	
+
     	//构造XML数据，接口对接
     	//IBS的url地址    http://172.16.2.218:9560 
     	
-    	//1.发送 xml,请求FolioBalance接口， 返回参数 ：BalanceDue  , 判断余额
-    	$balance = WifiPay::folioBalance();
+    	//1.发送 xml,请求FolioBalance接口， 返回参数 ：BalanceDue , 判断余额
+    	$balance = WifiPay::folioBalance($passport);
     	
     	
     	//2.判断余额是否充足
@@ -92,14 +95,14 @@ class WifiController extends Controller
     		//---sql事务---
     		$transaction = Yii::$app->db->beginTransaction();
     		try {
-    			//3.调用支付接口
-    			$postResponse = WifiPay::DTSPostCharge();
+    			//3.调用支付接口  todo
+    			$postResponse = WifiPay::DTSPostCharge($passport,$TenderType,$checkNumber,$wifi_item['sale_price']);
     			
     			//4.判断 PostchargeResponse XML
     			$PostchargeResponse = Wifi::xmlUnparsed($postResponse);
-    			$checkNumber = $PostchargeResponse->attributes()->CheckNumber;
-    			if($PostchargeResponse ){  
-    				// todo
+    			
+//     			$checkNumber = $PostchargeResponse->attributes()->CheckNumber;
+    			if(isset($PostchargeResponse->attributes()->Code)){  
     				// 如果error，就  返回 '{"status":"ERROR"}'，
     				$result = '{"status":"ERROR"}';
     			}else {
@@ -108,9 +111,9 @@ class WifiController extends Controller
     				// 获取$amount  todo
     				$pay_log_id = Wifi::writePayLogToDB($checkNumber,$passport,$name,$amount);
     				 
-    				//6.购买上网卡
+    				//6.购买上网卡  todo
     				Wifi::wifiCardBuy($wifi_id,$passport,$pay_log_id);
-    				//todo
+    		
     				
     				$result = '{"status":"OK"}';
     			}
@@ -123,8 +126,7 @@ class WifiController extends Controller
     	}
     	
     	echo $result;
-    	
-*/
+
     }
     
     
@@ -170,7 +172,14 @@ class WifiController extends Controller
     	$wifi_code = Yii::$app->request->post('wifi_code');
     	$wifi_password = Yii::$app->request->post('wifi_password');
     	
-    	$result = '{"status":"OK","data":{"wifi_code":"'.$wifi_code.'","wifi_password":"'.$wifi_password.'"}}';
+
+    	$flow_start = WifiConnect::getWifiFlow($wifi_code)->flow_start; //总流量 
+    	$left_flow = WifiConnect::getWifiFlow($wifi_code)->left_flow;	//剩余流量
+    	
+    	$sql = " SELECT time FROM wifi_info WHERE wifi_code = '$wifi_code'";
+    	$turnOnTime = Yii::$app->db->createCommand($sql)->queryOne()['time'];
+    	
+    	$result = '{"status":"OK","data":{"wifi_code":"'.$wifi_code.'","wifi_password":"'.$wifi_password.'","turnOnTime":"'.$turnOnTime.'","flow_start":"'.$flow_start.'","left_flow":"'.$left_flow.'"}}';
     	echo $result;
     }
     
@@ -182,6 +191,8 @@ class WifiController extends Controller
     	$result = '{"status":"OK"}';
     	echo $result;
     }
+    
+    
     
     
     
@@ -224,7 +235,25 @@ class WifiController extends Controller
     		$postObj = simplexml_load_string($res, 'SimpleXMLElement', LIBXML_NOCDATA);
     		$body = $postObj->Body->PostCharge;
     		echo $body->attributes()->CheckNumber;
+    		
     	}
+    }
+    
+    
+    
+    public function actionSentjson()
+    {
+    	$wifi_code = '123456';
+    	$flow = WifiConnect::getWifiFlow($wifi_code)->flow_start;
+    	
+		echo $flow;
+    }
+    
+    
+    public function actionTestjson()
+    {
+    	$data = '{"name":"123","left_flow":"50","flow_start":"100"}';
+    	return $data;
     }
     //---   XML request Demo-----  end --
     	

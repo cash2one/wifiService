@@ -5,9 +5,7 @@ $(document).ready(function(){
 
 //切换tab
 function tab() {
-	
 	changeWidthAndHeight();
-
 	$(window).resize(function(){
 		changeWidthAndHeight();
 	});
@@ -35,12 +33,11 @@ function tab() {
 		$("#InternetAccess_box .tab_content > div").css("width",$(window).width() + "px");
 		$(".tab_content > div").css("height", ($(window).height() - $(".tab_title").height()) + "px");
 	}
-	
 }
 
 
 
-//------ 获取get请求的参数------
+//------ 获取get请求的参数------s
 function getQueryString(name) {
 	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
 	var r = window.location.search.substr(1).match(reg);
@@ -69,7 +66,7 @@ var wifi_price ;	//套餐的价格
 function GetNameAndShowConfirm(wifi_id)
 {
 	$.ajax({
-        url: "getwifi",
+        url: "wifi/getwifi",
         data: 'wifi_id='+wifi_id+"&iso="+getQueryString("iso"),
         type: 'post',
         dataType: 'json',
@@ -109,11 +106,11 @@ function GetNameAndShowConfirm(wifi_id)
 }
 
 
-
+$("body").off("click","#payment");
 //点击payment按钮----立即支付-----
 $("body").on("click","#payment",function(){
 	$.ajax({
-		url:"payment",
+		url:"wifi/payment",
 		data:"wifi_id="+wifi_id+"&PassportNO="+getQueryString("PassportNO")+"&Name="+getQueryString("Name")+"&TenderType="+getQueryString("TenderType")+"&iso="+getQueryString("iso"),
 		type:'post',
 		dataType:'json',
@@ -129,6 +126,9 @@ $("body").on("click","#payment",function(){
 			}else if(response.status == "FAIL"){
 				//显示支付失败界面
 				ShowPayFailPage();
+			}else if(response.status == "ERROR"){
+				//显示支付出错界面
+				ShowPayErrorPage();
 			}
 		},
 		error:function(XMLHttpRequest,textStatus,errorThrown){
@@ -144,7 +144,7 @@ $("body").on("click","#payment",function(){
 function ShowConnectPage()
 {
 	$.ajax({
-        url: "getwifiitemstatus",
+        url: "wifi/getwifiitemstatus",
         data: 'PassportNO='+getQueryString("PassportNO"),
         type: 'post',
         dataType: 'json',
@@ -190,6 +190,26 @@ function ShowPayFailPage()
 		location.reload();	//重载页面
 	});
 }
+
+//显示支付出错界面
+function ShowPayErrorPage()
+{
+	$(".payment").replaceWith(
+		"<div class='content payment'>"+
+			"<h3>Wifi订单支付出现错误！</h3>"+
+			"<p>很抱歉，支付出现错误，请联系前台咨询！</p>"+
+		"</div>"
+	);
+		
+	$("#payment").replaceWith(
+		"<input id='return' type='button' value='返回'></input>"
+	);
+	
+	$("body").on("click","#return",function(){
+		location.reload();	//重载页面
+	});
+}
+
 
 
 //显示选择上网连接 ---- 立即上网 界面
@@ -238,12 +258,13 @@ function ShowConnectSelect(data)
 function ClickWifiConnectBtn(data)
 {
 	//点击connect按钮  --立即联网 ---
+	$("body").off("click","#connect");
 	$("body").on("click","#connect",function(){
 		//获取点击套餐index
     	index = SelectWifiItem();
     	
 		$.ajax({
-		 url: "wificonnect",
+		 url: "wifi/wificonnect",
 	        data: 'wifi_code='+data[index]['wifi_code']+'&wifi_password='+data[index]['wifi_password'],
 	        type: 'post',
 	        dataType: 'json',
@@ -264,14 +285,12 @@ function ClickWifiConnectBtn(data)
 //停用wifi页面
 function ShowLogOutWifiConnect(item)
 {
-	var wifi_status = "<div class='content connect'><h3>当前连接的套餐：</h3><ul id='ul_wifi_connect'>";
+	var wifi_status = "<div class='content connect'><h3>当前连接的套餐：</h3>";
 	wifi_status +=
-		"<ul>"+
-			"<li>账号："+item.wifi_code+"</li>"+
-			"<li>密码："+item.wifi_password+"</li>"+
-		"</ul>"+
-		"</label></li>";
-	
+			"<p>账号："+item.wifi_code+"</p>"+
+			"<p>密码："+item.wifi_password+"</p>"+
+			"<p>开通的时间 : "+item.turnOnTime+"</p>"+
+			"<p>流量状态 : 已用 "+item.left_flow+"M / 剩余 "+item.flow_start+"M </p>";
 	$(".connect").replaceWith(wifi_status);
 	
 	//动态生成立即联网按钮
@@ -288,20 +307,17 @@ function ShowLogOutWifiConnect(item)
 function ClickLogoutWifiBtn(item)
 {
 	//点击connect按钮  --立即联网 ---
+	$("body").off("click","#connect_logout");
 	$("body").on("click","#connect_logout",function(){
 		$.ajax({
-			url: "logoutwificonnect",
+			url: "wifi/logoutwificonnect",
 	        data: 'wifi_code='+item.wifi_code+'&wifi_password='+item.wifi_password,
 	        type: 'post',
 	        dataType: 'json',
 	        success : function(response) {
 	            if(response.status == "OK"){
-	            	
 	            	//显示购买页面
-	            	location.reload();	//重载页面
-	            	
-//	            	ShowConnectPage();//todo
-	            	
+	            	ShowConnectPage();
 	            }
 	        },
 	        error: function(XMLHttpRequest, textStatus, errorThrown) {

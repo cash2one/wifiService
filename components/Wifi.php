@@ -54,6 +54,7 @@ class Wifi
 	{
 		//通过wifi_id 更改wifi_info表中的数据状态,并获取被更改数据的wifi_info_id
 		//todo
+		
 		return $wifi_info_id;
 	}
 	
@@ -82,6 +83,8 @@ class Wifi
 		$sql = " INSERT INTO `wifi_pay_log` (`check_num`,`passport_num`,`name`,`amount`,`pay_time`)
 		VALUES('$checknum','$passportNum','$name','$amount','$pay_time')" ;
 		Yii::$app->db->createCommand($sql)->execute();
+		
+		
 	}
 	
 	//解析xml内容
