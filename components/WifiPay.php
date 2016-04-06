@@ -67,8 +67,8 @@ class WifiPay
 				</DTSPostCharge>";
 		
 		//2.记录 Postcharge XML 内容 到 ibsxml_log	
-		$type = 1;     //'类型，0:接收 1:发送',
-		Wifi::writeXMLToDB($request,$type);
+		$type_request = 1;     //'类型，0:接收 1:发送',
+		Wifi::writeXMLToDB($request,$type_request);
 		
 		
 		//3.调用支付接口，发送 Postcharge XML内容
@@ -76,8 +76,8 @@ class WifiPay
 		
 		
 		//4.记录 PostchargeResponse 返回的XML内容
-		$type = 0;     //'类型，0:接收 1:发送',
-		Wifi::writeXMLToDB($chargeResponse,$type);
+		$type_response = 0;     //'类型，0:接收 1:发送',
+		Wifi::writeXMLToDB($chargeResponse,$type_response);
 		
 		return $chargeResponse;
 	}

@@ -65,7 +65,7 @@ class WifiController extends Controller
     	$checkNumber = '1234'; //todo
 
 
- /*   	 
+/*  	 
     	//---  test demo ------
     	if($wifi_item['sale_price'] < 110){
     		//成功，返回OK
@@ -76,8 +76,8 @@ class WifiController extends Controller
     	}
     	echo $result;
     	//---  test demo - - end ---
+
 */
-  	
 
     	//构造XML数据，接口对接
     	//IBS的url地址    http://172.16.2.218:9560 
@@ -95,25 +95,22 @@ class WifiController extends Controller
     		//---sql事务---
     		$transaction = Yii::$app->db->beginTransaction();
     		try {
-    			//3.调用支付接口  todo
+    			//3.调用支付接口
     			$postResponse = WifiPay::DTSPostCharge($passport,$TenderType,$checkNumber,$wifi_item['sale_price']);
     			
     			//4.判断 PostchargeResponse XML
     			$PostchargeResponse = Wifi::xmlUnparsed($postResponse);
     			
-//     			$checkNumber = $PostchargeResponse->attributes()->CheckNumber;
     			if(isset($PostchargeResponse->attributes()->Code)){  
-    				// 如果error，就  返回 '{"status":"ERROR"}'，
+    				// 如果error，就返回 '{"status":"ERROR"}'，
     				$result = '{"status":"ERROR"}';
     			}else {
     				
     				//5.记录本地数据库的支付信息
-    				// 获取$amount  todo
     				$pay_log_id = Wifi::writePayLogToDB($checkNumber,$passport,$name,$amount);
-    				 
+    				
     				//6.购买上网卡  todo
     				Wifi::wifiCardBuy($wifi_id,$passport,$pay_log_id);
-    		
     				
     				$result = '{"status":"OK"}';
     			}
@@ -131,14 +128,9 @@ class WifiController extends Controller
     
     
     //获取游客购买的套餐
-    //todo
     public function actionGetwifiitemstatus()
     {
     	$passport = Yii::$app->request->post('PassportNO');
-
-//     	$passport = '123456';  //fake data  ,  delete when the interface done.....  todo..
-    	
-    	
     	$wifi_status = Wifi::getWifiItemStatus($passport);
     	$item = '';
     	
@@ -174,7 +166,7 @@ class WifiController extends Controller
     	
 
     	$flow_start = WifiConnect::getWifiFlow($wifi_code)->flow_start; //总流量 
-    	$left_flow = WifiConnect::getWifiFlow($wifi_code)->left_flow;	//剩余流量
+    	$left_flow  = WifiConnect::getWifiFlow($wifi_code)->left_flow;	//剩余流量
     	
     	$sql = " SELECT time FROM wifi_info WHERE wifi_code = '$wifi_code'";
     	$turnOnTime = Yii::$app->db->createCommand($sql)->queryOne()['time'];
@@ -197,6 +189,26 @@ class WifiController extends Controller
     
     
     //---   XML request Demo-----  begin --
+    
+    public function actionTestupdate()
+    {
+    	$time = date('Y-m-d H:i:s',time());
+    	$wifi_id = 1;
+		//通过wifi_id 更改wifi_info表中的数据状态,并获取被更改数据的wifi_info_id
+   	 	$time = date('Y-m-d H:i:s',time());
+		$sql = "SELECT wifi_info_id FROM wifi_info WHERE wifi_id='$wifi_id' AND status_sale=0 LIMIT 1";
+		$wifi_info_id = Yii::$app->db->createCommand($sql)->queryOne()['wifi_info_id'];
+		if($wifi_info_id){
+			$sql = "UPDATE wifi_info SET status_sale='1' ,time='$time' WHERE wifi_info_id='$wifi_info_id'";
+			Yii::$app->db->createCommand($sql)->execute();
+			return $wifi_info_id;
+		}else {
+			return 0;
+		}
+    }
+    
+    
+    
     public function actionTest()
     {
     	$url = "www.wifiservice.com/wifi/response";

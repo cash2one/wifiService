@@ -39,31 +39,69 @@ class Wifi
 	}
 	
 
-
-	
 	
 	//购买上网卡
 	public static function wifiCardBuy($wifi_id,$passport,$pay_log_id)
 	{
-		self::wifiCard($wifi_id);
+		//生成一张上网卡
+		$wifi_info_id = self::wifiCard($wifi_id);
+		
+		//把相关信息保存到wifi_item_status
+		self::wifiItemSave($passport,$wifi_info_id,$pay_log_id);
+		
 	}
-	
 	
 	//生成一张上网卡
 	private static function wifiCard($wifi_id)
 	{
 		//通过wifi_id 更改wifi_info表中的数据状态,并获取被更改数据的wifi_info_id
-		//todo
-		
-		return $wifi_info_id;
+		$time = date('Y-m-d H:i:s',time());
+		$sql = "SELECT wifi_info_id FROM wifi_info WHERE wifi_id='$wifi_id' AND status_sale=0 LIMIT 1";
+		$wifi_info_id = Yii::$app->db->createCommand($sql)->queryOne()['wifi_info_id'];
+		if($wifi_info_id){
+			$sql = "UPDATE wifi_info SET status_sale='1' ,time='$time' WHERE wifi_info_id='$wifi_info_id'";
+			Yii::$app->db->createCommand($sql)->execute();
+			return $wifi_info_id;
+		}else {
+			return 0;
+		}
+	}
+	
+	//把相关信息保存到wifi_item_status
+	private  static function wifiItemSave($passport,$wifi_info_id,$pay_log_id)
+	{
+		$sql = " INSERT INTO `wifi_item_status` (passport_num,wifi_info_id,pay_log_id) VALUES('$passport','$wifi_info_id','$pay_log_id')";
+		Yii::$app->db->createCommand($sql)->execute();
 	}
 	
 	
-	//获取游客购买的上网卡
+	//获取游客购买的上网卡  
+	//todo 判断有效期
 	public static function getWifiItemStatus($passport)
 	{
-		$sql = " SELECT * FROM wifi_item_status WHERE passport_num = '$passport'  AND status = 0" ;
+		//1.查找 wifi_info 的开通时间
+		//2.查找 wifi_item 的有效时间
+		//3.对比当前时间和开通时间，如果小于有效时决，显示
+
+// 		$sql = " SELECT * FROM wifi_item_status WHERE passport_num = '$passport'  AND status = 0 " ;
+// 		$wifi_item_status = Yii::$app->db->createCommand($sql)->queryAll();
+// 		$wifi_info_id = wifi_item_status['wifi_info_id'];
+// 		$pay_log_id = wifi_item_status['pay_log_id'];
+		
+// 		$sql = " SELECT wifi_id,time FROM wifi_info WHERE wifi_info_id = '$wifi_info_id'";
+// 		$wifi_info = Yii::$app->db->createCommand($sql)->queryOne();
+// 		$wifi_id = $wifi_info['wifi_id'];
+// 		$time = $wifi_info['time'];
+		
+// 		$sql = " SELECT expiry_day FROM wifi_item WHERE wifi_id = '$wifi_id'";
+		$time = date('Y-m-d H:i:s',time());
+		
+		$sql = " SELECT a.* FROM wifi_item_status a,wifi_info b,wifi_item c 
+					WHERE a.wifi_info_id=b.wifi_info_id AND b.wifi_id = c.wifi_id 
+					AND a.passport_num='$passport' AND a.status=0 AND '$time' < DATE_ADD(b.time,INTERVAL c.expiry_day day)";
+		
 		$wifi_item_status = Yii::$app->db->createCommand($sql)->queryAll();
+		
 		return $wifi_item_status;
 	}
 	
@@ -73,7 +111,9 @@ class Wifi
 	//把Xml内容写入数据库中
 	public static function writeXMLToDB($data,$type)
 	{
-		//todo
+		$time = date('Y-m-d H:i:s',time());
+		$sql = " INSERT INTO `ibsxml_log` (`type`,`content`,`time`) VALUES('$type','$data','$time')";
+		Yii::$app->db->createCommand($sql)->execute();
 	}
 	
 	//记录支付记录到数据库中
@@ -84,6 +124,8 @@ class Wifi
 		VALUES('$checknum','$passportNum','$name','$amount','$pay_time')" ;
 		Yii::$app->db->createCommand($sql)->execute();
 		
+		$pay_log_id = Yii::$app->db->getLastInsertID();
+		return $pay_log_id;
 		
 	}
 	
