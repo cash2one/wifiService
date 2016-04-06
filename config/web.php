@@ -6,6 +6,7 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+	'timezone' => 'Asia/ShangHai',
 	'defaultRoute' => 'wifi/index',
     'components' => [
         'request' => [

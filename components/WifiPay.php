@@ -83,6 +83,13 @@ class WifiPay
 	}
 
 	
+	public static function isIBSPay()
+	{
+		$sql = "SELECT type FROM ibs_pay WHERE id = 1";
+		$type = Yii::$app->db->createCommand($sql)->queryOne()['type'];
+		return $type;
+	}
+	
 
 	
 	

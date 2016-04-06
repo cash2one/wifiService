@@ -12,7 +12,7 @@ class Wifi
 	{
 		$sql = " SELECT a.sale_price ,b.wifi_name
 		FROM wifi_item a ,wifi_item_language b
-		WHERE a.wifi_id = b.wifi_id AND a.wifi_id =$wifi_id AND iso='$iso' ";
+		WHERE a.wifi_id = b.wifi_id AND a.wifi_id ='$wifi_id' AND iso='$iso' ";
 		$wifi_item = Yii::$app->db->createCommand($sql)->queryOne();
 		return $wifi_item;
 	}
@@ -96,7 +96,7 @@ class Wifi
 // 		$sql = " SELECT expiry_day FROM wifi_item WHERE wifi_id = '$wifi_id'";
 		$time = date('Y-m-d H:i:s',time());
 		
-		$sql = " SELECT a.* FROM wifi_item_status a,wifi_info b,wifi_item c 
+		$sql = " SELECT a.*,b.wifi_id FROM wifi_item_status a,wifi_info b,wifi_item c 
 					WHERE a.wifi_info_id=b.wifi_info_id AND b.wifi_id = c.wifi_id 
 					AND a.passport_num='$passport' AND a.status=0 AND '$time' < DATE_ADD(b.time,INTERVAL c.expiry_day day)";
 		
