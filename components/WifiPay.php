@@ -38,14 +38,20 @@ class WifiPay
 	{
 // 		$url = "http://172.16.2.218:9560";
 		$url = Yii::$app->params['ibs_request_url'];
+		$time = date('Y-m-d H:i:s',time());
 		$xml = "<?xml version='1.0' encoding='utf-8' ?>
+				<DTSFolioBalance>
+				<Header Action='PMS' CreationDateTime='$time' SourceApplication='WIFI'/>
 				<Body>
-				<PassportNO='$passport'>
+				<FolioBalance PassportNO='$passport' />
 				</Body>
+				</DTSFolioBalance>
 				";
-		$balance  = Wifi::httpsRequest($url, $xml);  //返回值字段为 : PassportNO, BalanceDue
-		
-		return $balance['BalanceDue'];
+		$res  = Wifi::httpsRequest($url, $xml);  //返回值字段为 : PassportNO, BalanceDue
+		$postObj = simplexml_load_string($res, 'SimpleXMLElement', LIBXML_NOCDATA);
+		$body = $postObj->Body->FolioBalance;
+		$balance =  $body->attributes()->BalanceDue;
+		return $balance;
 	}
 
 	
@@ -58,13 +64,14 @@ class WifiPay
 
 		$url = Yii::$app->params['ibs_request_url'];
 		//1.生成xml
+		$time = date('Y-m-d H:i:s',time());
 		$request = "<?xml version='1.0' encoding='utf-8' ?>
-				<DTSPostCharge>
-				<Header Action='PMS'  />
-				<Body>
-					<PostCharge  OriginatingSystemID='WIFI' Department='WIFI' CheckNumber='$checkNumber'  PassportNo='$passport'  TenderType='$TenderType'  Gratuity=''  SalesAmount='$price' TaxAmount=''  TotalSales='$price' />
-				</Body>
-				</DTSPostCharge>";
+					<DTSPostCharge>
+					<Header Action='PMS' CreationDateTime='$time' SourceApplication='WIFI' />
+					<Body>
+						<PostCharge  OriginatingSystemID='WIFI' Department='WIFI' CheckNumber='$checkNumber'  PassportNo='$passport'  TenderType='$TenderType'  Gratuity=''  SalesAmount='$price' TaxAmount=''  TotalSales='$price' />
+					</Body>
+					</DTSPostCharge>";
 		
 		//2.记录 Postcharge XML 内容 到 ibsxml_log	
 		$type_request = 1;     //'类型，0:接收 1:发送',
@@ -83,6 +90,20 @@ class WifiPay
 	}
 
 	
+	//生成订单号
+	public static function createChecknum()
+	{
+		$my_code = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
+		 
+		$order_sn = $my_code[intval(date('m'))].(intval(date('d')) < 10 ? intval(date('d')) : $my_code[(intval(date('d'))-10)]).date('Y')
+		.substr(time(),-5).substr(microtime(),2,5)
+		.sprintf('%02d', rand(0, 99));
+		 
+		return $order_sn;
+	}
+	
+	
+	//查找数据库，是否使用ibs系统
 	public static function isIBSPay()
 	{
 		$sql = "SELECT type FROM ibs_pay WHERE id = 1";

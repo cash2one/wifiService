@@ -37,13 +37,21 @@ function tab() {
 
 
 
-//------ 获取get请求的参数------s
-function getQueryString(name) {
-	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-	var r = window.location.search.substr(1).match(reg);
-	if (r != null) return unescape(r[2]); return null;
+//------ 获取get请求的参数------
+function request(paras) {
+    var url = location.href;
+    var paraString = url.substring(url.indexOf("?") + 1, url.length).split("&");
+    var paraObj = {}
+    for (i = 0; j = paraString[i]; i++) {
+        paraObj[j.substring(0, j.indexOf("=")).toLowerCase()] = j.substring(j.indexOf("=") + 1, j.length);
+    }
+    var returnValue = paraObj[paras.toLowerCase()];
+    if (typeof (returnValue) == "undefined") {
+        return "";
+    } else {
+		return returnValue;
+    }
 }
-
 
 
 var wifi_id ;     	//套餐的id
@@ -67,7 +75,7 @@ function GetNameAndShowConfirm(wifi_id)
 {
 	$.ajax({
         url: "wifi/getwifi",
-        data: 'wifi_id='+wifi_id+"&iso="+getQueryString("iso"),
+        data: 'wifi_id='+wifi_id+"&iso="+request("iso"),
         type: 'post',
         dataType: 'json',
         success : function(response) {
@@ -81,8 +89,6 @@ function GetNameAndShowConfirm(wifi_id)
 			console.log("error");
         }
     });
-	
-	
 
 	
 	//------ 显示确认支付页面-------
@@ -111,9 +117,9 @@ $("body").off("click","#payment");
 $("body").on("click","#payment",function(){
 	$.ajax({
 		url:"wifi/payment",
-		data:"wifi_id="+wifi_id+"&PassportNO="+getQueryString("PassportNO")+"&Name="+getQueryString("Name")+"&TenderType="+getQueryString("TenderType")+"&iso="+getQueryString("iso"),
+		data:"wifi_id="+wifi_id+"&PassportNO="+request("PassportNO")+"&Name="+decodeURI(request("Name"))+"&TenderType="+request("TenderType")+"&iso="+getQueryString("iso"),
 		type:'post',
-		dataType:'json',
+		dataType:'json', 
 		success:function(response){
 			if(response.status == "OK"){
 				//跳转到上网连接
@@ -228,8 +234,8 @@ function ShowConnectSelect(data)
 			
 		wifi_status +=
 			"<ul>"+
-				"<li>账号："+item.wifi_code+"</li>"+
-				"<li>密码："+item.wifi_password+"</li>"+
+				"<li>账号："+item.wifi_code+" <input type='hidden' id='wifi_code' value="+item.wifi_code+" /></li>"+
+				"<li>密码："+item.wifi_password+"<input type='hidden' id='wifi_password' value="+item.wifi_password+" /></li>"+
 			"</ul>"+
 			"</label></li>";
 	});
@@ -260,19 +266,17 @@ function ClickWifiConnectBtn(data)
 	//点击connect按钮  --立即联网 ---
 	$("body").off("click","#connect");
 	$("body").on("click","#connect",function(){
-		//获取点击套餐index
+		//获取点击的套餐
     	index = SelectWifiItem();
-    	
 		$.ajax({
 		 url: "wifi/wificonnect",
-	        data: 'wifi_code='+data[index]['wifi_code']+'&wifi_password='+data[index]['wifi_password'],
+	        data: 'wifi_code='+index[0]+'&wifi_password='+index[1],
 	        type: 'post',
 	        dataType: 'json',
 	        success : function(response) {
 	            if(response.status == "OK"){
 	            	//显示 停用wifi页面
 	            	ShowLogOutWifiConnect(response.data);
-	       
 	            }
 	        },
 	        error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -331,13 +335,14 @@ function ClickLogoutWifiBtn(item)
 //获取 上网选择套餐的index
 function SelectWifiItem()
 {
-	var index = 0; //选择联网的套餐index
-	$("#ul_wifi_connect input").each(function(){
-		if($(this).prop("checked")) {
-			index = $(this).val();
+	var index = [];	//定义一个数组存放 wifi套餐
+	$("#ul_wifi_connect>li").each(function(){
+		if($(this).find("input").prop("checked")) {
+			index[0] = $(this).find("ul li input#wifi_code").val();
+			index[1] = $(this).find("ul li input#wifi_password").val();
 		}
 	});
-	return index - 1;
+	return index ;
 }
 
 

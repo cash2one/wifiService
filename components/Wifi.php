@@ -107,7 +107,6 @@ class Wifi
 	
 	
 	
-	
 	//把Xml内容写入数据库中
 	public static function writeXMLToDB($data,$type)
 	{
@@ -133,17 +132,13 @@ class Wifi
 	public static function xmlUnparsed($data)
 	{
 		$xmlObj = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
-		$PostCharge = $xmlObj->Body->PostCharge;
+		$PostCharge = $xmlObj->Body;
 		return $PostCharge;
-	
-// 		$checkNumber = $PostCharge->attributes()->CheckNumber;
-	
 	}
 	
 	
-	
 	//通过curl发送http请求，发送内容可以为 xml 或者 json
-	public static function httpsRequest($url,$data)
+	public static function httpsRequest($url,$data='')
 	{
 		$curl = curl_init();								// create curl resource
 		curl_setopt($curl, CURLOPT_URL, $url);				// set url

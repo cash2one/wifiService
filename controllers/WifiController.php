@@ -62,24 +62,11 @@ class WifiController extends Controller
     	
     	$wifi_item = Wifi::getWifiItem($wifi_id,$iso);
     	
-    	$checkNumber = '1234'; //todo
+    	$checkNumber = WifiPay::createChecknum(); 
+    	
 
-
-/*  	 
-    	//---  test demo ------
-    	if($wifi_item['sale_price'] < 110){
-    		//成功，返回OK
-    		$result = '{"status":"OK"}';
-    	}else{
-    		//失败，返回FAIL
-    		$result = '{"status":"FAIL"}';
-    	}
-    	echo $result;
-    	//---  test demo - - end ---
-
-*/
-
-    	$type = WifiPay::isIBSPay();
+    	$type = WifiPay::isIBSPay(); //是否通过ibs收费系统计费
+    	
     	if($type){
     		
     		//通过ibs系统支付
@@ -102,7 +89,7 @@ class WifiController extends Controller
 	    			//4.判断 PostchargeResponse XML
 	    			$PostchargeResponse = Wifi::xmlUnparsed($postResponse);
 	    			
-	    			if(isset($PostchargeResponse->attributes()->Code)){  
+	    			if(isset($PostchargeResponse->attributes()->Code)){
 	    				// 如果error，就返回 '{"status":"ERROR"}'，
 	    				$result = '{"status":"ERROR"}';
 	    			}else {
@@ -133,7 +120,7 @@ class WifiController extends Controller
 	    		Wifi::wifiCardBuy($wifi_id,$passport,$pay_log_id);
 	    		
 	    		$transaction->commit();
-	    		$result = '{"status":"OK"}';
+	    		$result = '{"status":"OK","name":"'.$name.'"}';
 	    		
     		}catch(Exception $e){
     			$transaction->rollBack();
@@ -184,27 +171,51 @@ class WifiController extends Controller
     	$wifi_code = Yii::$app->request->post('wifi_code');
     	$wifi_password = Yii::$app->request->post('wifi_password');
     	
-
-    	$flow_start = WifiConnect::getWifiFlow($wifi_code)->flow_start; //总流量 
-    	$left_flow  = WifiConnect::getWifiFlow($wifi_code)->left_flow;	//剩余流量
-    	
-    	
+    	$flow_start = isset(WifiConnect::getWifiFlow($wifi_code)->flow_start) ? WifiConnect::getWifiFlow($wifi_code)->flow_start : 0; 	//总流量
+    	$left_flow  = isset(WifiConnect::getWifiFlow($wifi_code)->left_flow) ? WifiConnect::getWifiFlow($wifi_code)->left_flow : 0 ;  	//剩余流量
     	
     	$sql = " SELECT time FROM wifi_info WHERE wifi_code = '$wifi_code'";
     	$turnOnTime = Yii::$app->db->createCommand($sql)->queryOne()['time'];
+    	
+    	//认证
+    	$response = WifiConnect::PortalLogin($wifi_code,$wifi_password);
+    	if($response != ''){
+    		$errorCode = $response['errorCode'];
+    		$wlanuserip = $response['wlanuserip'];
+    		$wlanacip = $response['wlanacip'];
+    		//$wlanuserip，$wlanacip 存储到数据库中
+    		WifiConnect::SaveWlanParams($wifi_code,$wlanuserip,$wlanacip);
+    	}
     	
     	$result = '{"status":"OK","data":{"wifi_code":"'.$wifi_code.'","wifi_password":"'.$wifi_password.'","turnOnTime":"'.$turnOnTime.'","flow_start":"'.$flow_start.'","left_flow":"'.$left_flow.'"}}';
     	echo $result;
     }
     
-    
-    
-    //停用网络
+
+    //停用网络  
     public function actionLogoutwificonnect()
     {
+    	$wifi_code = Yii::$app->request->post('wifi_code');
+    	$wifi_password = Yii::$app->request->post('wifi_password');
+    	//访问下线接口
+    	$response = WifiConnect::PortaLogout($wifi_code);
+    	
+    	if($response == 0){
+    		//注销完成
+    	}
     	$result = '{"status":"OK"}';
     	echo $result;
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -231,9 +242,38 @@ class WifiController extends Controller
     
     
     
+    public function actionResponsefail()
+    {
+    	$xml =  "<?xml version='1.0' encoding='utf-8' ?>
+				<DTSFailResponse><Header Action='Nano' CreationDateTime='2016-03-21 23:49:27' DocumentDefinition='DTSFailResponse' MessageIdentifier='13408284.20160321' SourceApplication='DTS'/>
+    			<Body Code='22' ErrorDescription='Unknown Error!'>
+    			<OriginalMessage>FolioReviewRequest</OriginalMessage>
+    			</Body>
+    			</DTSFailResponse>";
+    	
+    	$postObj = simplexml_load_string($xml,'SimpleXMLElement', LIBXML_NOCDATA);
+    	$PostCharge = $postObj->Body->attributes()->Code;
+    	if(isset($PostCharge)){
+    		echo '11';
+    	}
+    }
+    
+    public function actionBaidu()
+    {
+//     	$url = "http://www.qq.com/";
+//     	$res = Wifi::httpsRequest($url);
+		$wifi_code = '12345';
+    	$response = WifiConnect::SaveWlanParams($wifi_code,22,22);
+    	
+    	echo $response;
+    }
+    
+    
     public function actionTest()
     {
-    	$url = "www.wifiservice.com/wifi/response";
+//     	$url = "www.wifiservice.com/wifi/responsefoliobalance";
+//     	$url = "www.wifiservice.com/wifi/response";
+    
     	$data = "<?xml version='1.0' encoding='utf-8' ?>
     			<DTSPostCharge>
     				<Header Action='PMS' Comment='Pay by the Minute: CREW Rate  Start:3/22/2016 2:15:31 AM End:3/22/2016 2:28:28 AM IP:172.28.25.129' CreationDateTime='2016-03-22 06:47:40' DocumentDefinition='' MessageIdentifier='7b6e2866-f5e9-48c1-8b27-9568946e3eed' SourceApplication='WIFI'/>
@@ -242,11 +282,42 @@ class WifiController extends Controller
     				</Body>
     			</DTSPostCharge>
     			";
-    
-    	$res = Wifi::httpsRequest($url, $data);
     	
-    	$this->actionTestresponse($res);
+    	
+    	$time = $time = date('Y-m-d H:i:s',time());
+    	$passport = '123456';
+    	$url = 'www.wifiservice.com/wifi/responsefoliobalancedata';
+    	$xml = "<?xml version='1.0' encoding='utf-8' ?>
+	    	<DTSFolioBalance>
+	    	<Header Action='PMS' CreationDateTime='$time' SourceApplication='WIFI'/>
+	    	<Body>
+	    	<FolioBalance PassportNO='$passport' />
+	    	</Body>
+	    	</DTSFolioBalance>
+    	";
+    
+    	$res = Wifi::httpsRequest($url, $xml);
+    	$postObj = simplexml_load_string($res, 'SimpleXMLElement', LIBXML_NOCDATA);
+    	var_dump($res);
+    	
+//     	$this->actionTestresponse($res);
   	
+    }
+    
+    
+    public function actionResponsefoliobalancedata()
+    {
+    	$passport = '123456';
+    	$time = $time = date('Y-m-d H:i:s',time());
+    	$xml = "<?xml version='1.0' encoding='utf-8' ?>
+    	<DTSFolioBalance>
+    	<Header Action='PMS' CreationDateTime='$time' SourceApplication='WIFI'/>
+    	<Body>
+    	<FolioBalance PassportNO='$passport' />
+    	</Body>
+    	</DTSFolioBalance>
+    	";
+    	return $xml;
     }
  
     public  function actionResponse()
@@ -263,14 +334,57 @@ class WifiController extends Controller
     }
     
     
+    public function actionResponsefoliobalance()
+    {
+    	$data = "<?xml version='1.0' encoding='utf-8' ?>
+				<DTSFolioBalanceResponse>
+    				<Header Action='PMS' Comment='' CreationDateTime='2016-03-22 06:47:40' DocumentDefinition='' MessageIdentifier='7b6e2866-f5e9-48c1-8b27-9568946e3eed' SourceApplication='WIFI'/>
+    				<Body>
+    					<FolioBalance PassportNO='H123456'  BalanceDue='99.99' />
+    				</Body>
+    			</DTSFolioBalanceResponse> 
+    			";
+    	return $data;
+    }
+    
+    
+    
+    
+    
     public function actionTestresponse($res)
     {
+//     	if (!empty($res)){
+//     		$postObj = simplexml_load_string($res, 'SimpleXMLElement', LIBXML_NOCDATA);
+//     		$body = $postObj->Body->PostCharge;
+//     		echo $body->attributes()->CheckNumber;
+    		
+//     	}
+    	
+    	
     	if (!empty($res)){
     		$postObj = simplexml_load_string($res, 'SimpleXMLElement', LIBXML_NOCDATA);
-    		$body = $postObj->Body->PostCharge;
-    		echo $body->attributes()->CheckNumber;
-    		
+    		$body = $postObj->Body->FolioBalance;
+    		echo $body->attributes()->BalanceDue;
+    	
     	}
+    }
+    
+    public function actionTestflow()
+    {
+    	$wifi_code = "1000101122";
+    	$url = "http://106.39.37.48:8080/fms/ws/queryFlowInfo?user_name=".$wifi_code;
+    	$url = Yii::$app->params['flow_url'].$wifi_code;
+    	$json = Wifi::httpsRequest($url);
+    	$response = json_decode(Wifi::httpsRequest($url));
+    	if(isset(json_decode(Wifi::httpsRequest($url))->flow_start)){
+    		echo "true";
+    	}else{
+    		echo "false";
+    	}
+    	echo "<br/>";
+    	var_dump($response);
+    	echo "<br/>";
+
     }
     
     
@@ -289,6 +403,69 @@ class WifiController extends Controller
     	$data = '{"name":"123","left_flow":"50","flow_start":"100"}';
     	return $data;
     }
+    
+    public function actionBaiducurl()
+    {
+//     	$url = 'http://www.wifiservice.com/wifi/testpage';
+    	$username = '123456';
+    	$userpasswd = '123456';
+    	$content =  WifiConnect::PortalLogin($username,$userpasswd);
+    	
+    	if($content != ''){
+    		var_dump($content);
+    	}else{
+    		echo "22";
+    	}
+//     	$url = 'http://www.baidu.com';
+//     	$ch = curl_init();
+//     	curl_setopt($ch, CURLOPT_URL, $url);
+//     	curl_setopt($ch, CURLOPT_HEADER, TRUE);	//表示需要response header
+// 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+// 		curl_setopt($ch, CURLOPT_VERBOSE, 1);
+	
+		
+// 		$response = curl_exec($ch);
+
+// 		// Then, after your curl_exec call:
+// 		$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+// 		$header = substr($response, 0, $header_size);
+// 		$matches = array();
+// 		$content = preg_match('/Location:(.*?)\n/',$header,$matches);
+// 		$url =  str_replace("Location:",'', $matches[0]);
+// 		echo $url;
+		
+// 		$url = @parse_url(trim(array_pop($matches)));
+// 		var_dump($url);
+		
+		
+    }
+    
+    
+    public function actionParseurl()
+    {
+    	$url = "123.57.182.84:8080/?ssid=test800&wlanacip=123.57.182.84&apid=EA113E6B-652C-4B04-83D6-B22948BE832E&wlanuserip=192.168.68.218&wlanusermac=70-1A-04-FF-12-3C&wlanusersn=235394546&wlanuserfirsturl=www%2Ebaidu%2Ecom%2F";
+    	$response = WifiConnect::ParseURL($url);
+    	echo $response['ssid']."<br/>";
+    	echo $response['wlanacip']."<br/>";
+    	echo $response['apid']."<br/>";
+    	echo $response['wlanuserip']."<br/>";
+    	echo $response['wlanusermac']."<br/>";
+    	echo $response['wlanusersn']."<br/>";
+    	
+    	//array(7) { ["ssid"]=> string(7) "test800" ["wlanacip"]=> string(13) "123.57.182.84" ["apid"]=> string(36) "EA113E6B-652C-4B04-83D6-B22948BE832E" ["wlanuserip"]=> string(14) "192.168.68.218" ["wlanusermac"]=> string(17) "70-1A-04-FF-12-3C" ["wlanusersn"]=> string(9) "235394546" ["wlanuserfirsturl"]=> string(20) "www%2Ebaidu%2Ecom%2F" } 
+    }
+    
+  
+    
+    public function actionTestpage()
+    {
+
+    	return $this->render('testpage');
+    }
+    
+    
+    
+    
     //---   XML request Demo-----  end --
     	
 }
