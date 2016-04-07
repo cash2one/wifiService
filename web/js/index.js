@@ -38,6 +38,13 @@ function tab() {
 
 
 //------ 获取get请求的参数------
+function getQueryString(name) {
+	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+	var r = window.location.search.substr(1).match(reg);
+	if (r != null) return unescape(r[2]); return null;
+}
+
+//------ 获取get请求的参数------
 function request(paras) {
     var url = location.href;
     var paraString = url.substring(url.indexOf("?") + 1, url.length).split("&");
@@ -75,7 +82,7 @@ function GetNameAndShowConfirm(wifi_id)
 {
 	$.ajax({
         url: "wifi/getwifi",
-        data: 'wifi_id='+wifi_id+"&iso="+request("iso"),
+        data: 'wifi_id='+wifi_id+"&iso="+getQueryString("iso"),
         type: 'post',
         dataType: 'json',
         success : function(response) {
@@ -89,6 +96,8 @@ function GetNameAndShowConfirm(wifi_id)
 			console.log("error");
         }
     });
+	
+	
 
 	
 	//------ 显示确认支付页面-------
@@ -117,7 +126,7 @@ $("body").off("click","#payment");
 $("body").on("click","#payment",function(){
 	$.ajax({
 		url:"wifi/payment",
-		data:"wifi_id="+wifi_id+"&PassportNO="+request("PassportNO")+"&Name="+decodeURI(request("Name"))+"&TenderType="+request("TenderType")+"&iso="+getQueryString("iso"),
+		data:"wifi_id="+wifi_id+"&PassportNO="+getQueryString("PassportNO")+"&Name="+decodeURI(request("Name"))+"&TenderType="+getQueryString("TenderType")+"&iso="+getQueryString("iso"),
 		type:'post',
 		dataType:'json', 
 		success:function(response){

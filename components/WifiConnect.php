@@ -118,7 +118,6 @@ class WifiConnect
 	}
 	
 	//$wlanuserip，$wlanacip 从数据库中拿到
-	//todo
 	private static function GetWlanParams($wifi_code)
 	{
 		//根据wifi_code从数据库中查找对应的 $wlanuserip，$wlanacip 

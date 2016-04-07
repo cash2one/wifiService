@@ -28,14 +28,14 @@ class WifiController extends Controller
     {
     	$wifi_id = Yii::$app->request->post('wifi_id');
     	$iso = Yii::$app->request->post('iso');
-    	
+
     	if($iso === 'null'){
     		$iso = 'zh_cn';
     	}
     	
     	if(isset($wifi_id)){
     		$wifi_item = Wifi::getWifiItem($wifi_id,$iso);
-    		$item = '{"sale_price" : "'.$wifi_item['sale_price'].'","wifi_name":"'.$wifi_item['wifi_name'].'"}';
+    		$item = '{"sale_price":"'.$wifi_item['sale_price'].'","wifi_name":"'.$wifi_item['wifi_name'].'"}';
     	}else{
     		$item = '';
     	}
@@ -156,7 +156,6 @@ class WifiController extends Controller
     			// 最后一条，不用加在末尾加 ','
     			$item .= '{"wifi_name" : "'.$wifi_item['wifi_name'].'","wifi_code":"'.$wifi_info['wifi_code'].'","wifi_info_id":"'.$wifi_info['wifi_info_id'].'","wifi_password":"'.$wifi_info['wifi_password'].'"}';
     		}
-    		
     	}
     
     	$result = '{"status":"OK","data":['.$item.']}';
@@ -465,7 +464,56 @@ class WifiController extends Controller
     
     
     
+    //获取wifi的名字，价格
+    public  function actionGettess($wifi_id=1, $iso = 'zh_cn' )
+    {
+    	$sql = " SELECT a.sale_price ,b.wifi_name FROM wifi_item a ,wifi_item_language b WHERE a.wifi_id = b.wifi_id AND a.wifi_id ='$wifi_id' AND b.iso='$iso' ";
+		$wifi_item = Yii::$app->db->createCommand($sql)->queryOne();
+		echo $wifi_item['sale_price'];
+		echo $wifi_item['wifi_name'];
+    	var_dump($wifi_item);
+    }
     
+    
+    
+    // Server side notification
+    public function actionNotify() {
+    	$alipay = Yii::app()->alipay;
+    	if ($alipay->verifyNotify()) {
+    		$order_num = $_POST['out_trade_no'];
+    		if($_POST['trade_status'] == 'TRADE_FINISHED' || $_POST['trade_status'] == 'TRADE_SUCCESS') {
+    			$this->updateOrderStatus($order_num);
+    			echo "success";
+    		}
+    		else {
+    			echo "success";
+    		}
+    	} else {
+    		//echo "fail";
+    		throw new CHttpException(404,'交易失败！');
+    		exit();
+    	}
+    }
+    
+    
+    
+	//Redirect notification
+	public function actionReturn() {
+ 		$alipay = Yii::app()->alipay;
+		if ($alipay->verifyReturn()) {
+			$order_num = $_GET['out_trade_no'];
+			$order_info = $this->getOrderType($order_num);
+			if(empty($order_info['member_id']) && '2' == $order_info['order_type']){
+    			$this->redirect(Yii::app()->createUrl('agent/OrderCenter'));
+    		}else{
+    			$this->redirect(array('memberCenter/memberCenterOrder','order_state'=>1));
+    		}
+    	} else {
+    		throw new CHttpException(404,'交易失败！');
+    		exit();
+    	}
+ 	}
+ 
     //---   XML request Demo-----  end --
     	
 }
