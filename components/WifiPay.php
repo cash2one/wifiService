@@ -37,7 +37,8 @@ class WifiPay
 	public static function folioBalance($passport)
 	{
 // 		$url = "http://172.16.2.218:9560";
-		$url = Yii::$app->params['ibs_request_url'];
+// 		$url = Yii::$app->params['ibs_request_url'];
+		$url = Wifi::selectUrl('ibs_request_url');
 		$time = date('Y-m-d H:i:s',time());
 		$xml = "<?xml version='1.0' encoding='utf-8' ?>
 				<DTSFolioBalance>
@@ -61,8 +62,10 @@ class WifiPay
 	{
 		//http://172.16.2.218:9560
 // 		$url = " http://172.16.2.218:9560";
+// 		$url = Yii::$app->params['ibs_request_url'];
 
-		$url = Yii::$app->params['ibs_request_url'];
+		
+		$url = Wifi::selectUrl('ibs_request_url');
 		//1.生成xml
 		$time = date('Y-m-d H:i:s',time());
 		$request = "<?xml version='1.0' encoding='utf-8' ?>

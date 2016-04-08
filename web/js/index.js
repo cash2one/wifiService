@@ -44,7 +44,7 @@ function getQueryString(name) {
 	if (r != null) return unescape(r[2]); return null;
 }
 
-//------ 获取get请求的参数------
+//------ 获取get请求的参数------  使用这个中文不乱码-------
 function request(paras) {
     var url = location.href;
     var paraString = url.substring(url.indexOf("?") + 1, url.length).split("&");
@@ -127,6 +127,7 @@ $("body").on("click","#payment",function(){
 	$.ajax({
 		url:"wifi/payment",
 		data:"wifi_id="+wifi_id+"&PassportNO="+getQueryString("PassportNO")+"&Name="+decodeURI(request("Name"))+"&TenderType="+getQueryString("TenderType")+"&iso="+getQueryString("iso"),
+//		data:"wifi_id="+wifi_id+"&PassportNO="+getQueryString("PassportNO")+"&Name="+getQueryString("Name")+"&TenderType="+getQueryString("TenderType")+"&iso="+getQueryString("iso"),
 		type:'post',
 		dataType:'json', 
 		success:function(response){

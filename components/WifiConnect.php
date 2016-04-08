@@ -8,7 +8,9 @@ class WifiConnect
 	//查询剩余流量
 	public static function getWifiFlow($wifi_code)
 	{
-		$url = Yii::$app->params['flow_url'].$wifi_code;
+// 		$url = Yii::$app->params['flow_url'].$wifi_code;
+		$flow_url = Wifi::selectUrl('flow_url');
+		$url = $flow_url."?user_name=".$wifi_code;
 		$json = Wifi::httpsRequest($url);
 		$response = json_decode($json);
 		return $response;
@@ -20,8 +22,12 @@ class WifiConnect
 	public static function PortalLogin($username,$userpasswd)
 	{
 		//请求一次百度，如果有返回字段参数，获取字段参数，再把参数带到url 请求认证，返回字段参数，以便注销时使用
-		$request_url = Yii::$app->params['request_url'];	//第一次请求的地址
-		$portal_url = Yii::$app->params['portal_url'];		//portal认证的地址
+// 		$request_url = Yii::$app->params['request_url'];	//第一次请求的地址
+// 		$portal_url = Yii::$app->params['portal_url'];		//portal认证的地址
+		
+		$request_url = Wifi::selectUrl('request_url');
+		$portal_url = Wifi::selectUrl('portal_url');
+		
 		$response = array();
 		$content = self::RequireBeforeLogin($request_url);
 		if($content !== false){
@@ -93,7 +99,8 @@ class WifiConnect
 		$wlanuserip = $response['wlanuserip'];
 		$wlanacip = $response['wlanacip'];
 		//发送请求，带上参数
-		$portal_url = Yii::$app->params['portal_url'];
+// 		$portal_url = Yii::$app->params['portal_url'];
+		$portal_url = Wifi::selectUrl('portal_url');
 		$url = $portal_url."?versions=2.0&action=logout&wlanuserip=".$wlanuserip."&wlanacip=".$wlanacip;
 		$errorCode = json_decode(Wifi::httpsRequest($url))->errorCode;
 		return $errorCode;

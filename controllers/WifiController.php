@@ -261,10 +261,15 @@ class WifiController extends Controller
     {
 //     	$url = "http://www.qq.com/";
 //     	$res = Wifi::httpsRequest($url);
-		$wifi_code = '12345';
-    	$response = WifiConnect::SaveWlanParams($wifi_code,22,22);
-    	
-    	echo $response;
+// 		$wifi_code = '12345';
+//     	$response = WifiConnect::SaveWlanParams($wifi_code,22,22);
+		$wifi_code = '1234';
+//     	$url = Wifi::selectUrl('flow_url');
+//     	$url = Wifi::selectUrl('ibs_request_url');
+//     	$url = Wifi::selectUrl('portal_url');
+    	$url = Wifi::selectUrl('request_url');
+    	echo $url."?name=".$wifi_code;
+//     	var_dump($res);
     }
     
     

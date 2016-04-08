@@ -1,8 +1,6 @@
 <?php
 namespace app\components;
 use Yii;
-// use app\models\WifiItem;
-// use app\models\WifiItemLanguage;
 
 class Wifi
 {
@@ -22,7 +20,7 @@ class Wifi
 	//获取所有wifi套餐
 	public static function getAllWifiItem($iso='zh_cn')
 	{
-		$sql = "SELECT a.wifi_id,a.sale_price,a.wifi_flow,b.wifi_name ,a.expiry_day
+		$sql = "SELECT a.wifi_id,a.sale_price,a.wifi_flow,b.wifi_name 
 		FROM wifi_item a ,wifi_item_language b
 		WHERE a.wifi_id = b.wifi_id
 		AND a.status=0 AND b.iso='$iso' AND a.status=0";
@@ -84,22 +82,11 @@ class Wifi
 		//2.查找 wifi_item 的有效时间
 		//3.对比当前时间和开通时间，如果小于有效时决，显示
 
-// 		$sql = " SELECT * FROM wifi_item_status WHERE passport_num = '$passport'  AND status = 0 " ;
-// 		$wifi_item_status = Yii::$app->db->createCommand($sql)->queryAll();
-// 		$wifi_info_id = wifi_item_status['wifi_info_id'];
-// 		$pay_log_id = wifi_item_status['pay_log_id'];
-		
-// 		$sql = " SELECT wifi_id,time FROM wifi_info WHERE wifi_info_id = '$wifi_info_id'";
-// 		$wifi_info = Yii::$app->db->createCommand($sql)->queryOne();
-// 		$wifi_id = $wifi_info['wifi_id'];
-// 		$time = $wifi_info['time'];
-		
-// 		$sql = " SELECT expiry_day FROM wifi_item WHERE wifi_id = '$wifi_id'";
 		$time = date('Y-m-d H:i:s',time());
 		
 		$sql = " SELECT a.*,b.wifi_id FROM wifi_item_status a,wifi_info b,wifi_item c 
 					WHERE a.wifi_info_id=b.wifi_info_id AND b.wifi_id = c.wifi_id 
-					AND a.passport_num='$passport' AND a.status=0 AND '$time' < DATE_ADD(b.time,INTERVAL c.expiry_day day)";
+					AND a.passport_num='$passport' AND a.status=0 AND '$time' < DATE_ADD(b.time,INTERVAL b.expiry_day day)";
 		
 		$wifi_item_status = Yii::$app->db->createCommand($sql)->queryAll();
 		
@@ -153,6 +140,15 @@ class Wifi
 		$output = curl_exec($curl);							// $output contains the output string
 		curl_close($curl);									// close curl resource to free up system resources
 		return $output;
+	}
+	
+	
+	//通过查找数据库获得url地址
+	public static function selectUrl($name)
+	{
+		$sql = "SELECT url FROM wifi_url_params WHERE name='$name'";
+		$url = Yii::$app->db->createCommand($sql)->queryOne()['url'];
+		return $url;
 	}
 
 	

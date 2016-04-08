@@ -8,6 +8,11 @@ $config = [
     'bootstrap' => ['log'],
 	'timezone' => 'Asia/ShangHai',
 	'defaultRoute' => 'wifi/index',
+	'modules' => [
+			'wifibilling' => [
+				'class' => 'app\modules\wifibillingmanagement\Wifibilling',
+			]
+		],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
