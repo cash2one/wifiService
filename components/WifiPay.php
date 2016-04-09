@@ -5,64 +5,58 @@ use app\components\Wifi;
 class WifiPay 
 {
 	
-	//<DTSPostCharge>
-	//	<Header Action="PMS" Comment="Pay by the Minute: CREW Rate  Start:3/22/2016 2:15:31 AM End:3/22/2016 2:28:28 AM IP:172.28.25.129" CreationDateTime="2016-03-22 06:47:40" DocumentDefinition="" MessageIdentifier="7b6e2866-f5e9-48c1-8b27-9568946e3eed" SourceApplication="WIFI"/>
-	//	<Body>
-	//		<PostCharge CheckNumber="L490282" Department="WIFI" FolioID="0000902524" PassportNO="H123456" Gratuity="" OriginatingSystemID="WIFI" SalesAmount="2.47" TaxAmount="" TenderType="03" TotalSales="2.47" TransactionDate="20160322" TransactionTime="02:47:40"/>
-	//	</Body>
-	//</DTSPostCharge>
 	
-	
-
-	//  Response -- Fail
-	//<DTSFailResponse>
-	//	<Header Action="Nano" CreationDateTime="2016-03-21 23:49:27" DocumentDefinition="DTSFailResponse" MessageIdentifier="13408284.20160321" SourceApplication="DTS"/>
-	//	<Body Code="22" ErrorDescription="Unknown Error!">
-	//		<OriginalMessage>FolioReviewRequest</OriginalMessage>
-	//	</Body>
-	//</DTSFailResponse>
-	
-	
-	
-	//  Response -- Success
-	//<DTSPostChargeResponse>
-	//	<Header Action="Lufthansa" CreationDateTime="2016-03-22 02:50:03" DocumentDefinition="DTSPostChargeResponse" MessageIdentifier="13408515.20160322" SourceApplication="DTS"/>
-	//	<Body>
-	//		<PostCharge CheckNum="L490282" FolioID="0000902524" PassportNO="H123456" PostingDate="2016-03-22" PostingTime="02:50:03"/>
-	//	</Body>
-	//	</DTSPostChargeResponse>
-	
-
-	//请求IBS系统查询余额
-	public static function folioBalance($passport)
+/*
+	//发送IBS系统查询余额的请求
+	public static function folioBalance($passport,$identififer,$time)
 	{
 // 		$url = "http://172.16.2.218:9560";
 // 		$url = Yii::$app->params['ibs_request_url'];
+// 		$time = date('Y-m-d H:i:s',time());
+
 		$url = Wifi::selectUrl('ibs_request_url');
-		$time = date('Y-m-d H:i:s',time());
 		$xml = "<?xml version='1.0' encoding='utf-8' ?>
 				<DTSFolioBalance>
-				<Header Action='PMS' CreationDateTime='$time' SourceApplication='WIFI'/>
+				<Header Action='PMS' CreationDateTime='$time' SourceApplication='WIFI'  MessageIdentifier='$identififer' />
 				<Body>
 				<FolioBalance PassportNO='$passport' />
 				</Body>
 				</DTSFolioBalance>
 				";
-		$res  = Wifi::httpsRequest($url, $xml);  //返回值字段为 : PassportNO, BalanceDue
-		$postObj = simplexml_load_string($res, 'SimpleXMLElement', LIBXML_NOCDATA);
-		$body = $postObj->Body->FolioBalance;
-		$balance =  $body->attributes()->BalanceDue;
-		return $balance;
+		$type = '1';	//0是接收，1是发送
+		Wifi::writeXMLToDB($xml, $type ,$time,$identififer);	
+		Wifi::httpsRequest($url, $xml);
+		
+// 		$res  = Wifi::httpsRequest($url, $xml);  //返回值字段为 : PassportNO, BalanceDue
+// 		$postObj = simplexml_load_string($res, 'SimpleXMLElement', LIBXML_NOCDATA);
+// 		$body = $postObj->Body->FolioBalance;
+// 		$balance =  $body->attributes()->BalanceDue;
+// 		return $balance;
+		
+		
+// 		$setting = array(
+// 			'http' => array(
+// 				'method' => 'POST',
+// 				'user_agent' => '<Wifi>',
+// 				'header' => "Content-type: application/x-www-form-urlencoded",
+// 				'content' => $xml
+// 			)
+// 		);
+		
+// 		$context = stream_context_create($setting);
+// 		$response = file_get_contents($url, null, $context);
 	}
-
+	
+*/
 	
 	
 	//请求DTSPostCharge
-	public static function DTSPostCharge($passport,$TenderType,$checkNumber,$price)
+	public static function DTSPostCharge($passport,$TenderType,$checkNumber,$price,$identififer)
 	{
 		//http://172.16.2.218:9560
 // 		$url = " http://172.16.2.218:9560";
 // 		$url = Yii::$app->params['ibs_request_url'];
+// 		$url = "http://www.wifiservice.com/wifi/responsefoliobalancedata";  //todo  测试用
 
 		
 		$url = Wifi::selectUrl('ibs_request_url');
@@ -70,7 +64,7 @@ class WifiPay
 		$time = date('Y-m-d H:i:s',time());
 		$request = "<?xml version='1.0' encoding='utf-8' ?>
 					<DTSPostCharge>
-					<Header Action='PMS' CreationDateTime='$time' SourceApplication='WIFI' />
+					<Header Action='PMS' CreationDateTime='$time' SourceApplication='WIFI' MessageIdentifier='$identififer' />
 					<Body>
 						<PostCharge  OriginatingSystemID='WIFI' Department='WIFI' CheckNumber='$checkNumber'  PassportNo='$passport'  TenderType='$TenderType'  Gratuity=''  SalesAmount='$price' TaxAmount=''  TotalSales='$price' />
 					</Body>
@@ -78,22 +72,15 @@ class WifiPay
 		
 		//2.记录 Postcharge XML 内容 到 ibsxml_log	
 		$type_request = 1;     //'类型，0:接收 1:发送',
-		Wifi::writeXMLToDB($request,$type_request);
-		
+		Wifi::writeXMLToDB($request,$type_request,$time,$identififer);
 		
 		//3.调用支付接口，发送 Postcharge XML内容
-		$chargeResponse = Wifi::httpsRequest($url, $request);
-		
-		
-		//4.记录 PostchargeResponse 返回的XML内容
-		$type_response = 0;     //'类型，0:接收 1:发送',
-		Wifi::writeXMLToDB($chargeResponse,$type_response);
-		
-		return $chargeResponse;
+		Wifi::httpsRequest($url, $request);
 	}
 
 	
-	//生成订单号
+	
+	//生成订单号checknum
 	public static function createChecknum()
 	{
 		$my_code = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
@@ -113,6 +100,9 @@ class WifiPay
 		$type = Yii::$app->db->createCommand($sql)->queryOne()['type'];
 		return $type;
 	}
+	
+	
+	
 	
 
 	

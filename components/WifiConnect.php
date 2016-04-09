@@ -36,8 +36,6 @@ class WifiConnect
 			
 			//解析 url 里面的参数
 			$response = self::ParseURL($response_url);
-// 			$response['errorCode'] = '1234';
-
 			$errorCode = json_decode(Wifi::httpsRequest($url))->errorCode;
 			$response['errorCode'] = $errorCode;
 			
@@ -102,7 +100,11 @@ class WifiConnect
 // 		$portal_url = Yii::$app->params['portal_url'];
 		$portal_url = Wifi::selectUrl('portal_url');
 		$url = $portal_url."?versions=2.0&action=logout&wlanuserip=".$wlanuserip."&wlanacip=".$wlanacip;
-		$errorCode = json_decode(Wifi::httpsRequest($url))->errorCode;
+		if(isset(json_decode(Wifi::httpsRequest($url))->errorCode)){
+			$errorCode = json_decode(Wifi::httpsRequest($url))->errorCode;
+		}else {
+			$errorCode = 0;
+		}
 		return $errorCode;
 	}
 	

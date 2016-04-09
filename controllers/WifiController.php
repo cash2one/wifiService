@@ -27,6 +27,7 @@ class WifiController extends Controller
     public function actionGetwifi()
     {
     	$wifi_id = Yii::$app->request->post('wifi_id');
+    	$wifi_id = Yii::$app->request->post('wifi_id');
     	$iso = Yii::$app->request->post('iso');
 
     	if($iso === 'null'){
@@ -45,8 +46,7 @@ class WifiController extends Controller
     }
     
     
-    
-    
+/*
     //支付wifi套餐
     public function actionPayment()
     {
@@ -133,6 +133,128 @@ class WifiController extends Controller
 
     }
     
+*/
+     
+    
+    //支付wifi套餐
+    public function actionPayment()
+    {
+    	$wifi_id = Yii::$app->request->post('wifi_id');
+    	$passport = Yii::$app->request->post('PassportNO');
+    	$TenderType = Yii::$app->request->post('TenderType');
+    	$name = Yii::$app->request->post('Name');
+    	$iso = Yii::$app->request->post('iso');
+    	if($iso === 'null'){
+    		$iso = 'zh_cn';
+    	}
+    	
+    	$identififer = $passport.".".time();
+    	
+    	$wifi_item = Wifi::getWifiItem($wifi_id,$iso);
+    	$checkNumber = WifiPay::createChecknum();
+    	$type = WifiPay::isIBSPay(); 
+    	if($type){
+    		//通过ibs收费系统计费
+    		WifiPay::DTSPostCharge($passport,$TenderType,$checkNumber,$wifi_item['sale_price'],$identififer);
+    		//把$identififer传到前端
+    		$result = '{"status":"OK","type":"1","identififer":"'.$identififer.'"}';
+    	}else{
+    		//不通过ibs系统支付
+    		//---sql事务---
+    		$transaction = Yii::$app->db->beginTransaction();
+    		try {
+    			//1.记录本地数据库的支付信息
+    			$pay_log_id = Wifi::writePayLogToDB($checkNumber,$passport,$name,$wifi_item['sale_price']);
+    			//2.购买上网卡
+    			Wifi::wifiCardBuy($wifi_id,$passport,$pay_log_id);
+    	   
+    			$transaction->commit();
+    			$result = '{"status":"OK","type":"0","identififer":"'.$identififer.'"}';
+    	   
+    		}catch(Exception $e){
+    			$transaction->rollBack();
+    			$result = '{"status":"ERROR","type":"0"}';
+    		}
+    		//---sql事务---end--
+    	}
+    	echo $result;
+    }
+	
+    
+    //IBSwifi的回传内容,保存到数据库中  todo
+    public function actionIbsresponse()
+    {
+    	if( $_SERVER['REQUEST_METHOD'] === 'POST' ){
+    		// 接收
+    		$content = file_get_contents('php://input');
+    		$type_response = 0; 	//'类型，0:接收 1:发送',
+    		if($content){
+    			$PostchargeResponse = Wifi::xmlUnparsed($content);
+    			$header = $PostchargeResponse->Header;
+    			$time = date('Y-m-d H:i:s',time());
+    			$identififer = $header->attributes()->MessageIdentifier;
+    			//记录 PostchargeResponse 返回的XML内容
+    			Wifi::writeXMLToDB($content,$type_response,$time,$identififer);
+    			return $identififer;
+    		}
+    		exit;
+    	}
+    }
+    
+    //ajax查找数据库，并且下单
+    public function actionGetxmlfromdb()
+    {
+    	$identififer = Yii::$app->request->post('identififer');
+    	$wifi_id = Yii::$app->request->post('wifi_id');
+    	$passport = Yii::$app->request->post('PassportNO');
+    	$iso = Yii::$app->request->post('iso');
+    	if($iso === 'null'){
+    		$iso = 'zh_cn';
+    	}
+    	$name = Yii::$app->request->post('Name');
+    	$wifi_item = Wifi::getWifiItem($wifi_id,$iso);
+    	$checkNumber = WifiPay::createChecknum();
+    	
+    	//查找数据表
+    	$sql = " SELECT content FROM ibsxml_log WHERE identififer='$identififer' AND type=0 ";
+    	$data = Yii::$app->db->createCommand($sql)->queryOne()['content'];
+    	if($data){
+    		//解析数据
+    		$PostchargeResponse = Wifi::xmlUnparsed($data);
+    		$body = $PostchargeResponse->Body;
+    		if($body->attributes()->Code){
+    			//支付失败
+    			$result = '{"status":"Fail"}';
+    		}else{
+    			$transaction = Yii::$app->db->beginTransaction();
+    			try {
+    				//1.记录本地数据库的支付信息
+    				$pay_log_id = Wifi::writePayLogToDB($checkNumber,$passport,$name,$wifi_item['sale_price']);
+    				//2.购买上网卡
+    				Wifi::wifiCardBuy($wifi_id,$passport,$pay_log_id);
+    				$transaction->commit();
+    				$result = '{"status":"OK","$pay_log_id":"'.$pay_log_id.'"}';
+    			}catch(Exception $e){
+    				$transaction->rollBack();
+    				$result = '{"status":"Fail"}';
+    			}
+    			
+//     			//1.记录本地数据库的支付信息
+//     			$pay_log_id = Wifi::writePayLogToDB($checkNumber,$passport,$name,$wifi_item['sale_price']);
+//     			//2.购买上网卡
+//     			Wifi::wifiCardBuy($wifi_id,$passport,$pay_log_id);
+//     			//支付成功
+//     			$result = '{"status":"OK"}';
+    			
+    		}
+    	}else{
+    		//没找到数据
+    		$result = '{"status":"Noitem","$identififer":"'.$identififer.'"}';
+    	}
+    	
+    	echo $result;
+    }
+    
     
     //获取游客购买的套餐
     public function actionGetwifiitemstatus()
@@ -201,6 +323,7 @@ class WifiController extends Controller
     	
     	if($response == 0){
     		//注销完成
+    		
     	}
     	$result = '{"status":"OK"}';
     	echo $result;
@@ -278,19 +401,10 @@ class WifiController extends Controller
 //     	$url = "www.wifiservice.com/wifi/responsefoliobalance";
 //     	$url = "www.wifiservice.com/wifi/response";
     
-    	$data = "<?xml version='1.0' encoding='utf-8' ?>
-    			<DTSPostCharge>
-    				<Header Action='PMS' Comment='Pay by the Minute: CREW Rate  Start:3/22/2016 2:15:31 AM End:3/22/2016 2:28:28 AM IP:172.28.25.129' CreationDateTime='2016-03-22 06:47:40' DocumentDefinition='' MessageIdentifier='7b6e2866-f5e9-48c1-8b27-9568946e3eed' SourceApplication='WIFI'/>
-    				<Body>
-    					<PostCharge CheckNumber='L490282' Department='WIFI' FolioID='0000902524' PassportNO='H123456' Gratuity='' OriginatingSystemID='WIFI' SalesAmount='2.47' TaxAmount='' TenderType='03' TotalSales='2.47' TransactionDate='20160322' TransactionTime='02:47:40'/>
-    				</Body>
-    			</DTSPostCharge>
-    			";
-    	
-    	
     	$time = $time = date('Y-m-d H:i:s',time());
     	$passport = '123456';
     	$url = 'www.wifiservice.com/wifi/responsefoliobalancedata';
+//     	$url = 'www.wifiservice.com/wifi/ibsresponse';
     	$xml = "<?xml version='1.0' encoding='utf-8' ?>
 	    	<DTSFolioBalance>
 	    	<Header Action='PMS' CreationDateTime='$time' SourceApplication='WIFI'/>
@@ -300,12 +414,13 @@ class WifiController extends Controller
 	    	</DTSFolioBalance>
     	";
     
-    	$res = Wifi::httpsRequest($url, $xml);
-    	$postObj = simplexml_load_string($res, 'SimpleXMLElement', LIBXML_NOCDATA);
-    	var_dump($res);
+    	$response = Wifi::httpsRequest($url, $xml);
+//     	$postObj = simplexml_load_string($res, 'SimpleXMLElement', LIBXML_NOCDATA);
+//     	var_dump($res);
     	
 //     	$this->actionTestresponse($res);
-  	
+  		echo $response;
+  		
     }
     
     
@@ -313,6 +428,7 @@ class WifiController extends Controller
     {
     	$passport = '123456';
     	$time = $time = date('Y-m-d H:i:s',time());
+    	/*
     	$xml = "<?xml version='1.0' encoding='utf-8' ?>
     	<DTSFolioBalance>
     	<Header Action='PMS' CreationDateTime='$time' SourceApplication='WIFI'/>
@@ -321,7 +437,38 @@ class WifiController extends Controller
     	</Body>
     	</DTSFolioBalance>
     	";
-    	return $xml;
+    	*/
+    
+    	/*
+    	 *  	$xml = "<?xml version='1.0' encoding='utf-8' ?>
+				<DTSPostChargeResponse>
+    				<Header Action='Lufthansa' CreationDateTime='2016-03-22 02:50:03' DocumentDefinition='DTSPostChargeResponse' MessageIdentifier='13408515.20160322' SourceApplication='DTS'/>
+    				<Body>
+    					<PostCharge CheckNum='L490282' FolioID='0000902524' PassportNO='H123456' PostingDate='2016-03-22' PostingTime='02:50:03'/>
+    				</Body>
+    			</DTSPostChargeResponse>";
+    	 */
+    	
+    	
+    	$content = file_get_contents('php://input');
+   
+    	
+    	$url = 'http://www.wifiservice.com/wifi/ibsresponse';
+    	$res = Wifi::httpsRequest($url, $content);
+ 		
+    	echo $res;
+    	
+//     	$setting = array(
+//     		'http' => array(
+//     			'method' => 'POST',
+//     			'user_agent' => '<Client Application Name>',
+//     			'header' => "Content-type: application/x-www-form-urlencoded",
+//     			'content' => $xml
+//     			)
+//     	);
+//     	$context = stream_context_create($setting);
+//     	$url = 'http://www.wifiservice.com/wifi/ibsresponse';
+//     	$response = file_get_contents($url, null, $context);
     }
  
     public  function actionResponse()

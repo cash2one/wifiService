@@ -82,7 +82,7 @@ function GetNameAndShowConfirm(wifi_id)
 {
 	$.ajax({
         url: "wifi/getwifi",
-        data: 'wifi_id='+wifi_id+"&iso="+getQueryString("iso"),
+        data: 'wifi_id='+wifi_id+"&PassportNO="+getQueryString("PassportNO")+"&iso="+getQueryString("iso"),
         type: 'post',
         dataType: 'json',
         success : function(response) {
@@ -124,6 +124,8 @@ function GetNameAndShowConfirm(wifi_id)
 $("body").off("click","#payment");
 //点击payment按钮----立即支付-----
 $("body").on("click","#payment",function(){
+	//切换到支付中界面
+	ShowPayingPage();
 	$.ajax({
 		url:"wifi/payment",
 		data:"wifi_id="+wifi_id+"&PassportNO="+getQueryString("PassportNO")+"&Name="+decodeURI(request("Name"))+"&TenderType="+getQueryString("TenderType")+"&iso="+getQueryString("iso"),
@@ -132,13 +134,47 @@ $("body").on("click","#payment",function(){
 		dataType:'json', 
 		success:function(response){
 			if(response.status == "OK"){
-				//跳转到上网连接
-				$(".tab_content").css("left",(-$(window).width() + "px"));
-				$(".tab_title li.active").removeClass("active");
-				$(".tab_title li:nth-of-type(2)").addClass("active");
+				if(response.type == "1"){
+					//通过ibs连接上网
+					//延迟3秒请求数据库
+					setTimeout(function(){
+						var identififer = response.identififer;
+						$.ajax({
+							url:"wifi/getxmlfromdb",
+							data:"wifi_id="+wifi_id+"&PassportNO="+getQueryString("PassportNO")+"&identififer="+identififer+"&Name="+decodeURI(request("Name"))+"&TenderType="+getQueryString("TenderType")+"&iso="+getQueryString("iso"),
+							type:'post',
+							dataType:'json', 
+							success:function(response){
+								if(response.status == "OK"){
+									//支付成功，跳到连接界面
+									$(".tab_content").css("left",(-$(window).width() + "px"));
+									$(".tab_title li.active").removeClass("active");
+									$(".tab_title li:nth-of-type(2)").addClass("active");
+									//显示上网连接界面
+									ShowConnectPage();
+								}else if( response.status == "Fail" ){
+									//支付失败，跳到支付失败界面
+									ShowPayFailPage();
+								}else {
+									//显示支付出错界面
+									ShowPayErrorPage();
+								}
+							},
+							error:function(XMLHttpRequest,textStatus,errorThrown){
+								console.log("error");
+							}
+						});
+					},3000);
+				}else if(response.type == "0"){
+					//不使用ibs连接上网
+					//跳转到上网连接
+					$(".tab_content").css("left",(-$(window).width() + "px"));
+					$(".tab_title li.active").removeClass("active");
+					$(".tab_title li:nth-of-type(2)").addClass("active");
+					//显示上网连接界面
+					ShowConnectPage();
+				}
 				
-				//显示上网连接界面
-				ShowConnectPage();
 			}else if(response.status == "FAIL"){
 				//显示支付失败界面
 				ShowPayFailPage();
@@ -151,9 +187,11 @@ $("body").on("click","#payment",function(){
 			console.log("error");
 		}
 	});
+	
+	
+	
+	
 });
-
-
 
 
 //显示上网连接界面
@@ -166,12 +204,10 @@ function ShowConnectPage()
         dataType: 'json',
         success : function(response) {
             if(response.status == "OK"){
-            	
             	if(response.data != ''){
             		//游客购买了上网卡
             		//显示上网连接--立即上网界面
             		ShowConnectSelect(response.data);
-            		
             	}else {
             		//游客没有购买上网卡
             		//显示没有购买上网卡界面
@@ -186,6 +222,27 @@ function ShowConnectPage()
 	
 }
 
+
+
+//显示等待支付中界面
+function ShowPayingPage()
+{
+	$(".payment").replaceWith(
+		"<div class='content payment'>"+
+			"<h3>Wifi订单支付中！</h3>"+
+			"<p>正在生成订单中，请稍后...</p>"+
+		"</div>"
+	);
+	
+	$("#payment").replaceWith(
+		//"<input id='return' type='button' value='取消'></input>"
+	);
+	
+	$("body").on("click","#return",function(){
+		location.reload();	//重载页面
+	});
+	
+}
 
 
 //显示支付失败界面
@@ -262,8 +319,6 @@ function ShowConnectSelect(data)
 	$("#connect_logout").replaceWith(
 		"<input id='connect' type='button' value='立即联网'></input>"
 	);
-	
-	
 	
 	//点击 立即联网 按钮
 	ClickWifiConnectBtn(data);

@@ -75,7 +75,7 @@ class Wifi
 	
 	
 	//获取游客购买的上网卡  
-	//todo 判断有效期
+	// 判断有效期
 	public static function getWifiItemStatus($passport)
 	{
 		//1.查找 wifi_info 的开通时间
@@ -96,11 +96,16 @@ class Wifi
 	
 	
 	//把Xml内容写入数据库中
-	public static function writeXMLToDB($data,$type)
+	public static function writeXMLToDB($data,$type,$time,$identififer)
 	{
-		$time = date('Y-m-d H:i:s',time());
-		$sql = " INSERT INTO `ibsxml_log` (`type`,`content`,`time`) VALUES('$type','$data','$time')";
-		Yii::$app->db->createCommand($sql)->execute();
+		$params = [
+			':type' => $type,
+			':data' => $data,
+			':time' => $time,
+			':identififer'=>$identififer,
+		];
+		$sql = " INSERT INTO `ibsxml_log` (`type`,`content`,`time`,`identififer`) VALUES(:type,:data,:time,:identififer)";
+		Yii::$app->db->createCommand($sql,$params)->execute();
 	}
 	
 	//记录支付记录到数据库中
@@ -113,15 +118,15 @@ class Wifi
 		
 		$pay_log_id = Yii::$app->db->getLastInsertID();
 		return $pay_log_id;
-		
 	}
+	
 	
 	//解析xml内容
 	public static function xmlUnparsed($data)
 	{
 		$xmlObj = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
-		$PostCharge = $xmlObj->Body;
-		return $PostCharge;
+// 		$PostCharge = $xmlObj->Body;
+		return $xmlObj;
 	}
 	
 	
@@ -132,9 +137,11 @@ class Wifi
 		curl_setopt($curl, CURLOPT_URL, $url);				// set url
 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
 		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);		//设置等待时间为10秒
 		if (!empty($data)){
 			curl_setopt($curl, CURLOPT_POST, 1);
 			curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+			
 		}
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);		//return the transfer as a string
 		$output = curl_exec($curl);							// $output contains the output string
