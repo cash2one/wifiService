@@ -137,6 +137,7 @@ $("body").on("click","#payment",function(){
 				if(response.type == "1"){
 					//通过ibs连接上网
 					//延迟3秒请求数据库
+					//setInterval(function(){
 					setTimeout(function(){
 						var identififer = response.identififer;
 						$.ajax({
@@ -164,7 +165,7 @@ $("body").on("click","#payment",function(){
 								console.log("error");
 							}
 						});
-					},3000);
+					},3000); //3秒后调用
 				}else if(response.type == "0"){
 					//不使用ibs连接上网
 					//跳转到上网连接
@@ -174,7 +175,6 @@ $("body").on("click","#payment",function(){
 					//显示上网连接界面
 					ShowConnectPage();
 				}
-				
 			}else if(response.status == "FAIL"){
 				//显示支付失败界面
 				ShowPayFailPage();
