@@ -9,10 +9,10 @@ $config = [
 	'timezone' => 'Asia/ShangHai',
 	'defaultRoute' => 'wifi/index',
 	'modules' => [
-			'wifibilling' => [
-				'class' => 'app\modules\wifibillingmanagement\Wifibilling',
-			]
-		],
+		'wifibilling' => [
+			'class' => 'app\modules\wifibillingmanagement\Wifibilling',
+		]
+	],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -56,6 +56,7 @@ $config = [
     ],
     'params' => $params,
 ];
+
 
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment

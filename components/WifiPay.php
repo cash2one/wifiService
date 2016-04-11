@@ -62,13 +62,7 @@ class WifiPay
 		$url = Wifi::selectUrl('ibs_request_url');
 		//1.生成xml
 		$time = date('Y-m-d H:i:s',time());
-		$request = "<?xml version='1.0' encoding='utf-8' ?>
-					<DTSPostCharge>
-					<Header Action='PMS' CreationDateTime='$time' SourceApplication='WIFI' MessageIdentifier='$identififer' />
-					<Body>
-						<PostCharge  OriginatingSystemID='WIFI' Department='WIFI' CheckNumber='$checkNumber'  PassportNo='$passport'  TenderType='$TenderType'  Gratuity=''  SalesAmount='$price' TaxAmount=''  TotalSales='$price' />
-					</Body>
-					</DTSPostCharge>";
+		$request = "<?xml version='1.0' encoding='utf-8' ?><DTSPostCharge><Header Action='PMS' CreationDateTime='$time' SourceApplication='WIFI' MessageIdentifier='$identififer' /><Body><PostCharge  OriginatingSystemID='WIFI' Department='WIFI' CheckNumber='$checkNumber'  PassportNo='$passport'  TenderType='$TenderType'  Gratuity=''  SalesAmount='$price' TaxAmount=''  TotalSales='$price' /></Body></DTSPostCharge>";
 		
 		//2.记录 Postcharge XML 内容 到 ibsxml_log	
 		$type_request = 1;     //'类型，0:接收 1:发送',

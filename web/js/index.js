@@ -187,10 +187,7 @@ $("body").on("click","#payment",function(){
 			console.log("error");
 		}
 	});
-	
-	
-	
-	
+
 });
 
 

@@ -21,7 +21,10 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 <head>
 	<title>上网</title>
 	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="<?php echo $baseUrl?>css/public.css">
+	
+			<script type="text/javascript" src="<?php echo $baseUrl?>js/jquery-2.2.2.min.js"></script>
+		
+
 </head>
 <body>
 	<!-- header start -->
@@ -34,17 +37,42 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 		<!-- asideNav end -->
 		<!-- content start -->
 		<div class="r content" id="user_content">
-			<div class="topNav">Wifi Billing&nbsp;&gt;&gt;&nbsp;<a href="#">Wifi</a></div>
+			<div class="topNav">Wifi Billing&nbsp;&gt;&gt;&nbsp;<a href="#">Import Card</a></div>
 
-                                                          <form style="position:relative;" enctype="multipart/form-data" id="import_form" action="infodata" method='post'>
-                                                        <div class="search" style="margin-left:40%">
-				<label>
-					<span>文件:</span>
-					<input  type='file' name="import_input" class="import_file"/>
+                                       <form style="position:relative;" enctype="multipart/form-data" id="import_form" action="infodata" method='post'>
+                          
+						<div style="height: 30px"></div>
+						<div style="width: 350px;float:left;margin-left:1%">
+										<span>Wifi Expiry_day(day):</span>
+				<input type="text"  style="height:23px" name="expiry_day" placeholder="50">
+				</div>
+									<div>	
+					
+									<span class="btn uploadFile_btn">
+									<span>Wifi Package:</span>
+										<?php $wifi_items = (new \yii\db\Query())
+									    	->from('wifi_item_language')
+									    	->where(['iso'=>'zh_cn'])
+									    	->all(); ?>
+									<select name="wifi_id" style="height:31px;width:200px">
+											<option selected='selected' value="">All</option>
+											
+											<?php foreach ($wifi_items as $k=>$v):?>				
+																<option value="<?=$v['wifi_id']?>" <?php if (isset($wifi_id)){if ($wifi_id==$v['wifi_id']){echo "selected='selected'"; }}?>><?=$v['wifi_name']?></option>
+																<?php endforeach;?>
+															</select>
+								</span>
+				<label class="uploadFileBox">
+					<span class="fileName">Select File...</span>
+					<a href="#"  class="uploadFile">choose<input type="file" name="import_input" class="import_file"></input></a>
 				</label>
 				
-				<span class="btn"><input type="submit" value="提交"></input></span>
+				<span class="btn uploadFile_btn">
+					<input type="submit" style="height: 31px"  value="submit"></input>
+				</span>
+				
 			</div>
+			
 			  </form>
 			<div class="searchResult">
 			  <?php if (isset($data)){?>
@@ -75,18 +103,15 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 					</tbody>
 				</table>
 				<?php Yii::$app->session['mydata']=$data;?>
-				
-				
-				
-				
-				<p class="records">有效时间(月):<span>26</span></p>
+				<p class="records">Wifi Expiry_day(day):<span><?php echo Yii::$app->session['expiry_day']?></span></p>
 				<div class="btn">
-					<a href="edit"><input type="submit" value="save"></input></a>
+					<input type="submit" value="save"></input>
 					
 				</div>
 				</form>
 				<?php }?>
 				<div class="pageNum">
+				  <div class="center" id="page_div"></div> 
 				<!-- 	<span>
 						<a href="#" class="active">1</a>
 						<a href="#">2</a>
@@ -99,11 +124,10 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 		<!-- content end -->
 	</main>
 	<!-- main end -->
-	<script type="text/javascript" src="<?php echo $baseUrl?>js/jquery-2.2.2.min.js"></script>
-	<script type="text/javascript" src="<?php echo $baseUrl?>js/public.js"></script>
-	<?=Html::jsFile('@web/js/jquery-2.2.2.min.js')?>
-	<?=Html::jsFile('@web/js/index.js')?>
+	
 	<script type="text/javascript">
+
+	
 $(function(){
     //监听文件域选中文件
     $("input[name='import_input']").change(function(){
@@ -119,6 +143,16 @@ $(function(){
         }
        
     });
+
+    <?php $massage=isset($massage)?$massage:'';?>
+    <?php if ($massage==1){?>
+    alert("请选择套餐");
+    <?php }elseif ($massage==2){?>
+    alert("操作成功");
+    <?php }elseif ($massage==3){?>
+    alert("操作失败");
+    <?php }?>
+    //操作后弹出框
 });
 
 </script>
