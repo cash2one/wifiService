@@ -15,7 +15,7 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 <!-- content start -->
 <div class="r content" id="user_content">
    
-   <h1>欢迎进入WIFI后台管理界面</h1>
+   <h1>Welcome Login Wifi ManagerMent System</h1>
     </div>
 </div>
 <!-- content end -->

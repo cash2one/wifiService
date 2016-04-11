@@ -11,7 +11,7 @@ class DefaultController extends Controller
     {
     	$auth=Auth::getAuth();
     	if ($auth=="false"){
-    		return $this->redirect("wifibilling/login/login");
+    		return $this->redirect("/wifibilling/login/login");
     	}//判断有没登陆
        return $this->render('index');
     }

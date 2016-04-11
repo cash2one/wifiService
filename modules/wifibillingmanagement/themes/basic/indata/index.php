@@ -19,7 +19,7 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 <!DOCTYPE html>
 <html>
 <head>
-	<title>上网</title>
+	<title>network</title>
 	<meta charset="utf-8">
 			<?=Html::cssFile('@web/assets/css/bootstrap.css')?>
 			<script type="text/javascript" src="<?php echo $baseUrl?>js/jquery-2.2.2.min.js"></script>
@@ -61,11 +61,9 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 					<thead>
 						<tr style=height:35px>
 							<th><center><input type=checkbox name=All onclick="checkAll('ids[]')"></input></center></th>
-							<th>name</th>
+							<th>Name</th>
 							<th>WIFI(MB)</th>
-						
-							<th>price</th>
-							
+							<th>Price</th>
 							<th>Status</th>
 							<th>Operate</th>
 						</tr>
@@ -80,29 +78,26 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 							<td>
 							<?php 
 							
-					  		 $str1='';
+					  		$str1='';
 					  		
 							for ($i=1;$i<=strlen($v['sale_price']);$i++){
 								$str=substr($v['sale_price'],$i-1,1);
-							
-							 if ($i%3==0){
-							 	if ($i!=strlen($v['sale_price'])){
-							 	$str1.=$str.',';}
-							 	else {
-							 		$str1.=$str;
-							 	}
-								
-							 }
-							else{
-								$str1.=$str;
+								 if ($i%3==0){
+								 	if ($i!=strlen($v['sale_price'])){
+								 	$str1.=$str.',';}
+								 	else {
+								 		$str1.=$str;
+								 	}
+									
+								 }
+								else{
+									$str1.=$str;
+								}
 							}
-							}
-							
-							
 							echo $str1;
 							?>
 							</td>
-							<td ><?php echo $v['status']==0?'usable':'unusable'?></td>
+							<td ><?php echo $v['status']==0?'enable':'disable'?></td>
 							<td  >
 						
 								<a href="edit?wifi_id=<?php echo $v['wifi_id']?>"><img src="<?php echo $baseUrl?>images/write.png"></a>
@@ -110,31 +105,21 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 							</td>
 						</tr>
 					<?php }?>
-						
 					</tbody>
-					
 				</table>
-				
 				<p class="records">Records:<span><?php echo $maxcount?></span></p>
 				<div class="btn">
 					<a href="edit"><input type="button" value="Add"></input></a>
 					<input type="button" id="deleteall" class='delete' value="Del Selected"></input>
 				</div>
-				
 				</form>
 						
 				<div class="pageNum">
 				<form id='member_list' method="post">
-										 <input type='hidden' name='page' value="<?php echo $page?>">
-                                        <input type='hidden' name='isPage' value="1">
-                                            <div class="center" id="page_div"></div> 
-	                                 </form>	
-				<!-- 	<span>
-						<a href="#" class="active">1</a>
-						<a href="#">2</a>
-						<a href="#">》</a>
-						<a href="#">Last</a>
-					</span> -->
+				 	<input type='hidden' name='page' value="<?php echo $page?>">
+                 	<input type='hidden' name='isPage' value="1">
+                 	<div class="center" id="page_div"></div> 
+	           	</form>	
 				</div>
 			</div>
 		</div>
@@ -162,21 +147,19 @@ $(function(){
 		$(".shadow").css("display","none");
 	});
 	$(".thissubmit").click(function(){
-		
-		 if($("#wifi_id").val()==''){
-			$(".formindex").submit();
-			}
-		else{
-$("#formpost").submit();
-		} 
-		});
+	 if($("#wifi_id").val()==''){
+		$(".formindex").submit();
+	}else{
+		$("#formpost").submit();
+	} 
+});
 	<?php
     $massage=isset($massage)?$massage:'';
-    if ($massage==''){}
-	elseif ($massage=='success'){?>//操作信息弹出框
-	alert('Option success');
-	<?php }
-else {
+    if ($massage==''){
+    	
+    }elseif ($massage=='success'){?>//操作信息弹出框
+		alert('Option success');
+	<?php }else {
 	?>
 	alert('OPtion fail');
 	<?php
@@ -215,38 +198,34 @@ function checkItem(str)
 jQuery(function($) {
 	  
 	/* 获取参数 */
-		//分页
-	     var page = <?php echo $page;?>;
-	        $('#page_div').jqPaginator({
-	            totalPages: <?php echo $count;?>,
-	            visiblePages: 5,
-	            currentPage: page,
-	            wrapper:'<ul class="pagination"></ul>',
-	            first:  '<li class="first"><a href="javascript:void(0);">首页</a></li>',
-	            prev:   '<li class="prev"><a href="javascript:void(0);">«</a></li>',
-	            next:   '<li class="next"><a href="javascript:void(0);">»</a></li>',
-	            last:   '<li class="last"><a href="javascript:void(0);">尾页</a></li>',
-	            page:   '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
-	            onPageChange: function (num) {
-	                var val = $("input[name='page']").val();
-	                if(num != val)
-	                {
-	                    $("input[name='page']").val(num);
-	                    $("input[name='isPage']").val(2);
-	                    $("form#member_list").submit();
-	                }
-	            }
-	        });
-	     
-	     
-
-					
-				});  
+	//分页
+	var page = <?php echo $page;?>;
+		$('#page_div').jqPaginator({
+            totalPages: <?php echo $count;?>,
+            visiblePages: 5,
+            currentPage: page,
+            wrapper:'<ul class="pagination"></ul>',
+            first:  '<li class="first"><a href="javascript:void(0);">First</a></li>',
+            prev:   '<li class="prev"><a href="javascript:void(0);">«</a></li>',
+            next:   '<li class="next"><a href="javascript:void(0);">»</a></li>',
+            last:   '<li class="last"><a href="javascript:void(0);">Last</a></li>',
+            page:   '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
+            onPageChange: function (num) {
+                var val = $("input[name='page']").val();
+                if(num != val)
+                {
+                    $("input[name='page']").val(num);
+                    $("input[name='isPage']").val(2);
+                    $("form#member_list").submit();
+                }
+            }
+        });				
+});  
 </script> 
 	<div class="shadow"></div>
 	<div id="promptBox" class="pop-ups write">
-		<h3>Prompt<a href="#" class="close r"></a></h3>
-		<p>Whether to delete??</p>
+		<h3>Warmming<a href="#" class="close r"></a></h3>
+		<p>Are you sure to delete? </p>
 		<p class="btn">
 		
 			<input type="button" class="thissubmit"  value="Yes"></input>

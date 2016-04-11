@@ -37,17 +37,16 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 		<!-- content start -->
 		<div class="r content" id="user_content">
 			<div class="topNav">Wifi Billing&nbsp;&gt;&gt;&nbsp;<a href="#">Curr Card</a></div>
-					<form id='member_list' method="post">
+			<form id='member_list' method="post">
 				<div class="search" style="margin-left: 26%">
-				
 				<label>
 					<span>Wifi Pakage:</span>
 				<select  style="width: 250px;height:30px" name="wifi_id">
-											<option selected='selected' value="">All</option>
-											<?php foreach ($wifi_items_info as $k=>$v):?>				
-																<option value="<?=$v['wifi_id']?>" <?php echo $v['wifi_id']==$wifi_id?"selected='selected'":''?> ><?=$v['wifi_name']?></option>
-																<?php endforeach;?>
-															</select>
+					<option selected='selected' value="">All</option>
+					<?php foreach ($wifi_items_info as $k=>$v):?>				
+					<option value="<?=$v['wifi_id']?>" <?php echo $v['wifi_id']==$wifi_id?"selected='selected'":''?> ><?=$v['wifi_name']?></option>
+					<?php endforeach;?>
+				</select>
 				</label>
 				
 				<span class="btn"><input type="submit" value="SEARCH"></input></span>
@@ -58,21 +57,17 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 					<thead>
 						<tr style="height:35px">
 						<th>Num</th>
-							
-							<th>wifi_code</th>
-							<th>wifi_password</th>
-							<th>expiry_day</th>
-							<th>Wifi Pakage</th>
-							<th>status_sale</th>
-								<th>time</th>
-						
+						<th>wifi_code</th>
+						<th>wifi_password</th>
+						<th>expiry_day</th>
+						<th>Wifi Pakage</th>
+						<th>status_sale</th>
+						<th>time</th>
 						</tr>
 					</thead>
 					<tbody>
 						<?php foreach ($wifi_item as $k=>$v){?>
 						<tr style="height:35px">
-					
-							
 							<td><?php echo $k+1?></td>
 							<td><?php echo $v['wifi_code']?></td>
 							<td><?php echo $v['wifi_password']?></td>
@@ -86,12 +81,12 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 					</tbody>
 				</table>
 			<p class="records">Records:<span><?php echo $maxcount?></span></p>
-				<div class="pageNum">
-										 <input type='hidden' name='page' value="<?php echo $page?>">
-                                        <input type='hidden' name='isPage' value="1">
-                                            <div class="center" id="page_div"></div> 
+			<div class="pageNum">
+				<input type='hidden' name='page' value="<?php echo $page?>">
+				<input type='hidden' name='isPage' value="1">
+				<div class="center" id="page_div"></div> 
 	                                
-				</div>
+			</div>
 			</div>
 			 </form>
 		</div>
@@ -100,35 +95,30 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 	<!-- main end -->
 	<script type="text/javascript">
 	jQuery(function($) {
-		  
 		/* 获取参数 */
-			//分页
-		     var page = <?php echo $page;?>;
-		        $('#page_div').jqPaginator({
-		            totalPages: <?php echo $count;?>,
-		            visiblePages: 5,
-		            currentPage: page,
-		            wrapper:'<ul class="pagination"></ul>',
-		            first:  '<li class="first"><a href="javascript:void(0);">首页</a></li>',
-		            prev:   '<li class="prev"><a href="javascript:void(0);">«</a></li>',
-		            next:   '<li class="next"><a href="javascript:void(0);">»</a></li>',
-		            last:   '<li class="last"><a href="javascript:void(0);">尾页</a></li>',
-		            page:   '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
-		            onPageChange: function (num) {
-		                var val = $("input[name='page']").val();
-		                if(num != val)
-		                {
-		                    $("input[name='page']").val(num);
-		                    $("input[name='isPage']").val(2);
-		                    $("form#member_list").submit();
-		                }
-		            }
-		        });
-		     
-		     
-
-						
-					});  
+		//分页
+	     var page = <?php echo $page;?>;
+	        $('#page_div').jqPaginator({
+	            totalPages: <?php echo $count;?>,
+	            visiblePages: 5,
+	            currentPage: page,
+	            wrapper:'<ul class="pagination"></ul>',
+	            first:  '<li class="first"><a href="javascript:void(0);">First</a></li>',
+	            prev:   '<li class="prev"><a href="javascript:void(0);">«</a></li>',
+	            next:   '<li class="next"><a href="javascript:void(0);">»</a></li>',
+	            last:   '<li class="last"><a href="javascript:void(0);">Last</a></li>',
+	            page:   '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
+	            onPageChange: function (num) {
+	                var val = $("input[name='page']").val();
+	                if(num != val)
+	                {
+	                    $("input[name='page']").val(num);
+	                    $("input[name='isPage']").val(2);
+	                    $("form#member_list").submit();
+	                }
+	            }
+	        });
+		 });  
 	</script>
 </body>
 </html>

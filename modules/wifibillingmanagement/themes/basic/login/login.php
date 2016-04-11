@@ -1,16 +1,10 @@
 <?php 
 	use yii\helpers\Html;
-?>
-<?php
-
-use app\modules\wifibillingmanagement\themes\basic\myasset\ThemeAsset;
-
-ThemeAsset::register($this);
-$baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
-
-//$assets = '@app/modules/membermanagement/themes/basic/static';
-//$baseUrl = Yii::$app->assetManager->publish($assets);
-
+	use app\modules\wifibillingmanagement\themes\basic\myasset\LoginAsset;
+	LoginAsset::register($this);
+	$baseUrl = $this->assetBundles[LoginAsset::className()]->baseUrl.'/';
+	//$assets = '@app/modules/membermanagement/themes/basic/static';
+	//$baseUrl = Yii::$app->assetManager->publish($assets);
 ?>
 <!DOCTYPE html>
 <html>
@@ -76,14 +70,14 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
                                         <div class="widget-main">
                                          
                                             <h4 class="header blue lighter bigger" style="margin-top: 9%">
-                                                <i class="icon-coffee green"></i>
-                                             	Pleace input your N and P...
+                                                <i class=""></i>
+                                             	Please Login
                                             </h4>      
                                             <?php
                                             if (isset($login_state)) {
                                                 echo '<p for="login_error" class="login-error red">' .'name or password was error,pleace input,too!'.'</p>';
                                             }
-                                            ?>                                                                              
+                                            ?>
                                             <div class="form" id="validation-form">
 											 	<?php
 												use yii\widgets\ActiveForm;
@@ -101,16 +95,14 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
                                                     <div class="form-group">
                                                         <label class="block clearfix">
                                                             <span class="block input-icon input-icon-right">
-                                                                <input type="text" name="username" class="form-control" placeholder="<?php echo $model->getAttributeLabel('username'); ?>" />
-                                                                <i class="icon-user"></i>
+                                                                <input type="text" name="username" class="form-control" placeholder="username" />
                                                             </span>
                                                         </label>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="block clearfix">
                                                             <span class="block input-icon input-icon-right">
-                                                                <input type="password" name="password" class="form-control" placeholder="<?php echo $model->getAttributeLabel('password'); ?>" />
-                                                                <i class="icon-lock"></i>
+                                                                <input type="password" name="password" class="form-control" placeholder="password" />
                                                             </span>
                                                         </label>
                                                     </div>
@@ -123,7 +115,6 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
                                                         </label> -->
 															<!-- echo $model->getAttributeLabel('rememberMe'); -->
                                                         <button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
-                                                            <i class="icon-key"></i>
                                                          		submit
                                                         </button>
                                                     </div>
@@ -148,7 +139,7 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
         <!--[if !IE]> -->
 
         <script type="text/javascript">
-            window.jQuery || document.write(<?=Html::jsFile('@web/assets/js/jquery-2.0.3.min.js');?>);
+            window.jQuery || document.write("<script src='<?php echo $baseUrl?>assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
         </script>
 
         <!-- <![endif]-->
@@ -161,13 +152,11 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 
         <script type="text/javascript">
             if ("ontouchend" in document)
-                document.write(<?=Html::jsFile('@web/assets/js/jquery.mobile.custom.min.js')?>);
+                document.write( <?=Html::jsFile('@web/assets/js/jquery.mobile.custom.min.js')?>);
         </script>
 
         <!-- page specific plugin scripts -->
-
-       
-<?=Html::jsFile('@web/assets/js/jquery.validate.min.js')?>
+		<?=Html::jsFile('@web/assets/js/jquery.validate.min.js')?>
 
         <!-- inline scripts related to this page -->
 

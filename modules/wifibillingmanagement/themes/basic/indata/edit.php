@@ -37,29 +37,29 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 		<div class="search" style="width: 400px;margin-left:auto;margin-right:auto;">
 				<form method="post">
 				<label>
-					<span >N&nbsp;a&nbsp;m&nbsp;e&nbsp;&nbsp;:</span>
-					<input type="text" name="wifi_name" value="<?php echo isset($data[0]['wifi_name'])?$data[0]['wifi_name']:'' ?>" placeholder="Wifi套餐一：50M"></input>
+					<span >Name :</span>
+					<input type="text" name="wifi_name" value="<?php echo isset($data[0]['wifi_name'])?$data[0]['wifi_name']:'' ?>"></input>
 				</label>
 				<br/><br/><br/>
 				<label>
-					<span>流量(MB):</span>
+					<span>Flow :</span>
 				
-					<input type="text" name="wifi_flow" value="<?php echo isset($data[0]['wifi_flow'])?$data[0]['wifi_flow']:'' ?>" placeholder="50"></input>
+					<input type="text" name="wifi_flow" value="<?php echo isset($data[0]['wifi_flow'])?$data[0]['wifi_flow']:'' ?>" ></input>
 					
 				</label>
 				<br/><br/><br/>
 					<label>
-					<span>价&nbsp;&nbsp;&nbsp;格&nbsp;&nbsp;&nbsp;:</span>
+					<span>Price :</span>
 					
-					<input type="text" name="sale_price" value="<?php echo isset($data[0]['sale_price'])?$data[0]['sale_price']:'' ?>" placeholder="50"></input>
+					<input type="text" name="sale_price" value="<?php echo isset($data[0]['sale_price'])?$data[0]['sale_price']:'' ?>" ></input>
 					
 				</label>
 					<br/><br/><br/>
 				<label>
-					<span>状&nbsp;&nbsp;&nbsp;态&nbsp;&nbsp;&nbsp;:</span>
+					<span>Status : </span>
 					
-					启用:<input type="radio" name="status" value="0" checked="checked">
-					不启用:<input type="radio" name="status" value="1" <?php if (isset($data[0]['status'])){if ($data[0]['status']==1){echo "checked='checked'";}} ?>>
+					<input type="radio" name="status" value="0" checked="checked" />Enable  &nbsp;
+					<input type="radio" name="status" value="1" <?php if (isset($data[0]['status'])){if ($data[0]['status']==1){echo "checked='checked'";}} ?>>Disable
 					
 				</label>
 					

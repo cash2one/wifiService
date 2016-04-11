@@ -37,19 +37,19 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 		<div class="search" style="width: 400px;margin-left:auto;margin-right:auto;">
 				<form method="post">
 				<label>
-					<span >N&nbsp;a&nbsp;m&nbsp;e&nbsp;:</span>
+					<span >Name :</span>
 					<input type="text" name="name" value="<?php echo isset($data[0]['name'])?$data[0]['name']:'' ?>" placeholder="ibs_request_url"></input>
 				</label>
 				<br/><br/><br/>
 				<label>
-					<span>U&nbsp;&nbsp;R&nbsp;&nbsp;L&nbsp;&nbsp;:</span>
+					<span>URL :</span>
 				
 					<input type="text" name="url" value="<?php echo isset($data[0]['url'])?$data[0]['url']:'' ?>" placeholder="http://www.baidu.com"></input>
 					
 				</label>
 				<br/><br/><br/>
 					<label>
-					<span>Remark&nbsp;:</span>
+					<span>Remark:</span>
 					
 					<input type="text" name="remark" value="<?php echo isset($data[0]['remark'])?$data[0]['remark']:'' ?>" placeholder="ibs请求地址"></input>
 					

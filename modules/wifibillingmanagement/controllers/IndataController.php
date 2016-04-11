@@ -23,7 +23,7 @@ class IndataController extends Controller
     	/*  */
   	 	$auth=Auth::getAuth();
   	 	if ($auth=="false"){
-  	 		return $this->redirect("wifibilling/login/login");
+  	 		return $this->redirect("/wifibilling/login/login");
   	 	}//判断有没登陆
   	 	$massage=isset($_GET['massage'])?$_GET['massage']:'';
     	$db= \Yii::$app->db;
@@ -39,7 +39,7 @@ class IndataController extends Controller
     public function actionDeleteall(){
     	$auth=Auth::getAuth();
     	if ($auth=="false"){
-    		return $this->redirect("wifibilling/login/login");
+    		return $this->redirect("/wifibilling/login/login");
     	}//判断有没登陆
     	$ids=isset($_POST['ids'])?$_POST['ids']:'';
     	if ($ids==''){
@@ -67,7 +67,7 @@ class IndataController extends Controller
   public function actionDelete(){
   	$auth=Auth::getAuth();
   	if ($auth=="false"){
-  		return $this->redirect("wifibilling/login/login");
+  		return $this->redirect("/wifibilling/login/login");
   	}//判断有没登陆
 
   	$wifi_id=isset($_POST['wifi_id'])?$_POST['wifi_id']:'';
@@ -86,7 +86,7 @@ class IndataController extends Controller
     	
     	$auth=Auth::getAuth();
     	if ($auth=="false"){
-    		return $this->redirect("wifibilling/login/login");
+    		return $this->redirect("/wifibilling/login/login");
     	}//判断有没登陆
     	$db=\Yii::$app->db;
         if ($_POST){
@@ -147,7 +147,7 @@ class IndataController extends Controller
     public function actionIndataupdate(){
     	$auth=Auth::getAuth();
     	if ($auth=="false"){
-    		return $this->redirect("wifibilling/login/login");
+    		return $this->redirect("/wifibilling/login/login");
     	}//判断有没登陆
     	
     	if ($_POST){
@@ -183,10 +183,20 @@ class IndataController extends Controller
     	}
     }
     public function actionUpdata(){
+    	/*  */
+    	$auth=Auth::getAuth();
+    	if ($auth=="false"){
+    		return $this->redirect("/wifibilling/login/login");
+    	}//判断有没登陆
     	$massage=isset($_GET['massage'])?$_GET['massage']:'';
     	return $this->render('updata',array('massage'=>$massage));
     }
     public function actionInfodata(){
+    	/*  */
+    	$auth=Auth::getAuth();
+    	if ($auth=="false"){
+    		return $this->redirect("/wifibilling/login/login");
+    	}//判断有没登陆
     	$flag = 0;
     	if ($_POST){
     		\Yii::$app->session['wifi_id']=$_POST['wifi_id'];
@@ -234,7 +244,7 @@ class IndataController extends Controller
     public function actionCurrdata(){
     	$auth=Auth::getAuth();
     	if ($auth=="false"){
-    		return $this->redirect("wifibilling/login/login");
+    		return $this->redirect("/wifibilling/login/login");
     	}//判断有没登陆
     	$db= \Yii::$app->db;
     	$wifi_items_info = (new \yii\db\Query())
@@ -256,6 +266,11 @@ class IndataController extends Controller
 
     }
 public function actionSavedata(){
+	/*  */
+	$auth=Auth::getAuth();
+	if ($auth=="false"){
+		return $this->redirect("/wifibilling/login/login");
+	}//判断有没登陆
 	$data=\Yii::$app->session['mydata'];
 	$wifi_id=\Yii::$app->session['wifi_id'];
 	$expiry_day=\Yii::$app->session['expiry_day'];
@@ -287,9 +302,10 @@ public function actionSavedata(){
     	
 }
 public function actionPay(){
+	
 	$auth=Auth::getAuth();
 	if ($auth=="false"){
-		return $this->redirect("wifibilling/login/login");
+		return $this->redirect("/wifibilling/login/login");
 	}//判断有没登陆
 	$ibs_pay = (new \yii\db\Query())
 	->from('ibs_pay')
@@ -301,6 +317,9 @@ public function actionPay(){
 		try {
 		$command = \Yii::$app->db->createCommand("UPDATE ibs_pay SET type='$type'")->execute();
 		$transaction->commit();
+		$ibs_pay = (new \yii\db\Query())
+		->from('ibs_pay')
+		->one();
 		return $this->render("pay",array('massage'=>1,'ibs_pay'=>$ibs_pay));
 		} catch(Exception $e) {
 			$transaction->rollBack();
@@ -312,11 +331,11 @@ public function actionPay(){
 public function actionReport(){
 	$auth=Auth::getAuth();
 	if ($auth=="false"){
-		return $this->redirect("wifibilling/login/login");
+		return $this->redirect("/wifibilling/login/login");
 	}//判断有没登陆
 		$db= \Yii::$app->db;
-    	$sql="select *from ibsxml_log ";
-    	$count_sql="select *from ibsxml_log ";
+    	$sql="select * from ibsxml_log ";
+    	$count_sql="select * from ibsxml_log ";
     	/* $wifi_item=\Yii::$app->db->createCommand($sql)->queryAll(); */
     	$selectdata=new seletedata();
 		$data=$selectdata->paging($sql, $count_sql);
@@ -327,11 +346,11 @@ public function actionReport(){
 public function actionWifiurl(){//wifi地址
 	$auth=Auth::getAuth();
 	if ($auth=="false"){
-		return $this->redirect("wifibilling/login/login");
+		return $this->redirect("/wifibilling/login/login");
 	}//判断有没登陆
 	$db= \Yii::$app->db;
-	$sql="select *from wifi_url_params";
-	$count_sql="select *from wifi_url_params";
+	$sql="select * from wifi_url_params";
+	$count_sql="select * from wifi_url_params";
 	/* $wifi_params =$db->createCommand($sql)->queryAll(); */
 	$massage=isset($_GET['massage'])?$_GET['massage']:'';
 	$selectdata=new seletedata();
@@ -342,7 +361,7 @@ public function actionWifiurl(){//wifi地址
 public function actionEditurl(){//url编辑
 	$auth=Auth::getAuth();
 	if ($auth=="false"){
-		return $this->redirect("/login/login");
+		return $this->redirect("/wifibilling/login/login");
 	}//判断有没登陆
 	$db=\Yii::$app->db;
 	if ($_POST){
@@ -394,7 +413,10 @@ public function actionEditurl(){//url编辑
 	}
 }
 public function actionDeleteurl(){
-	
+	$auth=Auth::getAuth();
+	if ($auth=="false"){
+		return $this->redirect("/wifibilling/login/login");
+	}//判断有没登陆
 	$id=isset($_POST['id'])?$_POST['id']:'';
 	$transaction =\Yii::$app->db->beginTransaction();
 	try {
@@ -408,6 +430,10 @@ public function actionDeleteurl(){
 	}
 }
 public function actionDeleteallurl(){//点击删除全部
+	$auth=Auth::getAuth();
+	if ($auth=="false"){
+		return $this->redirect("/wifibilling/login/login");
+	}//判断有没登陆
 	$ids=isset($_POST['ids'])?$_POST['ids']:'';
 	if ($ids==''){
 		return $this->redirect("wifiurl?massage=fail");
@@ -428,7 +454,5 @@ public function actionDeleteallurl(){//点击删除全部
 		}
 	}
 }
-public function actionAa(){
-	return $this->render("aa");
-}
+
 }

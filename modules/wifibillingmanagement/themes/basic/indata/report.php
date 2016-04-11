@@ -54,10 +54,10 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 						<?php foreach ($wifi_item as $k=>$v){?>
 						<tr  style="height:35px">
 						
-						<td><?php echo $k+1?></td>
-						<td><?php echo $v['type']==0?'accept':'send'?></td>
-							<td  align="left" ><?php echo $v['content']?></td>
-							<td><?php echo $v['time']?></td>
+						<td><?php echo $k+1;?></td>
+						<td><?php echo $v['type']==0?'accept':'send';?></td>
+							<td  align="left" ><?php  var_dump(simplexml_load_string($v['content'])); ?></td>
+							<td><?php echo $v['time'];?></td>
 							
 						</tr>
 					<?php }?>
@@ -67,10 +67,10 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 				
 				<div class="pageNum">
 					<form id='member_list' method="post">
-										 <input type='hidden' name='page' value="<?php echo $page?>">
-                                        <input type='hidden' name='isPage' value="1">
-                                            <div class="center" id="page_div"></div> 
-	                                 </form>	
+						<input type='hidden' name='page' value="<?php echo $page?>">
+                        <input type='hidden' name='isPage' value="1">
+                        <div class="center" id="page_div"></div> 
+	              	</form>	
 				<!-- 	<span>
 						<a href="#" class="active">1</a>
 						<a href="#">2</a>
@@ -94,10 +94,10 @@ jQuery(function($) {
 	            visiblePages: 5,
 	            currentPage: page,
 	            wrapper:'<ul class="pagination"></ul>',
-	            first:  '<li class="first"><a href="javascript:void(0);">首页</a></li>',
+	            first:  '<li class="first"><a href="javascript:void(0);">First</a></li>',
 	            prev:   '<li class="prev"><a href="javascript:void(0);">«</a></li>',
 	            next:   '<li class="next"><a href="javascript:void(0);">»</a></li>',
-	            last:   '<li class="last"><a href="javascript:void(0);">尾页</a></li>',
+	            last:   '<li class="last"><a href="javascript:void(0);">Last</a></li>',
 	            page:   '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
 	            onPageChange: function (num) {
 	                var val = $("input[name='page']").val();

@@ -44,8 +44,8 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 		<form method="post">
 				<label class="label_checkbox">
 					<span>IBS Pay:</span>
-					<label class="btn_checkbox">
-						<input type="checkbox" name="type" value="1"></input>
+					<label <?php echo $ibs_pay['type']==1?"class='btn_checkbox on'":"class='btn_checkbox'"?> >
+						<input type="checkbox" name="type" value="1" <?php echo $ibs_pay['type']==1?"checked='checked'":'';?> ></input>
 						<span></span>
 					</label>
 				</label>
