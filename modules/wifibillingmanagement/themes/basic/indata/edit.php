@@ -38,20 +38,20 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 				<form method="post">
 				<label>
 					<span >Name :</span>
-					<input type="text" name="wifi_name" value="<?php echo isset($data[0]['wifi_name'])?$data[0]['wifi_name']:'' ?>"></input>
+					<input type="text" name="wifi_name" id="wifi_name" value="<?php echo isset($data[0]['wifi_name'])?$data[0]['wifi_name']:'' ?>"></input>
 				</label>
 				<br/><br/><br/>
 				<label>
 					<span>Flow :</span>
 				
-					<input type="text" name="wifi_flow" value="<?php echo isset($data[0]['wifi_flow'])?$data[0]['wifi_flow']:'' ?>" ></input>
+					<input type="text" name="wifi_flow" id='wifi_flow' onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"  value="<?php echo isset($data[0]['wifi_flow'])?$data[0]['wifi_flow']:'' ?>" ></input>
 					
 				</label>
 				<br/><br/><br/>
 					<label>
 					<span>Price :</span>
 					
-					<input type="text" name="sale_price" value="<?php echo isset($data[0]['sale_price'])?$data[0]['sale_price']:'' ?>" ></input>
+					<input type="text" name="sale_price" id='sale_price' onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"  value="<?php echo isset($data[0]['sale_price'])?$data[0]['sale_price']:'' ?>" ></input>
 					
 				</label>
 					<br/><br/><br/>
@@ -65,7 +65,7 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 					
 				<br/><br/><br/>
 				<input type="hidden" name="wifi_id" value="<?php  echo isset($data[0]['wifi_id'])?$data[0]['wifi_id']:''?>">
-				<span class="btn"><input type="submit" value="submit"></input></span>
+				<span class="btn"><input id="mysubmit" type="submit" value="submit"></input></span>
 		<!-- content end -->
 		</form>
 		</div>
@@ -74,7 +74,48 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 	<script type="text/javascript" src="<?php echo $baseUrl?>js/jquery-2.2.2.min.js"></script>
 	<script type="text/javascript" src="<?php echo $baseUrl?>js/public.js"></script>
 	<script type="text/javascript">
+    $(function(){
 
+        
+    	
+
+
+    	 
+    	$("#mysubmit").click(function(){
+//     		var reg ="/^d+$/";
+//         	var wifi_flow= $('#wifi_flow').val();
+//         	var sale_price= $('#sale_price').val();
+        	
+//     		if(!reg.test(wifi_flow)){
+//         		alert(wifi_flow);
+//                 alert("输入Flow只能为数字");
+//                 return false;
+//         	}
+//     		if(!reg.test(sale_price)){
+//                 alert("输入price只能为数字");
+//                 return false;
+//         	}
+
+
+    		 var wifi_name = $("#wifi_name").val();
+    		 var wifi_flow = $("#wifi_flow").val();
+    		 var sale_price = $("#sale_price").val();
+        	 if(wifi_name==''){
+                alert("wifi_name can't empty");
+                return false;
+             }
+        	 else if(wifi_flow==''){
+        		 alert("flow can't empty");
+        		 return false;
+            	 }
+        	 else if(sale_price==''){
+        		 alert("price can't empty");
+        		 return false;
+            	 }
+             
+        })
+    	
+ })
 	</script>
 </body>
 </html>

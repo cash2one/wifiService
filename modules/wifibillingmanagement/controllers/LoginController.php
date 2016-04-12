@@ -19,6 +19,7 @@ class LoginController extends Controller
 	
 	public function actionLogin()
 	{
+		$weburl=Yii::$app->params['weburl'];
             $this->layout = false;
           
             if (!empty(\Yii::$app->user->id))
@@ -48,7 +49,7 @@ class LoginController extends Controller
                        
                     	\Yii::$app->session['admin_id']=$info['admin_id'];
 						\Yii::$app->session['admin_name']=$info['admin_name'];
-                                   return $this->redirect('/wifibilling');
+                                   return $this->redirect($weburl);
                          
                     }
                     else

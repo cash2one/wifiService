@@ -13,7 +13,8 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 ?>
 <?php 
 	use yii\helpers\Html;
-
+	use Yii as myyii;
+	$weburl=Yii::$app->params['weburl'];
 ?>
 
 <!DOCTYPE html>
@@ -55,7 +56,7 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 			<div class="topNav">Wifi Billing&nbsp;&gt;&gt;&nbsp;<a href="#">Wifi Package</a></div>
 	
 			<div class="searchResult">
-			<form action="deleteall" class="formindex" method="post">
+			<form action="<?php echo $weburl?>/indata/deleteall" class="formindex" method="post">
 		
 				<table>
 					<thead>
@@ -100,7 +101,7 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 							<td ><?php echo $v['status']==0?'enable':'disable'?></td>
 							<td  >
 						
-								<a href="edit?wifi_id=<?php echo $v['wifi_id']?>"><img src="<?php echo $baseUrl?>images/write.png"></a>
+								<a href="<?php echo $weburl?>/indata/edit?wifi_id=<?php echo $v['wifi_id']?>"><img src="<?php echo $baseUrl?>images/write.png"></a>
 								<img class="delete" onclick="infodata('<?php echo $v['wifi_id']?>')" src="<?php echo $baseUrl?>images/delete.png">
 							</td>
 						</tr>
@@ -125,7 +126,7 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 		</div>
 		<!-- content end -->
 	</main>
-<form action="delete" method="post" id="formpost"><!-- 按删除按钮时提交的表单 -->
+<form action="<?php echo $weburl?>/indata/delete" method="post" id="formpost"><!-- 按删除按钮时提交的表单 -->
 <input type="hidden" name="wifi_id" id="wifi_id">
 </form>
 	<!-- main end -->
@@ -159,9 +160,11 @@ $(function(){
     	
     }elseif ($massage=='success'){?>//操作信息弹出框
 		alert('Option success');
+		window.location = "<?php echo $weburl?>/indata/index";
 	<?php }else {
 	?>
 	alert('OPtion fail');
+	window.location = "<?php echo $weburl?>/indata/index";
 	<?php
 }	
 ?>
@@ -171,7 +174,7 @@ $(function(){
 function checkAll(str)    
 {    
 	
-   var a = document.getElementsByName(str);    
+   	var a = document.getElementsByName(str);    
     var n = a.length;    
     for (var i=0; i<n; i++)    
     a[i].checked = window.event.srcElement.checked;    

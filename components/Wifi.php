@@ -4,7 +4,6 @@ use Yii;
 
 class Wifi
 {
-	
 	//获取wifi的名字，价格
 	public static function getWifiItem($wifi_id, $iso = 'zh_cn' )
 	{
@@ -94,7 +93,6 @@ class Wifi
 	}
 	
 	
-	
 	//把Xml内容写入数据库中
 	public static function writeXMLToDB($data,$type,$time,$identififer)
 	{
@@ -124,9 +122,13 @@ class Wifi
 	//解析xml内容
 	public static function xmlUnparsed($data)
 	{
-		$xmlObj = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
+		if(self::xml_parser($data)){
+			$xmlObj = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
 // 		$PostCharge = $xmlObj->Body;
-		return $xmlObj;
+			return $xmlObj;
+		}else {
+			return false;
+		}
 	}
 	
 	
@@ -157,7 +159,17 @@ class Wifi
 		$url = Yii::$app->db->createCommand($sql)->queryOne()['url'];
 		return $url;
 	}
-
+	
+	//判断是不是xml格式
+	public static function xml_parser($str){
+		$xml_parser = xml_parser_create();
+		if(!xml_parse($xml_parser,$str,true)){
+			xml_parser_free($xml_parser);
+			return false;
+		}else {
+			return true;
+		}
+	}
 	
 	
 }

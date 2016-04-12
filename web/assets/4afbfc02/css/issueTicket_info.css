@@ -1,0 +1,9 @@
+#issueTicket_info .form { padding: 1em; border: 1px solid #e0e9f4; background: #fff; }
+#issueTicket_info label span { display: inline-block; width: 100px; text-align: right; }
+/*#issueTicket_info input:not([type='button']) { width: 180px; height: 20px; }*/
+#issueTicket_info select { width: 184px; height: 24px; }
+#issueTicket_info .lineSelect select { width: 478px; }
+#issueTicket_info .table { width: 48%; margin-bottom: 1em; }
+#issueTicket_info .btn { margin-top: 1em; }
+
+#memberInfo label span { width: 140px; }

@@ -21,10 +21,9 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 <head>
 	<title>上网</title>
 	<meta charset="utf-8">
-		<?=Html::cssFile('@web/assets/css/bootstrap.css')?>
-			<script type="text/javascript" src="<?php echo $baseUrl?>js/jquery-2.2.2.min.js"></script>
-			<script src="<?php echo $baseUrl?>js/jqPaginator.js"></script>	
-
+	<?=Html::cssFile('@web/assets/css/bootstrap.css')?>
+	<script type="text/javascript" src="<?php echo $baseUrl?>js/jquery-2.2.2.min.js"></script>
+	<script src="<?php echo $baseUrl?>js/jqPaginator.js"></script>
 </head>
 <body>
 	<!-- header start -->
@@ -38,7 +37,6 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 		<!-- content start -->
 		<div class="r content" id="user_content">
 			<div class="topNav">Wifi Report&nbsp;&gt;&gt;&nbsp;<a href="#">Report</a></div>
-	
 			<div class="searchResult">
 				<table>
 					<thead>
@@ -47,18 +45,15 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 							<th>type</th>
 							<th>XMLcontent</th>
 							<th>time</th>
-						
 						</tr>
 					</thead>
 					<tbody>
 						<?php foreach ($wifi_item as $k=>$v){?>
 						<tr  style="height:35px">
-						
 						<td><?php echo $k+1;?></td>
 						<td><?php echo $v['type']==0?'accept':'send';?></td>
-							<td  align="left" ><?php  var_dump(simplexml_load_string($v['content'])); ?></td>
+							<td  align="left" ><?php echo "<pre style='background-color:#ffffff;'><xmp style='width:150px;'>".$v['content']."</xmp></pre>"; ?></td>
 							<td><?php echo $v['time'];?></td>
-							
 						</tr>
 					<?php }?>
 					</tbody>

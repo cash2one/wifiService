@@ -15,36 +15,36 @@ use app\models\seletedata;
 require dirname(dirname(__FILE__)).'/extensions/PHPExcel.php';
 class IndataController extends Controller
 {
-	
 	public $enableCsrfValidation = false;
-	
     public function actionIndex()
     {
+    	$weburl=Yii::$app->params['weburl'];
     	/*  */
   	 	$auth=Auth::getAuth();
   	 	if ($auth=="false"){
-  	 		return $this->redirect("/wifibilling/login/login");
+  	 		return $this->redirect("$weburl/login/login");
   	 	}//判断有没登陆
   	 	$massage=isset($_GET['massage'])?$_GET['massage']:'';
     	$db= \Yii::$app->db;
-    	$sql="select *from wifi_item_language wil join wifi_item wi on wi.wifi_id=wil.wifi_id";
-    	$count_sql="select *from wifi_item_language wil join wifi_item wi on wi.wifi_id=wil.wifi_id";
+    	$sql="select * from wifi_item_language wil join wifi_item wi on wi.wifi_id=wil.wifi_id";
+    	$count_sql="select * from wifi_item_language wil join wifi_item wi on wi.wifi_id=wil.wifi_id";
     	/* $wifi_item=\Yii::$app->db->createCommand($sql)->queryAll(); */
     	$selectdata=new seletedata();
 		$data=$selectdata->paging($sql, $count_sql);
 		$data['massage']=$massage;
-    	
-   		 return $this->render('index',$data);
+    
+   		return $this->render('index',$data);
     }
     public function actionDeleteall(){
+    	$weburl=Yii::$app->params['weburl'];
     	$auth=Auth::getAuth();
     	if ($auth=="false"){
-    		return $this->redirect("/wifibilling/login/login");
+    		return $this->redirect("$weburl/login/login");
     	}//判断有没登陆
     	$ids=isset($_POST['ids'])?$_POST['ids']:'';
     	if ($ids==''){
     	
-    		return $this->redirect("index?massage=fail");
+    		return $this->redirect("$weburl/indata/index?massage=fail");
     	}
     	else {
     		$ids=implode('\',\'',$ids);
@@ -56,18 +56,19 @@ class IndataController extends Controller
     		$command2= \Yii::$app->db->createCommand($sql2)->execute();
     		$transaction->commit();
     		
-		  	return $this->redirect("index?massage=success");
+		  	return $this->redirect("$weburl/indata/index?massage=success");
 		  	} catch(Exception $e) {
   		$transaction->rollBack();
   		
-  		return $this->redirect("index?massage=fail");
+  		 	return $this->redirect("$weburl/indata/index?massage=fail");
   	}
     	}
     }
   public function actionDelete(){
+  	$weburl=Yii::$app->params['weburl'];
   	$auth=Auth::getAuth();
   	if ($auth=="false"){
-  		return $this->redirect("/wifibilling/login/login");
+  		return $this->redirect("$weburl/login/login");
   	}//判断有没登陆
 
   	$wifi_id=isset($_POST['wifi_id'])?$_POST['wifi_id']:'';
@@ -76,41 +77,47 @@ class IndataController extends Controller
   	$command =\Yii::$app->db->createCommand("delete from wifi_item_language where wifi_id=$wifi_id")->execute();
   	$transaction->commit();
   	
-  	return $this->redirect("index?massage=success");
+  	return $this->redirect("$weburl/indata/index?massage=success");
   	} catch(Exception $e) {
   		$transaction->rollBack();
-  		return $this->redirect("index?massage=fail");
+  		return $this->redirect("$weburl/indata/index?massage=fail");
   	}
   }
     public function actionEdit(){
-    	
+    	$weburl=Yii::$app->params['weburl'];
     	$auth=Auth::getAuth();
     	if ($auth=="false"){
-    		return $this->redirect("/wifibilling/login/login");
+    		return $this->redirect("$weburl/login/login");
     	}//判断有没登陆
     	$db=\Yii::$app->db;
         if ($_POST){
         	$wifi_id= $_POST['wifi_id'];
         
         	if ($wifi_id==''){//没有wifi_id就查询
-        		$sql="select max(wifi_id) as wifi_id from wifi_item";
-        		$wifi_id =$db->createCommand($sql)->queryAll();
-        		$wifi_id=$wifi_id[0]['wifi_id']+1;
+        		
         		$wifi_name=$_POST['wifi_name'];
         		$sale_price=$_POST['sale_price'];
         		$wifi_flow=$_POST['wifi_flow'];
         		$status=$_POST['status'];
-        		
+        		if (!is_numeric($sale_price)){
+        			return $this->redirect("$weburl/indata/index?massage=fail");
+        			exit;
+        		}
+        		elseif (!is_numeric($wifi_flow)){
+        			return $this->redirect("$weburl/indata/index?massage=fail");
+        			exit;
+        		}
         		
         		$transaction =\Yii::$app->db->beginTransaction();
         		try {
         			$command = $db->createCommand("insert into wifi_item(sale_price,wifi_flow,status) values('$sale_price','$wifi_flow','$status')")->execute();
-        			$command = $db->createCommand("insert into wifi_item_language(wifi_id,wifi_name) values($wifi_id,'$wifi_name')")->execute();
+        			$wifi_id=Yii::$app->db->getLastInsertID();
+        			$command1 = $db->createCommand("insert into wifi_item_language(wifi_id,wifi_name) values($wifi_id,'$wifi_name')")->execute();
         			$transaction->commit();
-        			return $this->redirect('index?massage=success');
+        				return $this->redirect("$weburl/indata/index?massage=success");
         		} catch(Exception $e) {
         			$transaction->rollBack();
-        			return $this->redirect('index',array('massage'=>'fail'));
+        				return $this->redirect("$weburl/indata/index?massage=fail");
         		}
         
         	}
@@ -124,10 +131,10 @@ class IndataController extends Controller
         			$command = $db->createCommand("update wifi_item_language set wifi_name='$wifi_name' where wifi_id=$wifi_id")->execute();
         			$tiem = $db->createCommand("update wifi_item set sale_price='$sale_price' , wifi_flow='$wifi_flow' , status='$status'  where wifi_id=$wifi_id")->execute();
         			$transaction->commit();
-        			return $this->redirect('index?massage=success');
+        			return $this->redirect("$weburl/indata/index?massage=success");
         		} catch(Exception $e) {
         			$transaction->rollBack();
-        			return $this->redirect('index?massage=fail');
+        				return $this->redirect("$weburl/indata/index?massage=fail");
         		}	
         	}
         
@@ -145,9 +152,10 @@ class IndataController extends Controller
         }
     }
     public function actionIndataupdate(){
+    	$weburl=Yii::$app->params['weburl'];
     	$auth=Auth::getAuth();
     	if ($auth=="false"){
-    		return $this->redirect("/wifibilling/login/login");
+    		return $this->redirect("$weburl/login/login");
     	}//判断有没登陆
     	
     	if ($_POST){
@@ -174,39 +182,43 @@ class IndataController extends Controller
 			     } catch(Exception $e) {
 			     	$transaction->rollBack();
 			     }
-			     $this->redirect("index");
+			   	return $this->redirect("$weburl/indata/index");
 			}
     	else {
   \Yii::$app->session['id']=$_POST['wifi_id'];
-  $this->redirect("index");
+	return $this->redirect("$weburl/indata/index");
     	}
     	}
     }
     public function actionUpdata(){
-    	/*  */
-    	$auth=Auth::getAuth();
-    	if ($auth=="false"){
-    		return $this->redirect("/wifibilling/login/login");
-    	}//判断有没登陆
     	$massage=isset($_GET['massage'])?$_GET['massage']:'';
     	return $this->render('updata',array('massage'=>$massage));
     }
     public function actionInfodata(){
-    	/*  */
-    	$auth=Auth::getAuth();
-    	if ($auth=="false"){
-    		return $this->redirect("/wifibilling/login/login");
-    	}//判断有没登陆
+    	$weburl=Yii::$app->params['weburl'];
     	$flag = 0;
     	if ($_POST){
-    		\Yii::$app->session['wifi_id']=$_POST['wifi_id'];
-    		\Yii::$app->session['expiry_day']=$_POST['expiry_day'];
-    	}
-    	if(!isset($_FILES['import_input']['tmp_name'])){
-    		$this->redirect("/Wifi/index");
+    	$wifi_id=isset($_POST['wifi_id'])?$_POST['wifi_id']:'';
+    	$expiry_day=isset($_POST['expiry_day'])?$_POST['expiry_day']:'';
+    	if (!is_numeric($expiry_day)){
+    		return $this->redirect("$weburl/indata/updata?massage=3");
     		exit;
     	}
-    	 
+    		if ($wifi_id==''&&$expiry_day==''){
+    		
+    			return $this->redirect("$weburl/indata/updata?massage=1");
+    		}
+    		\Yii::$app->session['wifi_id']=$wifi_id;
+    		\Yii::$app->session['expiry_day']=$expiry_day;
+    		
+    	}
+    	
+    	if(!isset($_FILES['import_input']['tmp_name'])){
+    	
+    		return $this->redirect("$weburl/indata/updata?massage=3");
+    		exit;
+    	}
+    
     	$filePath = $_FILES['import_input']['tmp_name'];
     	if($filePath){
     		$objectPHPExcel = new \PHPExcel();
@@ -240,11 +252,16 @@ class IndataController extends Controller
     		 
     		 
     	}
+    	else {
+    		return $this->redirect("$weburl/indata/updata?massage=3");
+    		exit;
+    	}
     }
     public function actionCurrdata(){
+    	$weburl=Yii::$app->params['weburl'];
     	$auth=Auth::getAuth();
     	if ($auth=="false"){
-    		return $this->redirect("/wifibilling/login/login");
+    		return $this->redirect("$weburl/login/login");
     	}//判断有没登陆
     	$db= \Yii::$app->db;
     	$wifi_items_info = (new \yii\db\Query())
@@ -266,17 +283,16 @@ class IndataController extends Controller
 
     }
 public function actionSavedata(){
-	/*  */
-	$auth=Auth::getAuth();
-	if ($auth=="false"){
-		return $this->redirect("/wifibilling/login/login");
-	}//判断有没登陆
+	$weburl=Yii::$app->params['weburl'];
 	$data=\Yii::$app->session['mydata'];
 	$wifi_id=\Yii::$app->session['wifi_id'];
 	$expiry_day=\Yii::$app->session['expiry_day'];
-	
+	if (!is_numeric($expiry_day)){
+		return $this->redirect("$weburl/indata/updata?massage=3");
+		exit;
+	}
 	if ($wifi_id==''){
-		return $this->redirect('updata?massage=1');
+		return $this->redirect("$weburl/indata/updata?massage=1");
 	}
 	else {
     	foreach ($data as $k=>$v){
@@ -290,22 +306,23 @@ public function actionSavedata(){
     	$transaction->commit();
     	} catch(Exception $e) {
     		$transaction->rollBack();
-    		return $this->redirect('updata?massage=3');
+    	
+    		return $this->redirect("$weburl/indata/updata?massage=3");
     		exit;
     	}
     	}
     	\Yii::$app->session['mydata']='';
     	\Yii::$app->session['wifi_id']='';
     	\Yii::$app->session['expiry_day']='';
-    	return $this->redirect('updata?massage=2');
+       	return $this->redirect("$weburl/indata/updata?massage=2");
 	}
     	
 }
 public function actionPay(){
-	
+	$weburl=Yii::$app->params['weburl'];
 	$auth=Auth::getAuth();
 	if ($auth=="false"){
-		return $this->redirect("/wifibilling/login/login");
+		return $this->redirect("$weburl/login/login");
 	}//判断有没登陆
 	$ibs_pay = (new \yii\db\Query())
 	->from('ibs_pay')
@@ -313,6 +330,7 @@ public function actionPay(){
 	
 	if ($_POST){
 		$type=isset($_POST['type'])?$_POST['type']:'0';
+	
 		$transaction =\Yii::$app->db->beginTransaction();
 		try {
 		$command = \Yii::$app->db->createCommand("UPDATE ibs_pay SET type='$type'")->execute();
@@ -329,13 +347,14 @@ public function actionPay(){
 	return $this->render("pay",array('ibs_pay'=>$ibs_pay));
 }
 public function actionReport(){
+	$weburl=Yii::$app->params['weburl'];
 	$auth=Auth::getAuth();
 	if ($auth=="false"){
-		return $this->redirect("/wifibilling/login/login");
+		return $this->redirect("$weburl/login/login");
 	}//判断有没登陆
 		$db= \Yii::$app->db;
-    	$sql="select * from ibsxml_log ";
-    	$count_sql="select * from ibsxml_log ";
+    	$sql="select *from ibsxml_log ";
+    	$count_sql="select *from ibsxml_log ";
     	/* $wifi_item=\Yii::$app->db->createCommand($sql)->queryAll(); */
     	$selectdata=new seletedata();
 		$data=$selectdata->paging($sql, $count_sql);
@@ -344,13 +363,14 @@ public function actionReport(){
 }
 
 public function actionWifiurl(){//wifi地址
+	$weburl=Yii::$app->params['weburl'];
 	$auth=Auth::getAuth();
 	if ($auth=="false"){
-		return $this->redirect("/wifibilling/login/login");
+		return $this->redirect("$weburl/login/login");
 	}//判断有没登陆
 	$db= \Yii::$app->db;
-	$sql="select * from wifi_url_params";
-	$count_sql="select * from wifi_url_params";
+	$sql="select *from wifi_url_params";
+	$count_sql="select *from wifi_url_params";
 	/* $wifi_params =$db->createCommand($sql)->queryAll(); */
 	$massage=isset($_GET['massage'])?$_GET['massage']:'';
 	$selectdata=new seletedata();
@@ -359,14 +379,14 @@ public function actionWifiurl(){//wifi地址
 	return $this->render("wifiurl",$data);
 }
 public function actionEditurl(){//url编辑
+	$weburl=Yii::$app->params['weburl'];
 	$auth=Auth::getAuth();
 	if ($auth=="false"){
-		return $this->redirect("/wifibilling/login/login");
+		return $this->redirect("$weburl/login/login");
 	}//判断有没登陆
 	$db=\Yii::$app->db;
 	if ($_POST){
 		$id= $_POST['id'];
-		
 		if ($id==''){//没有wifi_id就查询
 			$info=$_POST;
 			$transaction =\Yii::$app->db->beginTransaction();
@@ -377,10 +397,10 @@ public function actionEditurl(){//url编辑
 		     $_model->save();
 
 				$transaction->commit();
-				return $this->redirect('wifiurl?massage=success');
+				return $this->redirect("$weburl/indata/wifiurl?massage=success");
 			} catch(Exception $e) {
 				$transaction->rollBack();
-				return $this->redirect('wifiurl',array('massage'=>'fail'));
+				return $this->redirect("$weburl/indata/wifiurl?massage=fail");
 			}
 	
 		}
@@ -392,10 +412,10 @@ public function actionEditurl(){//url编辑
 				$remark=$_POST['remark'];
 				$command = $db->createCommand("update wifi_url_params set name='$name',remark='$remark',url='$url' where id=$id")->execute();
 				$transaction->commit();
-				return $this->redirect('wifiurl?massage=success');
+				return $this->redirect("$weburl/indata/wifiurl?massage=success");
 			} catch(Exception $e) {
 				$transaction->rollBack();
-				return $this->redirect('wifiurl?massage=fail');
+				return $this->redirect("$weburl/indata/wifiurl?massage=fail");
 			}
 		}
 	
@@ -413,30 +433,25 @@ public function actionEditurl(){//url编辑
 	}
 }
 public function actionDeleteurl(){
-	$auth=Auth::getAuth();
-	if ($auth=="false"){
-		return $this->redirect("/wifibilling/login/login");
-	}//判断有没登陆
+	
+	$weburl=Yii::$app->params['weburl'];
 	$id=isset($_POST['id'])?$_POST['id']:'';
 	$transaction =\Yii::$app->db->beginTransaction();
 	try {
 		$command =\Yii::$app->db->createCommand("delete from wifi_url_params where id=$id")->execute();
 		$transaction->commit();
 		 
-		return $this->redirect("wifiurl?massage=success");
+		return $this->redirect("$weburl/indata/wifiurl?massage=success");
 	} catch(Exception $e) {
 		$transaction->rollBack();
-		return $this->redirect("wifiurl?massage=fail");
+		return $this->redirect("$weburl/indata/wifiurl?massage=fail");
 	}
 }
 public function actionDeleteallurl(){//点击删除全部
-	$auth=Auth::getAuth();
-	if ($auth=="false"){
-		return $this->redirect("/wifibilling/login/login");
-	}//判断有没登陆
+	$weburl=Yii::$app->params['weburl'];
 	$ids=isset($_POST['ids'])?$_POST['ids']:'';
 	if ($ids==''){
-		return $this->redirect("wifiurl?massage=fail");
+		return $this->redirect("$weburl/indata/wifiurl?massage=fail");
 	}
 	else {
 		$ids=implode('\',\'',$ids);
@@ -446,11 +461,10 @@ public function actionDeleteallurl(){//点击删除全部
 			$command2= \Yii::$app->db->createCommand($sql)->execute();
 			$transaction->commit();
 
-			return $this->redirect("wifiurl?massage=success");
+			return $this->redirect("$weburl/indata/wifiurl?massage=success");
 		} catch(Exception $e) {
 			$transaction->rollBack();
-
-			return $this->redirect("wifiurl?massage=fail");
+			return $this->redirect("$weburl/indata/wifiurl?massage=fail");
 		}
 	}
 }

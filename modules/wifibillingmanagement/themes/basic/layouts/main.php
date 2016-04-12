@@ -14,6 +14,9 @@ $controller = Yii::$app->controller->id;
 $action = Yii::$app->controller->action->id;
 $permissionName = $module.'/'.$controller.'/'.$action;
 
+
+use Yii as myyii;
+$weburl=Yii::$app->params['weburl'];
 // echo $permissionName;
 // exit;
 
@@ -71,7 +74,7 @@ elseif ($permissionName=='wifibilling/indata/report'){
         </div>
         <div class="r">
             <span><?php echo Yii::$app->session['admin_name']?></span>
-            <a href="/wifibilling/login/loginout">Exit</a>
+            <a href="<?php echo $weburl?>/login/loginout">Exit</a>
         </div>
     </div>
 </header>
@@ -88,12 +91,12 @@ elseif ($permissionName=='wifibilling/indata/report'){
                 </li>
                 <!-- 二级 -->
                		 <ul>
-                    <li class="<?php echo ($Wifi_package_active ? 'active':'')?>"><a href="/wifibilling/indata/index"><?= \Yii::t('app', 'Wifi Package') ?></a></li>
-                     <li class="<?php echo ($url_active ? 'active':'')?>"><a href="/wifibilling/indata/wifiurl"><?= \Yii::t('app', 'Wifi URL') ?></a></li>
-						<li class="<?php echo ($carr_active ? 'active':'')?>"><a href="/wifibilling/indata/currdata">Curr Card</a></li>
-						<li class="<?php echo ($import_active ? 'active':'')?>"><a href="/wifibilling/indata/updata"><?= \Yii::t('app', 'Import Card') ?></a></li>
-                    <li class="<?php echo $pay_active?'active':''?>"><a href="/wifibilling/indata/pay"><?= \Yii::t('app', 'IBS pay set') ?></a></li>
-                    <li class="<?php echo ($report_active ? 'active':'')?>"><a href="/wifibilling/indata/report"><?= \Yii::t('app', 'Report') ?></a></li>
+                    <li class="<?php echo ($Wifi_package_active ? 'active':'')?>"><a href="<?php echo $weburl?>/indata/index"><?= \Yii::t('app', 'Wifi Package') ?></a></li>
+                     <li class="<?php echo ($url_active ? 'active':'')?>"><a href="<?php echo $weburl?>/indata/wifiurl"><?= \Yii::t('app', 'Wifi URL') ?></a></li>
+						<li class="<?php echo ($carr_active ? 'active':'')?>"><a href="<?php echo $weburl?>/indata/currdata">Curr Card</a></li>
+						<li class="<?php echo ($import_active ? 'active':'')?>"><a href="<?php echo $weburl?>/indata/updata"><?= \Yii::t('app', 'Import Card') ?></a></li>
+                    <li class="<?php echo $pay_active?'active':''?>"><a href="<?php echo $weburl?>/indata/pay"><?= \Yii::t('app', 'IBS pay set') ?></a></li>
+                    <li class="<?php echo ($report_active ? 'active':'')?>"><a href="<?php echo $weburl?>/indata/report"><?= \Yii::t('app', 'Report') ?></a></li>
                 </ul>
             </ul>
             <a href="#" id="closeAsideNav"><img src="<?=$baseUrl ?>images/asideNav_close.png"></a>

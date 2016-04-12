@@ -13,7 +13,8 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 ?>
 <?php 
 	use yii\helpers\Html;
-
+	use Yii as myyii;
+	$weburl=Yii::$app->params['weburl'];
 ?>
 
 <!DOCTYPE html>
@@ -38,30 +39,29 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 		<!-- content start -->
 		<div class="r content" id="user_content">
 			<div class="topNav">Wifi Billing&nbsp;&gt;&gt;&nbsp;<a href="#">Import Card</a></div>
-
-                                       <form style="position:relative;" enctype="multipart/form-data" id="import_form" action="infodata" method='post'>
+           <form style="position:relative;" enctype="multipart/form-data" id="import_form" action="<?php echo $weburl?>/indata/infodata" method='post'>
                           
-						<div style="height: 30px"></div>
-						<div style="width: 350px;float:left;margin-left:1%">
+			<div style="height: 30px"></div>
+			<div style="width: 350px;float:left;margin-left:1%">
 										<span>Wifi Expiry_day(day):</span>
-				<input type="text"  style="height:23px" name="expiry_day" placeholder="50">
+				<input type="text"  style="height:23px" name="expiry_day" id='expiry_day' onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" placeholder="50">
 				</div>
-									<div>	
+				<div>	
 					
-									<span class="btn uploadFile_btn">
-									<span>Wifi Package:</span>
-										<?php $wifi_items = (new \yii\db\Query())
-									    	->from('wifi_item_language')
-									    	->where(['iso'=>'zh_cn'])
-									    	->all(); ?>
-									<select name="wifi_id" style="height:31px;width:200px">
-											<option selected='selected' value="">All</option>
-											
-											<?php foreach ($wifi_items as $k=>$v):?>				
-																<option value="<?=$v['wifi_id']?>" <?php if (isset($wifi_id)){if ($wifi_id==$v['wifi_id']){echo "selected='selected'"; }}?>><?=$v['wifi_name']?></option>
-																<?php endforeach;?>
-															</select>
-								</span>
+				<span class="btn uploadFile_btn">
+				<span>Wifi Package:</span>
+					<?php $wifi_items = (new \yii\db\Query())
+				    	->from('wifi_item_language')
+				    	->where(['iso'=>'zh_cn'])
+				    	->all(); ?>
+				<select name="wifi_id" style="height:31px;width:200px">
+				<option selected='selected' value="">All</option>
+				
+				<?php foreach ($wifi_items as $k=>$v):?>				
+				<option value="<?=$v['wifi_id']?>" <?php if (isset($wifi_id)){if ($wifi_id==$v['wifi_id']){echo "selected='selected'"; }}?>><?=$v['wifi_name']?></option>
+				<?php endforeach;?>
+				</select>
+				</span>
 				<label class="uploadFileBox">
 					<span class="fileName">Select File...</span>
 					<a href="#"  class="uploadFile">choose<input type="file" name="import_input" class="import_file"></input></a>
@@ -76,18 +76,14 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 			  </form>
 			<div class="searchResult">
 			  <?php if (isset($data)){?>
-			  <form action="savedata" method="post">
+			  <form action="<?php echo $weburl?>/indata/savedata" method="post">
                   
 				<table>
 					<thead>
 						<tr>
-						
 							<th>序号</th>
 							<th>wifi_code</th>
-						
 							<th>wifi_password</th>
-							
-						
 						</tr>
 					</thead>
 					<tbody>
@@ -96,17 +92,14 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 							<td><?php echo $k+1?></td>
 							<td><?php echo $v['wifi_code']?></td>
 							<td><?php echo $v['wifi_password']?></td>
-						
 						</tr>
 					<?php }?>
-						
 					</tbody>
 				</table>
 				<?php Yii::$app->session['mydata']=$data;?>
 				<p class="records">Wifi Expiry_day(day):<span><?php echo Yii::$app->session['expiry_day']?></span></p>
 				<div class="btn">
-					<input type="submit" value="save"></input>
-					
+					<input type="submit" id="mysubmit" value="save"></input>
 				</div>
 				</form>
 				<?php }?>
@@ -131,28 +124,55 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 $(function(){
     //监听文件域选中文件
     $("input[name='import_input']").change(function(){
-        
         var fileName = $(this).val();
         var extStart  = fileName.lastIndexOf(".")+1;
         var fileext1 = fileName.substring(extStart,fileName.length).toLowerCase(); 
         var allowtype =  ["xls","xlsx"];
-        if ($.inArray(fileext1,allowtype) == -1)
-        {
+        if ($.inArray(fileext1,allowtype) == -1){
             alert("请输入正确格式的excel文件!");
             return false;
         }
-       
     });
 
     <?php $massage=isset($massage)?$massage:'';?>
     <?php if ($massage==1){?>
     alert("请选择套餐");
+    window.location = "<?php echo $weburl?>/indata/updata";
     <?php }elseif ($massage==2){?>
     alert("操作成功");
+    window.location = "<?php echo $weburl?>/indata/updata";
     <?php }elseif ($massage==3){?>
     alert("操作失败");
+    window.location = "<?php echo $weburl?>/indata/updata";
     <?php }?>
     //操作后弹出框
+    	 
+    	$("#mysubmit").click(function(){
+//     		var reg ="/^d+$/";
+//         	var wifi_flow= $('#wifi_flow').val();
+//         	var sale_price= $('#sale_price').val();
+        	
+//     		if(!reg.test(wifi_flow)){
+//         		alert(wifi_flow);
+//                 alert("输入Flow只能为数字");
+//                 return false;
+//         	}
+//     		if(!reg.test(sale_price)){
+//                 alert("输入price只能为数字");
+//                 return false;
+//         	}
+
+
+    		
+    		 var expiry_day = $("#expiry_day").val();
+        	 if(expiry_day==''){
+                alert("expiry_day can't empty");
+                return false;
+             }
+        	
+             
+        })
+    
 });
 
 </script>

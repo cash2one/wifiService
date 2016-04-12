@@ -10,7 +10,8 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl.'/';
 ?>
 <?php 
 	use yii\helpers\Html;
-
+	use Yii as myyii;
+	$weburl=Yii::$app->params['weburl'];
 ?>
 
 <!DOCTYPE html>
@@ -52,7 +53,7 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl.'/';
 			<div class="topNav">Wifi Billing&nbsp;&gt;&gt;&nbsp;<a href="#">Wifi URL</a></div>
 	
 			<div class="searchResult">
-			<form action="deleteallurl" class="formindex" method="post">
+			<form action="<?php echo $weburl?>/indata/deleteallurl" class="formindex" method="post">
 				<table  >
 					<thead>
 						<tr style="height:35px">
@@ -78,7 +79,7 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl.'/';
 							
 							<td  align="left">
 						
-								<a href="editurl?id=<?php echo $v['id']?>"><img src="<?php echo $baseUrl?>images/write.png"></a>
+								<a href="<?php echo $weburl?>/indata/editurl?id=<?php echo $v['id']?>"><img src="<?php echo $baseUrl?>images/write.png"></a>
 								<img class="delete" onclick="infodata('<?php echo $v['id']?>')" src="<?php echo $baseUrl?>images/delete.png">
 							</td>
 						</tr>
@@ -106,7 +107,7 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl.'/';
 		</div>
 		<!-- content end -->
 	</main>
-<form action="deleteurl" method="post" id="formpost"><!-- 表单按删除按钮时提交的 -->
+<form action="<?php echo $weburl?>/indata/deleteurl" method="post" id="formpost"><!-- 表单按删除按钮时提交的 -->
 <input type="hidden" name="id" id="id">
 </form>
 	<!-- main end -->
@@ -166,10 +167,12 @@ $("#formpost").submit();
     if ($massage==''){}
 	elseif ($massage=='success'){?>//操作信息弹出框
 	alert('Option success');
+	window.location = "<?php echo $weburl?>/indata/wifiurl";
 	<?php }
 else {
 	?>
 	alert('Option fail');
+	window.location = "<?php echo $weburl?>/indata/wifiurl";
 	<?php
 }	
 ?>
