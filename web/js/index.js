@@ -69,14 +69,30 @@ $("body").on("click","#buy",function(){
 			wifi_id = $(this).val();
 		}
 	});
+	//显示页面正在跳转中
+	ShowJumpingPage();
 	GetNameAndShowConfirm(wifi_id);
 });
 
 
+//显示页面正在跳转中
+function ShowJumpingPage()
+{
+	$(".payment").replaceWith(
+		"<div class='content payment'>"+
+			"<h3>跳转中</h3>"+
+			"<p>页面正在跳转中，请稍等片刻。</p>"+
+		"</div>"
+	);
+	$("#buy").replaceWith(
+			""
+	);
+}
 
 
 var wifi_name ;		//套餐的名字
 var wifi_price ;	//套餐的价格
+var wifi_flow ;		//套餐的流量
 //------ 得到wifi套餐信息，并显示确认支付页面---
 function GetNameAndShowConfirm(wifi_id)
 {
@@ -89,6 +105,7 @@ function GetNameAndShowConfirm(wifi_id)
             if(response.status == "OK"){
                 wifi_name = response.data['wifi_name'];
                 wifi_price = response.data['sale_price'];
+                wifi_flow = response.data['wifi_flow'];
                 PayConfirm(wifi_name,wifi_price);
             }
         },
@@ -98,8 +115,6 @@ function GetNameAndShowConfirm(wifi_id)
     });
 	
 	
-
-	
 	//------ 显示确认支付页面-------
 	function PayConfirm(wifi_name,wifi_price)
 	{
@@ -107,14 +122,14 @@ function GetNameAndShowConfirm(wifi_id)
 			"<div class='content payment'>"+
 				"<h3>Wifi订单确认</h3>"+
 				"<ul>"+
-					"<li>商品名称："+wifi_name+"</li>"+
+					"<li>商品名称："+wifi_name+"&nbsp;&nbsp;"+wifi_flow+"M</li>"+
 					"<li>订单金额：$"+wifi_price+"</li>"+
 				"</ul>"+
-				"<p>购买前请确保您的房卡中余额充足，支付成功后，系统将自动从您的房卡中扣除对应的余额。</p>"+
+				"<p style='color:#666;'>购买前请确保您的房卡中余额充足，支付成功后，系统将自动从您的房卡中扣除对应的余额。</p>"+
 			"</div>"
 		);
 
-		$("#buy").replaceWith(
+		$(".btn").append(
 			"<input id='payment' type='button' value='立即支付'></input>"
 		);
 	}
@@ -124,6 +139,9 @@ function GetNameAndShowConfirm(wifi_id)
 $("body").off("click","#payment");
 //点击payment按钮----立即支付-----
 $("body").on("click","#payment",function(){
+	//显示订单生成中
+	ShowPayingPage();
+	
 	$.ajax({
 		url:"wifi/payment",
 		data:"wifi_id="+wifi_id+"&PassportNO="+getQueryString("PassportNO")+"&Name="+decodeURI(request("Name"))+"&TenderType="+getQueryString("TenderType")+"&iso="+getQueryString("iso"),
@@ -132,19 +150,25 @@ $("body").on("click","#payment",function(){
 		dataType:'json', 
 		success:function(response){
 			if(response.status == "OK"){
-				//跳转到上网连接
-				$(".tab_content").css("left",(-$(window).width() + "px"));
-				$(".tab_title li.active").removeClass("active");
-				$(".tab_title li:nth-of-type(2)").addClass("active");
-				
-				//显示上网连接界面
-				ShowConnectPage();
+				//显示支付成功页面，3秒后跳转
+				ShowPaySuccess();
+				setTimeout(function(){
+					//跳转到上网连接
+					$(".tab_content").css("left",(-$(window).width() + "px"));
+					$(".tab_title li.active").removeClass("active");
+					$(".tab_title li:nth-of-type(2)").addClass("active");
+					
+					//显示上网连接界面
+					ShowConnectPage();
+				},3000);
 			}else if(response.status == "FAIL"){
 				//显示支付失败界面
 				ShowPayFailPage();
 			}else if(response.status == "ERROR"){
 				//显示支付出错界面
 				ShowPayErrorPage();
+			}else if(response.status == "NoCard"){
+				ShowNoCardPage();
 			}
 		},
 		error:function(XMLHttpRequest,textStatus,errorThrown){
@@ -152,7 +176,6 @@ $("body").on("click","#payment",function(){
 		}
 	});
 });
-
 
 
 
@@ -187,6 +210,25 @@ function ShowConnectPage()
 }
 
 
+//显示没有套餐页面(卡卖完了)
+function ShowNoCardPage()
+{
+	$(".payment").replaceWith(
+		"<div class='content payment'>"+
+			"<h3>售罄</h3>"+
+			"<p>很抱歉，您选择的套餐已经卖完了，请联系相关人员！</p>"+
+		"</div>"
+	);
+	
+	$(".btn").append(
+		"<input id='return' type='button' value='返回'></input>"
+	);
+	
+	$("body").on("click","#return",function(){
+		location.reload();	//重载页面
+	});
+}
+
 
 //显示支付失败界面
 function ShowPayFailPage()
@@ -198,7 +240,7 @@ function ShowPayFailPage()
 		"</div>"
 	);
 	
-	$("#payment").replaceWith(
+	$(".btn").append(
 		"<input id='return' type='button' value='返回'></input>"
 	);
 	
@@ -217,7 +259,7 @@ function ShowPayErrorPage()
 		"</div>"
 	);
 		
-	$("#payment").replaceWith(
+	$(".btn").append(
 		"<input id='return' type='button' value='返回'></input>"
 	);
 	
@@ -225,6 +267,33 @@ function ShowPayErrorPage()
 		location.reload();	//重载页面
 	});
 }
+
+//显示支付中页面
+function ShowPayingPage()
+{
+	$(".payment").replaceWith(
+		"<div class='content payment'>"+
+			"<h3>正在支付中！</h3>"+
+			"<p>正在生成订单，请稍后！</p>"+
+		"</div>"
+	);
+		
+	$("#payment").replaceWith(
+		""
+	);
+}
+
+//显示支付成功页面
+function ShowPaySuccess()
+{
+	$(".payment").replaceWith(
+		"<div class='content payment'>"+
+			"<h3>支付成功！</h3>"+
+			"<p>订单支付成功, 3秒后自动跳转</p>"+
+		"</div>"
+	);
+}
+
 
 
 

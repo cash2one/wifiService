@@ -7,7 +7,7 @@ class Wifi
 	//获取wifi的名字，价格
 	public static function getWifiItem($wifi_id, $iso = 'zh_cn' )
 	{
-		$sql = " SELECT a.sale_price ,b.wifi_name 
+		$sql = " SELECT a.sale_price ,a.wifi_flow,b.wifi_name 
 			FROM wifi_item a ,wifi_item_language b 
 			WHERE a.wifi_id = b.wifi_id 
 			AND a.wifi_id ='$wifi_id' AND b.iso='$iso'";
@@ -143,7 +143,6 @@ class Wifi
 	{
 		if(self::xml_parser($data)){
 			$xmlObj = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
-// 		$PostCharge = $xmlObj->Body;
 			return $xmlObj;
 		}else {
 			return false;

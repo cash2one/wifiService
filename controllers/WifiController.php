@@ -36,7 +36,7 @@ class WifiController extends Controller
     	
     	if(isset($wifi_id)){
     		$wifi_item = Wifi::getWifiItem($wifi_id,$iso);
-    		$item = '{"sale_price":"'.$wifi_item['sale_price'].'","wifi_name":"'.$wifi_item['wifi_name'].'"}';
+    		$item = '{"sale_price":"'.$wifi_item['sale_price'].'","wifi_flow":"'.$wifi_item['wifi_flow'].'","wifi_name":"'.$wifi_item['wifi_name'].'"}';
     	}else{
     		$item = '';
     	}
@@ -49,23 +49,23 @@ class WifiController extends Controller
     //支付wifi套餐
     public function actionPayment()
     {
-//     	$wifi_id = Yii::$app->request->post('wifi_id');
-//     	$passport = Yii::$app->request->post('PassportNO');
-//     	$TenderType = Yii::$app->request->post('TenderType');
-//     	$name = Yii::$app->request->post('Name');
-//     	$iso = Yii::$app->request->post('iso');
+    	$wifi_id = Yii::$app->request->post('wifi_id');
+    	$passport = Yii::$app->request->post('PassportNO');
+    	$TenderType = Yii::$app->request->post('TenderType');
+    	$name = Yii::$app->request->post('Name');
+    	$iso = Yii::$app->request->post('iso');
     	 
-//     	if($iso === 'null'){
-//     		$iso = 'zh_cn';
-//     	}
+    	if($iso === 'null'){
+    		$iso = 'zh_cn';
+    	}
     	 
     	
     	//--test code begin--
-    	$wifi_id = '2';
-    	$passport = '123456';
-    	$TenderType = '02';
-    	$name='zhangsan';
-    	$iso = 'zh_cn';
+//     	$wifi_id = '2';
+//     	$passport = '123456';
+//     	$TenderType = '02';
+//     	$name='zhangsan';
+//     	$iso = 'zh_cn';
     	//--test code end ---
     	
     	
@@ -227,104 +227,6 @@ class WifiController extends Controller
 
     
     
-    /*
-   	//支付wifi套餐
-    public function actionPayment()
-    {
-    	$wifi_id = Yii::$app->request->post('wifi_id');
-    	$passport = Yii::$app->request->post('PassportNO');
-    	$TenderType = Yii::$app->request->post('TenderType');
-    	$name = Yii::$app->request->post('Name');
-    	$iso = Yii::$app->request->post('iso');
-    	 
-    	if($iso === 'null'){
-    		$iso = 'zh_cn';
-    	}
-    	 
-    	$wifi_item = Wifi::getWifiItem($wifi_id,$iso);
-    	 
-    	$checkNumber = WifiPay::createChecknum();
-    	$identififer = $passport.".".time();
-    
-    	$ibsPayType = WifiPay::isIBSPay(); //是否通过ibs收费系统计费
-    	 
-    	if($ibsPayType){
-    		//通过ibs系统支付
-    		$checkBalance = WifiPay::isCheckBalance();  //是否需要查询余额
-    		
-    		if($checkBalance){
-    			//需要查询余额
-    			//构造XML数据，接口对接
-    			//1.发送 xml,请求FolioBalance接口， 返回参数 ：BalanceDue , 判断余额
-    			$balance = WifiPay::folioBalance($passport);
-    			
-    			//2.判断余额是否充足
-    			if($balance < $wifi_item['sale_price']){
-    				// 如果余额不足，返回 '{"status":"FAIL"}'，
-    				$result = '{"status":"FAIL"}';
-    			}else {
-    				//---sql事务---
-    				$transaction = Yii::$app->db->beginTransaction();
-    				try {
-    					
-    					
-    					
-    					//3.调用支付接口
-    					$postResponse = WifiPay::DTSPostCharge($passport,$TenderType,$checkNumber,$wifi_item['sale_price'],$identififer);
-    					if($postResponse != ""){
-    						//4.判断 PostchargeResponse XML
-    						$PostchargeResponse = Wifi::xmlUnparsed($postResponse);
-    						if(isset($PostchargeResponse->attributes()->Code)){
-    							// 如果error，就返回 '{"status":"ERROR"}'，
-    							$result = '{"status":"ERROR"}';
-    						}else {
-    							//5.记录本地数据库的支付信息
-    							$pay_log_id = Wifi::writePayLogToDB($checkNumber,$passport,$name,$wifi_item['sale_price']);
-    							//6.购买上网卡
-    							Wifi::wifiCardBuy($wifi_id,$passport,$pay_log_id);
-    							$result = '{"status":"OK"}';
-    						}
-    						$transaction->commit();
-    					}else {
-    						$result = '{"status":"ERROR"}';
-    					}
-    				}catch(Exception $e){
-    					$transaction->rollBack();
-    					$result = '{"status":"ERROR"}';
-    				}
-    				//---sql事务---end--
-    			}
-    		}else {
-    			//不查询余额，直接支付
-    			//todo
-    		}
-    		
-    	}else{
-    		//不通过ibs系统支付
-    		//---sql事务---
-    		$transaction = Yii::$app->db->beginTransaction();
-    		try {
-    			//1.记录本地数据库的支付信息
-    			$pay_log_id = Wifi::writePayLogToDB($checkNumber,$passport,$name,$wifi_item['sale_price']);
-    			//2.购买上网卡
-    			Wifi::wifiCardBuy($wifi_id,$passport,$pay_log_id);
-    	   
-    			$transaction->commit();
-    			$result = '{"status":"OK","name":"'.$name.'"}';
-    	   
-    		}catch(Exception $e){
-    			$transaction->rollBack();
-    			$result = '{"status":"ERROR"}';
-    		}
-    		//---sql事务---end--
-    	}
-    	 
-    	echo $result;
-    
-    }
-    */
-    
-    
     //获取游客购买的套餐
     public function actionGetwifiitemstatus()
     {
@@ -352,7 +254,6 @@ class WifiController extends Controller
     	$result = '{"status":"OK","data":['.$item.']}';
     	echo $result;
     }
-    
     
     
     //网络连接
@@ -397,7 +298,6 @@ class WifiController extends Controller
     	$result = '{"status":"OK"}';
     	echo $result;
     }
-    
     
     
     
