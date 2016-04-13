@@ -28,15 +28,7 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 
 </head>
 <body>
-	<!-- header start -->
 	
-	<!-- header end -->
-	<!-- main start -->
-	<main id="main" style="margin-left:1%">
-		<!-- asideNav start -->
-		<aside id="asideNav" class="l"></aside>
-		<!-- asideNav end -->
-		<!-- content start -->
 		<div class="r content" id="user_content">
 			<div class="topNav">Wifi Billing&nbsp;&gt;&gt;&nbsp;<a href="#">Import Card</a></div>
            <form style="position:relative;" enctype="multipart/form-data" id="import_form" action="<?php echo $weburl?>/indata/infodata" method='post'>
@@ -62,12 +54,14 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 				<?php endforeach;?>
 				</select>
 				</span>
-				<label class="uploadFileBox">
+				<br>
+				<br>
+				<label class="uploadFileBox" style="margin-left:1%">
 					<span class="fileName">Select File...</span>
 					<a href="#"  class="uploadFile">choose<input type="file" name="import_input" class="import_file"></input></a>
 				</label>
 				
-				<span class="btn uploadFile_btn">
+				<span class="btn uploadFile_btn" style="margin-left:3%">
 					<input type="submit" style="height: 31px"  value="submit"></input>
 				</span>
 				
@@ -81,7 +75,7 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 				<table>
 					<thead>
 						<tr>
-							<th>序号</th>
+							<th>Num</th>
 							<th>wifi_code</th>
 							<th>wifi_password</th>
 						</tr>
@@ -114,9 +108,7 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 				</div>
 			</div>
 		</div>
-		<!-- content end -->
-	</main>
-	<!-- main end -->
+	
 	
 	<script type="text/javascript">
 
@@ -164,12 +156,7 @@ $(function(){
 
 
     		
-    		 var expiry_day = $("#expiry_day").val();
-        	 if(expiry_day==''){
-                alert("expiry_day can't empty");
-                return false;
-             }
-        	
+    		
              
         })
     

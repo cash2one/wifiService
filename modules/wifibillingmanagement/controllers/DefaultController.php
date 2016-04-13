@@ -14,6 +14,9 @@ class DefaultController extends Controller
     	if ($auth=="false"){
     		return $this->redirect("$weburl/login/login");
     	}//判断有没登陆
-       return $this->render('index');
+    	else {
+    		$power=Auth::getPower();
+    	}
+    	   return $this->render('index');
     }
 }

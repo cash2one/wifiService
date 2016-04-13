@@ -11,6 +11,7 @@ use app\components\Helper;
 use app\components\Wifi;
 use app\components\Auth;
 use app\models\seletedata;
+use app\models\WifiPayLog;
 
 require dirname(dirname(__FILE__)).'/extensions/PHPExcel.php';
 class IndataController extends Controller
@@ -152,6 +153,7 @@ class IndataController extends Controller
         }
     }
     public function actionIndataupdate(){
+    	
     	$weburl=Yii::$app->params['weburl'];
     	$auth=Auth::getAuth();
     	if ($auth=="false"){
@@ -205,8 +207,7 @@ class IndataController extends Controller
     		exit;
     	}
     		if ($wifi_id==''&&$expiry_day==''){
-    		
-    			return $this->redirect("$weburl/indata/updata?massage=1");
+    		return $this->redirect("$weburl/indata/updata?massage=1");
     		}
     		\Yii::$app->session['wifi_id']=$wifi_id;
     		\Yii::$app->session['expiry_day']=$expiry_day;
@@ -282,7 +283,7 @@ class IndataController extends Controller
     		return $this->render('currdata',$data);
 
     }
-public function actionSavedata(){
+public function actionSavedata(){//xml文件导入
 	$weburl=Yii::$app->params['weburl'];
 	$data=\Yii::$app->session['mydata'];
 	$wifi_id=\Yii::$app->session['wifi_id'];
@@ -325,20 +326,19 @@ public function actionPay(){
 		return $this->redirect("$weburl/login/login");
 	}//判断有没登陆
 	$ibs_pay = (new \yii\db\Query())
-	->from('ibs_pay')
-	->one();
+		->from('ibs_pay')
+		->all();
 	
 	if ($_POST){
 		$type=isset($_POST['type'])?$_POST['type']:'0';
-	
+		$money=isset($_POST['money'])?$_POST['money']:'0';
 		$transaction =\Yii::$app->db->beginTransaction();
 		try {
-		$command = \Yii::$app->db->createCommand("UPDATE ibs_pay SET type='$type'")->execute();
+		$command = \Yii::$app->db->createCommand("UPDATE ibs_pay SET type='$type' where id=1")->execute();
+		$command = \Yii::$app->db->createCommand("UPDATE ibs_pay SET type='$money' where id=2")->execute();
 		$transaction->commit();
-		$ibs_pay = (new \yii\db\Query())
-		->from('ibs_pay')
-		->one();
-		return $this->render("pay",array('massage'=>1,'ibs_pay'=>$ibs_pay));
+		
+		return $this->render("pay",array('massage'=>1,'type'=>$type,'money'=>$money));
 		} catch(Exception $e) {
 			$transaction->rollBack();
 			return $this->render("pay",array('massage'=>2,'type'=>$ibs_pay['type']));
@@ -357,7 +357,7 @@ public function actionReport(){
     	$count_sql="select *from ibsxml_log ";
     	/* $wifi_item=\Yii::$app->db->createCommand($sql)->queryAll(); */
     	$selectdata=new seletedata();
-		$data=$selectdata->paging($sql, $count_sql);
+		$data=$selectdata->reoprtpaging($sql, $count_sql);
    		 return $this->render('report',$data);
 	
 }
@@ -377,6 +377,21 @@ public function actionWifiurl(){//wifi地址
 	$data=$selectdata->paging($sql, $count_sql);
 	$data['massage']=$massage;
 	return $this->render("wifiurl",$data);
+}
+/* pay information 信息  */
+public function actionPayinformation(){
+	$weburl=Yii::$app->params['weburl'];
+	$auth=Auth::getAuth();
+	if ($auth=="false"){
+		return $this->redirect("$weburl/login/login");
+	}//判断有没登陆
+	$db= \Yii::$app->db;
+	$sql="select *from wifi_pay_log";
+	$count_sql="select *from wifi_pay_log";
+	/* $wifi_params =$db->createCommand($sql)->queryAll(); */
+	$selectdata=new seletedata();
+	$data=$selectdata->paging($sql, $count_sql);
+	return $this->render("payinformation",$data);
 }
 public function actionEditurl(){//url编辑
 	$weburl=Yii::$app->params['weburl'];

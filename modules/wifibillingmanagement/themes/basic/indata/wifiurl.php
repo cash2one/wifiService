@@ -40,15 +40,7 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl.'/';
 	</style>
 </head>
 <body>
-	<!-- header start -->
-	
-	<!-- header end -->
-	<!-- main start -->
-	<main id="main" style="margin-left:1%">
-		<!-- asideNav start -->
-		<aside id="asideNav" class="l"></aside>
-		<!-- asideNav end -->
-		<!-- content start -->
+
 		<div class="r content" id="user_content">
 			<div class="topNav">Wifi Billing&nbsp;&gt;&gt;&nbsp;<a href="#">Wifi URL</a></div>
 	
@@ -58,13 +50,13 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl.'/';
 					<thead>
 						<tr style="height:35px">
 							<th style="width:50px"><center><input type=checkbox name=All onclick="checkAll('ids[]')"></input></center></th>
-							<th>name</th>
-							<th>url</th>
+							<th style="text-align:center">name</th>
+							<th style="text-align:center">url</th>
 						
-							<th>remark</th>
+							<th style="text-align:center">remark</th>
 							
 							
-							<th>Operate</th>
+							<th style="text-align:center">Operate</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -105,8 +97,7 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl.'/';
 				</div>
 			</div>
 		</div>
-		<!-- content end -->
-	</main>
+	
 <form action="<?php echo $weburl?>/indata/deleteurl" method="post" id="formpost"><!-- 表单按删除按钮时提交的 -->
 <input type="hidden" name="id" id="id">
 </form>

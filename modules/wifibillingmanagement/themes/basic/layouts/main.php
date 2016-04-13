@@ -16,17 +16,54 @@ $permissionName = $module.'/'.$controller.'/'.$action;
 
 
 use Yii as myyii;
+use app\components\Auth;
 $weburl=Yii::$app->params['weburl'];
 // echo $permissionName;
 // exit;
+/* 权限控制 */
+$Wifi_package = false;
+$url = false;
+$carr = false;
+$import = false;
+$pay=false;
+$pinformation=false;
+$report=false;
+$ids=isset(Yii::$app->session['ids'])?Yii::$app->session['ids']:array();
+foreach ($ids as $k=>$v){
+	if ($v==1){
+	$Wifi_package=true;
+	}
+	if ($v==2){
+		$url=true;
+	}
+	if ($v==3){
+		$carr=true;
+	}
+	if ($v==4){
+		$import=true;
+	}
+	if ($v==5){
+		$pay=true;
+	}
+	if ($v==6){
+		$pinformation=true;
+	
+	}
+	if ($v==7){
+		$report=true;
+	}
+}
+$info=Auth::GetRole($permissionName);
 
+
+/*  */
 $Wifi_package_active = false;
 $url_active = false;
 $carr_active = false;
 $import_active = false;
 $pay_active=false;
 $report_active=false;
-
+$pinformation_active=false;
 if($permissionName == 'wifibilling/indata/index'||$permissionName=='wifibilling/indata/edit' ){
 	
 	$Wifi_package_active = true;
@@ -47,6 +84,9 @@ elseif ($permissionName=='wifibilling/indata/pay'){
 elseif ($permissionName=='wifibilling/indata/report'){
 	$report_active=true;
 }
+elseif ($permissionName=='wifibilling/indata/report'){
+	$pinformation_active=true;
+}
 
 ?>
 <?php $this->beginPage() ?>
@@ -63,10 +103,10 @@ elseif ($permissionName=='wifibilling/indata/report'){
 
 <?php $this->beginBody() ?>
 <!-- header start -->
-<header id="header">
-    <div class="l" id="title">
+<header id="header" style="width:1010px">
+    <div class="l" id="title" >
         <img src="<?=$baseUrl ?>images/logo.png">
-        <h1><?= \Yii::t('app', 'Wifi Billing Management') ?></h1>
+        <h1><?= \Yii::t('app', "Wifi Billing  Management") ?></h1>
     </div>
     <div class="r" id="user">
         <div class="l" id="user_img">
@@ -90,15 +130,25 @@ elseif ($permissionName=='wifibilling/indata/report'){
                     <a href="#"><img src="<?=$baseUrl ?>images/routeManage_icon.png"><?= \Yii::t('app', 'Wifi Billging') ?><i></i></a>
                 </li>
                 <!-- 二级 -->
+
                		 <ul>
-                    <li class="<?php echo ($Wifi_package_active ? 'active':'')?>"><a href="<?php echo $weburl?>/indata/index"><?= \Yii::t('app', 'Wifi Package') ?></a></li>
+               		 <?php if ($Wifi_package){?>
+                     <li class="<?php echo ($Wifi_package_active ? 'active':'')?>"><a href="<?php echo $weburl?>/indata/index"><?= \Yii::t('app', 'Wifi Package') ?></a></li>
+                     <?php } if ($url){?>
                      <li class="<?php echo ($url_active ? 'active':'')?>"><a href="<?php echo $weburl?>/indata/wifiurl"><?= \Yii::t('app', 'Wifi URL') ?></a></li>
-						<li class="<?php echo ($carr_active ? 'active':'')?>"><a href="<?php echo $weburl?>/indata/currdata">Curr Card</a></li>
-						<li class="<?php echo ($import_active ? 'active':'')?>"><a href="<?php echo $weburl?>/indata/updata"><?= \Yii::t('app', 'Import Card') ?></a></li>
-                    <li class="<?php echo $pay_active?'active':''?>"><a href="<?php echo $weburl?>/indata/pay"><?= \Yii::t('app', 'IBS pay set') ?></a></li>
-                    <li class="<?php echo ($report_active ? 'active':'')?>"><a href="<?php echo $weburl?>/indata/report"><?= \Yii::t('app', 'Report') ?></a></li>
-                </ul>
-            </ul>
+					 <?php } if ($carr){?>
+					 <li class="<?php echo ($carr_active ? 'active':'')?>"><a href="<?php echo $weburl?>/indata/currdata">Curr Card</a></li>
+					 <?php }if ($import){?>
+					 <li class="<?php echo ($import_active ? 'active':'')?>"><a href="<?php echo $weburl?>/indata/updata"><?= \Yii::t('app', 'Import Card') ?></a></li>
+                     <?php }if ($pay){?>
+                     <li class="<?php echo $pay_active?'active':''?>"><a href="<?php echo $weburl?>/indata/pay"><?= \Yii::t('app', 'IBS pay set') ?></a></li>
+                      <?php }if ($pinformation){?>
+                     <li class="<?php echo $pinformation_active?'active':''?>"><a href="<?php echo $weburl?>/indata/payinformation"><?= \Yii::t('app', 'Pay Information') ?></a></li>
+                     <?php }if ($report){?>
+                   	 <li class="<?php echo ($report_active ? 'active':'')?>"><a href="<?php echo $weburl?>/indata/report"><?= \Yii::t('app', 'Report') ?></a></li>
+               		 <?php }?>
+		              </ul>
+		            </ul>
             <a href="#" id="closeAsideNav"><img src="<?=$baseUrl ?>images/asideNav_close.png"></a>
         </nav>
         <nav id="asideNav_close">
@@ -115,7 +165,15 @@ elseif ($permissionName=='wifibilling/indata/report'){
 </main>
 <!-- main end -->
 <script type="text/javascript" src="<?php echo $baseUrl?>js/jquery-2.2.2.min.js"></script>
-
+<script type="text/javascript">
+$(function(){
+var a=<?php echo $info?>;
+if(a==false){
+	window.location= "<?php echo $weburl?>/default/index";
+	
+}
+})
+</script>
 <?php $this->endBody() ?>
 </body>
 </html>

@@ -26,15 +26,7 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 			<script src="<?php echo $baseUrl?>js/jqPaginator.js"></script>	
 </head>
 <body>
-	<!-- header start -->
 	
-	<!-- header end -->
-	<!-- main start -->
-	<main id="main" style="margin-left:1%">
-		<!-- asideNav start -->
-		<aside id="asideNav" class="l"></aside>
-		<!-- asideNav end -->
-		<!-- content start -->
 		<div class="r content" id="user_content">
 			<div class="topNav">Wifi Billing&nbsp;&gt;&gt;&nbsp;<a href="#">Curr Card</a></div>
 			<form id='member_list' method="post">
@@ -55,14 +47,14 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 			<div class="searchResult">
 				<table>
 					<thead>
-						<tr style="height:35px">
-						<th>Num</th>
-						<th>wifi_code</th>
-						<th>wifi_password</th>
-						<th>expiry_day</th>
-						<th>Wifi Pakage</th>
-						<th>status_sale</th>
-						<th>time</th>
+						<tr style="height:35px;">
+						<th style="text-align:center">Num</th>
+						<th style="text-align:center">wifi_code</th>
+						<th style="text-align:center">wifi_password</th>
+						<th style="text-align:center">expiry_day</th>
+						<th style="text-align:center">Wifi Pakage</th>
+						<th style="text-align:center">status_sale</th>
+						<th style="text-align:center" >time</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -90,9 +82,7 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 			</div>
 			 </form>
 		</div>
-		<!-- content end -->
-	</main>
-	<!-- main end -->
+		
 	<script type="text/javascript">
 	jQuery(function($) {
 		/* 获取参数 */

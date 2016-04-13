@@ -29,26 +29,28 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 	</style>
 </head>
 <body>
-	<!-- header start -->
 	
-	<!-- header end -->
-	<!-- main start -->
-	<main id="main" style="margin-left:1%">
-		<!-- asideNav start -->
-		<aside id="asideNav" class="l"></aside>
-		<!-- asideNav end -->
-		<!-- content start -->
 				<div class="r content" id="user_content">
 			<div class="topNav">Wifi Billging&nbsp;&gt;&gt;&nbsp;<a href="#">IBS pay set</a></div>
 	<div>
+	<?php $type=isset($type)?$type:0;
+		  $money=isset($money)?$money:0;
+	?>
 		<form method="post">
-				<label class="label_checkbox">
-					<span>IBS Pay:</span>
-					<label <?php echo $ibs_pay['type']==1?"class='btn_checkbox on'":"class='btn_checkbox'"?> >
-						<input type="checkbox" name="type" value="1" <?php echo $ibs_pay['type']==1?"checked='checked'":'';?> ></input>
+			<label class="label_checkbox">
+				<span>IBS Pay:</span>
+					<label <?php echo $type==1?"class='btn_checkbox on'":"class='btn_checkbox'"?> >
+						<input type="checkbox" name="type" value="1" <?php echo $type==1?"checked='checked'":'';?> ></input>
 						<span></span>
 					</label>
-				</label>
+					</label>
+				<label class="label_checkbox" style="margin-left: 30px">
+				<span>Check Balance:</span>
+					<label <?php echo $money==1?"class='btn_checkbox on'":"class='btn_checkbox'"?> >
+						<input type="checkbox" name="money" value="1" <?php echo $money==1?"checked='checked'":'';?> ></input>
+						<span></span>
+					</label>
+					</label>
 				<input type="hidden" name='t' value='1'>
 				<span class="btn"><input type="submit" value="submit"></input></span>
 			
@@ -56,8 +58,7 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 			</div>
 
 		</div>
-	</main>
-	<!-- main end -->
+	
 		<script type="text/javascript" src="<?php echo $baseUrl?>js/jquery-2.2.2.min.js"></script>
 		<script type="text/javascript">
 $(function(){

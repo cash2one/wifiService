@@ -43,14 +43,6 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 	</style>
 </head>
 <body>
-	<!-- header start -->
-	
-	<!-- header end -->
-	<!-- main start -->
-	<main id="main" style="margin-left:1%">
-		<!-- asideNav start -->
-		<aside id="asideNav" class="l"></aside>
-		<!-- asideNav end -->
 		<!-- content start -->
 		<div class="r content" id="user_content">
 			<div class="topNav">Wifi Billing&nbsp;&gt;&gt;&nbsp;<a href="#">Wifi Package</a></div>
@@ -62,11 +54,11 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 					<thead>
 						<tr style=height:35px>
 							<th><center><input type=checkbox name=All onclick="checkAll('ids[]')"></input></center></th>
-							<th>Name</th>
-							<th>WIFI(MB)</th>
-							<th>Price</th>
-							<th>Status</th>
-							<th>Operate</th>
+							<th style="text-align:center">Name</th>
+							<th style="text-align:center">WIFI(MB)</th>
+							<th style="text-align:center">Price</th>
+							<th style="text-align:center">Status</th>
+							<th style="text-align:center">Operate</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -125,7 +117,6 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 			</div>
 		</div>
 		<!-- content end -->
-	</main>
 <form action="<?php echo $weburl?>/indata/delete" method="post" id="formpost"><!-- 按删除按钮时提交的表单 -->
 <input type="hidden" name="wifi_id" id="wifi_id">
 </form>
