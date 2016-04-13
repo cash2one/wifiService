@@ -4,16 +4,41 @@ use Yii;
 use app\components\Wifi;
 class WifiPay 
 {
+	//请求IBS系统查询余额
+	public static function folioBalance($passport,$identififer)
+	{
+// 		$url = Wifi::selectUrl('ibs_request_url');
+		$url = "http://localhost/wifiservice/web/wifi/testbalance";  //test url
+		//1.生成xml
+		$time = date('Y-m-d H:i:s',time());
+		$request = "<?xml version='1.0' encoding='utf-8' ?><DTSFolioBalance><Header Action='folioBalance' CreationDateTime='$time' SourceApplication='WIFI'  MessageIdentifier='$identififer' /><Body><FolioBalance PassportNO='$passport' /></Body></DTSFolioBalance>";
+		
+		//2.记录 DTSFolioBalance XML 内容 到 ibsxml_log 数据表	
+		$type_request = 1;     //'类型，0:接收 1:发送',
+		Wifi::writeXMLToDB($request,$type_request,$time,$identififer);
+		
+		
+		//3.调用查询接口，发送 DTSFolioBalance XML内容
+		$folioBalance  = Wifi::httpsRequest($url, $request);  //返回值字段为 : PassportNO, BalanceDue
+		
+		//4.记录 DTSFolioBalance 返回的XML内容
+		$type_response = 0;     //'类型，0:接收 1:发送',
+		Wifi::writeXMLToDB($folioBalance,$type_response,$time,$identififer);
+		
+		return $folioBalance;
+	}
+
+	
 	//请求DTSPostCharge
 	public static function DTSPostCharge($passport,$TenderType,$checkNumber,$price,$identififer)
 	{
-		$url = Wifi::selectUrl('ibs_request_url');
-// 		$url = "http://localhost/wifiservice/web/wifi/test";
+// 		$url = Wifi::selectUrl('ibs_request_url');
+		$url = "http://localhost/wifiservice/web/wifi/testpost";   //test url
 		//1.生成xml
 		$time = date('Y-m-d H:i:s',time());
-		$request = "<?xml version='1.0' encoding='utf-8' ?><DTSPostCharge><Header Action='PMS' CreationDateTime='$time' SourceApplication='WIFI' MessageIdentifier='$identififer' /><Body><PostCharge  OriginatingSystemID='WIFI' Department='WIFI' CheckNumber='$checkNumber'  PassportNo='$passport'  TenderType='$TenderType'  Gratuity=''  SalesAmount='$price' TaxAmount=''  TotalSales='$price' /></Body></DTSPostCharge>";
+		$request = "<?xml version='1.0' encoding='utf-8' ?><DTSPostCharge><Header Action='DTSPostCharge' CreationDateTime='$time' SourceApplication='WIFI' MessageIdentifier='$identififer' /><Body><PostCharge  OriginatingSystemID='WIFI' Department='WIFI' CheckNumber='$checkNumber'  PassportNo='$passport'  TenderType='$TenderType'  Gratuity=''  SalesAmount='$price' TaxAmount=''  TotalSales='$price' /></Body></DTSPostCharge>";
 		
-		//2.记录 Postcharge XML 内容 到 ibsxml_log	
+		//2.记录 DTSPostCharge XML 内容 到 ibsxml_log 数据表	
 		$type_request = 1;     //'类型，0:接收 1:发送',
 		Wifi::writeXMLToDB($request,$type_request,$time,$identififer);
 		
@@ -51,9 +76,13 @@ class WifiPay
 	
 	
 	
-	
-
-	
+	//查找数据库，是否需要查询余额
+	public static function isCheckBalance()
+	{
+		$sql = "SELECT type FROM ibs_pay WHERE id = 2";
+		$type = Yii::$app->db->createCommand($sql)->queryOne()['type'];
+		return $type;
+	}
 	
 	
 }

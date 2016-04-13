@@ -14858,3 +14858,944 @@ $_SERVER = [
     'REQUEST_TIME_FLOAT' => 1460443088.79
     'REQUEST_TIME' => 1460443088
 ]
+2016-04-12 17:01:08 [172.16.3.96][-][2k2047kinbrmtbcktsbfj8mu45][error][yii\web\HttpException:404] exception 'yii\base\InvalidRouteException' with message 'Unable to resolve the request "assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff".' in /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Module.php:460
+Stack trace:
+#0 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/web/Application.php(84): yii\base\Module->runAction('assets/font/DXI...', Array)
+#1 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 /Users/cc/Sites/wifiservice/web/index.php(14): yii\base\Application->run()
+#3 {main}
+
+Next exception 'yii\web\NotFoundHttpException' with message 'Page not found.' in /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/web/Application.php:96
+Stack trace:
+#0 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 /Users/cc/Sites/wifiservice/web/index.php(14): yii\base\Application->run()
+#2 {main}
+2016-04-12 17:01:08 [172.16.3.96][-][2k2047kinbrmtbcktsbfj8mu45][warning][yii\debug\Module::checkAccess] Access to debugger is denied due to IP address restriction. The requesting IP address is 172.16.3.96
+    in /Users/cc/Sites/wifiservice/views/layouts/main.php:75
+2016-04-12 17:01:08 [172.16.3.96][-][2k2047kinbrmtbcktsbfj8mu45][info][application] $_COOKIE = [
+    'PHPSESSID' => '2k2047kinbrmtbcktsbfj8mu45'
+    '_csrf' => 'd346b56b98afa22da2084174cf5bb2203541659c30f6833a6392874843fe18a8a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"JLwdj5Iw0gNMqx-F3IOZA2KoLSR3nO2X\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => '172.16.3.89'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0'
+    'HTTP_ACCEPT' => 'application/font-woff2;q=1.0,application/font-woff;q=0.9,*/*;q=0.8'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3'
+    'HTTP_ACCEPT_ENCODING' => 'identity'
+    'HTTP_REFERER' => 'http://172.16.3.89/wifiservice/web/assets/css/ace-fonts.css'
+    'HTTP_COOKIE' => 'PHPSESSID=2k2047kinbrmtbcktsbfj8mu45; _csrf=d346b56b98afa22da2084174cf5bb2203541659c30f6833a6392874843fe18a8a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22JLwdj5Iw0gNMqx-F3IOZA2KoLSR3nO2X%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'PATH' => '/usr/bin:/bin:/usr/sbin:/sbin'
+    'SERVER_SIGNATURE' => ''
+    'SERVER_SOFTWARE' => 'Apache/2.4.18 (Unix) PHP/5.5.31'
+    'SERVER_NAME' => '172.16.3.89'
+    'SERVER_ADDR' => '172.16.3.89'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '172.16.3.96'
+    'DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'SERVER_ADMIN' => 'vin_120@163.com'
+    'SCRIPT_FILENAME' => '/Users/cc/Sites/wifiservice/web/index.php'
+    'REMOTE_PORT' => '56534'
+    'REDIRECT_URL' => '/wifiservice/web/assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/wifiservice/web/assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff'
+    'SCRIPT_NAME' => '/wifiservice/web/index.php'
+    'PATH_INFO' => '/assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff'
+    'PATH_TRANSLATED' => '/Users/cc/Sites/assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff'
+    'PHP_SELF' => '/wifiservice/web/index.php/assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff'
+    'REQUEST_TIME_FLOAT' => 1460451668.198
+    'REQUEST_TIME' => 1460451668
+]
+2016-04-12 17:01:08 [172.16.3.96][-][2k2047kinbrmtbcktsbfj8mu45][error][yii\web\HttpException:404] exception 'yii\base\InvalidRouteException' with message 'Unable to resolve the request "assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff".' in /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Module.php:460
+Stack trace:
+#0 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/web/Application.php(84): yii\base\Module->runAction('assets/font/cJZ...', Array)
+#1 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 /Users/cc/Sites/wifiservice/web/index.php(14): yii\base\Application->run()
+#3 {main}
+
+Next exception 'yii\web\NotFoundHttpException' with message 'Page not found.' in /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/web/Application.php:96
+Stack trace:
+#0 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 /Users/cc/Sites/wifiservice/web/index.php(14): yii\base\Application->run()
+#2 {main}
+2016-04-12 17:01:08 [172.16.3.96][-][2k2047kinbrmtbcktsbfj8mu45][warning][yii\debug\Module::checkAccess] Access to debugger is denied due to IP address restriction. The requesting IP address is 172.16.3.96
+    in /Users/cc/Sites/wifiservice/views/layouts/main.php:75
+2016-04-12 17:01:08 [172.16.3.96][-][2k2047kinbrmtbcktsbfj8mu45][info][application] $_COOKIE = [
+    'PHPSESSID' => '2k2047kinbrmtbcktsbfj8mu45'
+    '_csrf' => 'd346b56b98afa22da2084174cf5bb2203541659c30f6833a6392874843fe18a8a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"JLwdj5Iw0gNMqx-F3IOZA2KoLSR3nO2X\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => '172.16.3.89'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0'
+    'HTTP_ACCEPT' => 'application/font-woff2;q=1.0,application/font-woff;q=0.9,*/*;q=0.8'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3'
+    'HTTP_ACCEPT_ENCODING' => 'identity'
+    'HTTP_REFERER' => 'http://172.16.3.89/wifiservice/web/assets/css/ace-fonts.css'
+    'HTTP_COOKIE' => 'PHPSESSID=2k2047kinbrmtbcktsbfj8mu45; _csrf=d346b56b98afa22da2084174cf5bb2203541659c30f6833a6392874843fe18a8a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22JLwdj5Iw0gNMqx-F3IOZA2KoLSR3nO2X%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'PATH' => '/usr/bin:/bin:/usr/sbin:/sbin'
+    'SERVER_SIGNATURE' => ''
+    'SERVER_SOFTWARE' => 'Apache/2.4.18 (Unix) PHP/5.5.31'
+    'SERVER_NAME' => '172.16.3.89'
+    'SERVER_ADDR' => '172.16.3.89'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '172.16.3.96'
+    'DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'SERVER_ADMIN' => 'vin_120@163.com'
+    'SCRIPT_FILENAME' => '/Users/cc/Sites/wifiservice/web/index.php'
+    'REMOTE_PORT' => '56535'
+    'REDIRECT_URL' => '/wifiservice/web/assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/wifiservice/web/assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff'
+    'SCRIPT_NAME' => '/wifiservice/web/index.php'
+    'PATH_INFO' => '/assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff'
+    'PATH_TRANSLATED' => '/Users/cc/Sites/assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff'
+    'PHP_SELF' => '/wifiservice/web/index.php/assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff'
+    'REQUEST_TIME_FLOAT' => 1460451668.371
+    'REQUEST_TIME' => 1460451668
+]
+2016-04-12 17:01:15 [172.16.3.96][-][-][warning][yii\debug\Module::checkAccess] Access to debugger is denied due to IP address restriction. The requesting IP address is 172.16.3.96
+    in /Users/cc/Sites/wifiservice/modules/wifibillingmanagement/themes/basic/layouts/main.php:119
+    in /Users/cc/Sites/wifiservice/modules/wifibillingmanagement/controllers/DefaultController.php:17
+2016-04-12 17:01:15 [172.16.3.96][-][-][info][application] $_COOKIE = [
+    'PHPSESSID' => '2k2047kinbrmtbcktsbfj8mu45'
+    '_csrf' => 'd346b56b98afa22da2084174cf5bb2203541659c30f6833a6392874843fe18a8a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"JLwdj5Iw0gNMqx-F3IOZA2KoLSR3nO2X\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    'admin_id' => 1
+    'admin_name' => 'super_admin'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => '172.16.3.89'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_REFERER' => 'http://172.16.3.89/wifiservice/web/wifibilling/login/login'
+    'HTTP_COOKIE' => 'PHPSESSID=2k2047kinbrmtbcktsbfj8mu45; _csrf=d346b56b98afa22da2084174cf5bb2203541659c30f6833a6392874843fe18a8a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22JLwdj5Iw0gNMqx-F3IOZA2KoLSR3nO2X%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'PATH' => '/usr/bin:/bin:/usr/sbin:/sbin'
+    'SERVER_SIGNATURE' => ''
+    'SERVER_SOFTWARE' => 'Apache/2.4.18 (Unix) PHP/5.5.31'
+    'SERVER_NAME' => '172.16.3.89'
+    'SERVER_ADDR' => '172.16.3.89'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '172.16.3.96'
+    'DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'SERVER_ADMIN' => 'vin_120@163.com'
+    'SCRIPT_FILENAME' => '/Users/cc/Sites/wifiservice/web/index.php'
+    'REMOTE_PORT' => '56522'
+    'REDIRECT_URL' => '/wifiservice/web/wifibilling'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/wifiservice/web/wifibilling'
+    'SCRIPT_NAME' => '/wifiservice/web/index.php'
+    'PATH_INFO' => '/wifibilling'
+    'PATH_TRANSLATED' => '/Users/cc/Sites/wifibilling'
+    'PHP_SELF' => '/wifiservice/web/index.php/wifibilling'
+    'REQUEST_TIME_FLOAT' => 1460451675.056
+    'REQUEST_TIME' => 1460451675
+]
+2016-04-12 17:01:20 [172.16.3.96][-][-][warning][yii\debug\Module::checkAccess] Access to debugger is denied due to IP address restriction. The requesting IP address is 172.16.3.96
+    in /Users/cc/Sites/wifiservice/modules/wifibillingmanagement/themes/basic/layouts/main.php:119
+    in /Users/cc/Sites/wifiservice/modules/wifibillingmanagement/controllers/IndataController.php:282
+2016-04-12 17:01:19 [172.16.3.96][-][-][info][application] $_COOKIE = [
+    'PHPSESSID' => '2k2047kinbrmtbcktsbfj8mu45'
+    '_csrf' => 'd346b56b98afa22da2084174cf5bb2203541659c30f6833a6392874843fe18a8a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"JLwdj5Iw0gNMqx-F3IOZA2KoLSR3nO2X\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    'admin_id' => 1
+    'admin_name' => 'super_admin'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => '172.16.3.89'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_REFERER' => 'http://172.16.3.89/wifiservice/web/wifibilling'
+    'HTTP_COOKIE' => 'PHPSESSID=2k2047kinbrmtbcktsbfj8mu45; _csrf=d346b56b98afa22da2084174cf5bb2203541659c30f6833a6392874843fe18a8a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22JLwdj5Iw0gNMqx-F3IOZA2KoLSR3nO2X%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'PATH' => '/usr/bin:/bin:/usr/sbin:/sbin'
+    'SERVER_SIGNATURE' => ''
+    'SERVER_SOFTWARE' => 'Apache/2.4.18 (Unix) PHP/5.5.31'
+    'SERVER_NAME' => '172.16.3.89'
+    'SERVER_ADDR' => '172.16.3.89'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '172.16.3.96'
+    'DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'SERVER_ADMIN' => 'vin_120@163.com'
+    'SCRIPT_FILENAME' => '/Users/cc/Sites/wifiservice/web/index.php'
+    'REMOTE_PORT' => '56522'
+    'REDIRECT_URL' => '/wifiservice/web/wifibilling/indata/currdata'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/wifiservice/web/wifibilling/indata/currdata'
+    'SCRIPT_NAME' => '/wifiservice/web/index.php'
+    'PATH_INFO' => '/wifibilling/indata/currdata'
+    'PATH_TRANSLATED' => '/Users/cc/Sites/wifibilling/indata/currdata'
+    'PHP_SELF' => '/wifiservice/web/index.php/wifibilling/indata/currdata'
+    'REQUEST_TIME_FLOAT' => 1460451679.838
+    'REQUEST_TIME' => 1460451679
+]
+2016-04-12 17:01:20 [172.16.3.96][-][-][warning][yii\debug\Module::checkAccess] Access to debugger is denied due to IP address restriction. The requesting IP address is 172.16.3.96
+    in /Users/cc/Sites/wifiservice/modules/wifibillingmanagement/themes/basic/layouts/main.php:119
+    in /Users/cc/Sites/wifiservice/modules/wifibillingmanagement/controllers/IndataController.php:195
+2016-04-12 17:01:20 [172.16.3.96][-][-][info][application] $_COOKIE = [
+    'PHPSESSID' => '2k2047kinbrmtbcktsbfj8mu45'
+    '_csrf' => 'd346b56b98afa22da2084174cf5bb2203541659c30f6833a6392874843fe18a8a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"JLwdj5Iw0gNMqx-F3IOZA2KoLSR3nO2X\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    'admin_id' => 1
+    'admin_name' => 'super_admin'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => '172.16.3.89'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_REFERER' => 'http://172.16.3.89/wifiservice/web/wifibilling'
+    'HTTP_COOKIE' => 'PHPSESSID=2k2047kinbrmtbcktsbfj8mu45; _csrf=d346b56b98afa22da2084174cf5bb2203541659c30f6833a6392874843fe18a8a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22JLwdj5Iw0gNMqx-F3IOZA2KoLSR3nO2X%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'PATH' => '/usr/bin:/bin:/usr/sbin:/sbin'
+    'SERVER_SIGNATURE' => ''
+    'SERVER_SOFTWARE' => 'Apache/2.4.18 (Unix) PHP/5.5.31'
+    'SERVER_NAME' => '172.16.3.89'
+    'SERVER_ADDR' => '172.16.3.89'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '172.16.3.96'
+    'DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'SERVER_ADMIN' => 'vin_120@163.com'
+    'SCRIPT_FILENAME' => '/Users/cc/Sites/wifiservice/web/index.php'
+    'REMOTE_PORT' => '56546'
+    'REDIRECT_URL' => '/wifiservice/web/wifibilling/indata/updata'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/wifiservice/web/wifibilling/indata/updata'
+    'SCRIPT_NAME' => '/wifiservice/web/index.php'
+    'PATH_INFO' => '/wifibilling/indata/updata'
+    'PATH_TRANSLATED' => '/Users/cc/Sites/wifibilling/indata/updata'
+    'PHP_SELF' => '/wifiservice/web/index.php/wifibilling/indata/updata'
+    'REQUEST_TIME_FLOAT' => 1460451680.231
+    'REQUEST_TIME' => 1460451680
+]
+2016-04-13 09:21:22 [::1][-][hl4q1v7icn4aeaardfdouplor5][error][yii\web\HttpException:404] exception 'yii\base\InvalidRouteException' with message 'Unable to resolve the request "assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff".' in /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Module.php:460
+Stack trace:
+#0 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/web/Application.php(84): yii\base\Module->runAction('assets/font/cJZ...', Array)
+#1 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 /Users/cc/Sites/wifiservice/web/index.php(14): yii\base\Application->run()
+#3 {main}
+
+Next exception 'yii\web\NotFoundHttpException' with message 'Page not found.' in /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/web/Application.php:96
+Stack trace:
+#0 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 /Users/cc/Sites/wifiservice/web/index.php(14): yii\base\Application->run()
+#2 {main}
+2016-04-13 09:21:22 [::1][-][hl4q1v7icn4aeaardfdouplor5][info][application] $_COOKIE = [
+    'PHPSESSID' => 'hl4q1v7icn4aeaardfdouplor5'
+    '_csrf' => 'ce3f2ed92787f72820182797c459c1a85f9697095a0de194c7ba6891ad3e23f6a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"NZtvKXz6SVMyJVfXS2Mhzf2hVOk1ZHze\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36'
+    'HTTP_ORIGIN' => 'http://localhost'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_REFERER' => 'http://localhost/wifiservice/web/assets/css/ace-fonts.css'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'en-US,en;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=hl4q1v7icn4aeaardfdouplor5; _csrf=ce3f2ed92787f72820182797c459c1a85f9697095a0de194c7ba6891ad3e23f6a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22NZtvKXz6SVMyJVfXS2Mhzf2hVOk1ZHze%22%3B%7D'
+    'PATH' => '/usr/bin:/bin:/usr/sbin:/sbin'
+    'SERVER_SIGNATURE' => ''
+    'SERVER_SOFTWARE' => 'Apache/2.4.18 (Unix) PHP/5.5.31'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'SERVER_ADMIN' => 'vin_120@163.com'
+    'SCRIPT_FILENAME' => '/Users/cc/Sites/wifiservice/web/index.php'
+    'REMOTE_PORT' => '49634'
+    'REDIRECT_URL' => '/wifiservice/web/assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/wifiservice/web/assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff'
+    'SCRIPT_NAME' => '/wifiservice/web/index.php'
+    'PATH_INFO' => '/assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff'
+    'PATH_TRANSLATED' => '/Users/cc/Sites/assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff'
+    'PHP_SELF' => '/wifiservice/web/index.php/assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff'
+    'REQUEST_TIME_FLOAT' => 1460510482.594
+    'REQUEST_TIME' => 1460510482
+]
+2016-04-13 09:21:22 [::1][-][hl4q1v7icn4aeaardfdouplor5][error][yii\web\HttpException:404] exception 'yii\base\InvalidRouteException' with message 'Unable to resolve the request "assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff".' in /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Module.php:460
+Stack trace:
+#0 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/web/Application.php(84): yii\base\Module->runAction('assets/font/DXI...', Array)
+#1 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 /Users/cc/Sites/wifiservice/web/index.php(14): yii\base\Application->run()
+#3 {main}
+
+Next exception 'yii\web\NotFoundHttpException' with message 'Page not found.' in /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/web/Application.php:96
+Stack trace:
+#0 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 /Users/cc/Sites/wifiservice/web/index.php(14): yii\base\Application->run()
+#2 {main}
+2016-04-13 09:21:22 [::1][-][hl4q1v7icn4aeaardfdouplor5][info][application] $_COOKIE = [
+    'PHPSESSID' => 'hl4q1v7icn4aeaardfdouplor5'
+    '_csrf' => 'ce3f2ed92787f72820182797c459c1a85f9697095a0de194c7ba6891ad3e23f6a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"NZtvKXz6SVMyJVfXS2Mhzf2hVOk1ZHze\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36'
+    'HTTP_ORIGIN' => 'http://localhost'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_REFERER' => 'http://localhost/wifiservice/web/assets/css/ace-fonts.css'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'en-US,en;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=hl4q1v7icn4aeaardfdouplor5; _csrf=ce3f2ed92787f72820182797c459c1a85f9697095a0de194c7ba6891ad3e23f6a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22NZtvKXz6SVMyJVfXS2Mhzf2hVOk1ZHze%22%3B%7D'
+    'PATH' => '/usr/bin:/bin:/usr/sbin:/sbin'
+    'SERVER_SIGNATURE' => ''
+    'SERVER_SOFTWARE' => 'Apache/2.4.18 (Unix) PHP/5.5.31'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'SERVER_ADMIN' => 'vin_120@163.com'
+    'SCRIPT_FILENAME' => '/Users/cc/Sites/wifiservice/web/index.php'
+    'REMOTE_PORT' => '49633'
+    'REDIRECT_URL' => '/wifiservice/web/assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/wifiservice/web/assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff'
+    'SCRIPT_NAME' => '/wifiservice/web/index.php'
+    'PATH_INFO' => '/assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff'
+    'PATH_TRANSLATED' => '/Users/cc/Sites/assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff'
+    'PHP_SELF' => '/wifiservice/web/index.php/assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff'
+    'REQUEST_TIME_FLOAT' => 1460510482.594
+    'REQUEST_TIME' => 1460510482
+]
+2016-04-13 10:43:00 [172.16.3.96][-][hu68n6nark8i53or3glbe8qdl0][error][yii\web\HttpException:404] exception 'yii\base\InvalidRouteException' with message 'Unable to resolve the request "assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff".' in /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Module.php:460
+Stack trace:
+#0 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/web/Application.php(84): yii\base\Module->runAction('assets/font/cJZ...', Array)
+#1 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 /Users/cc/Sites/wifiservice/web/index.php(14): yii\base\Application->run()
+#3 {main}
+
+Next exception 'yii\web\NotFoundHttpException' with message 'Page not found.' in /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/web/Application.php:96
+Stack trace:
+#0 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 /Users/cc/Sites/wifiservice/web/index.php(14): yii\base\Application->run()
+#2 {main}
+2016-04-13 10:43:00 [172.16.3.96][-][hu68n6nark8i53or3glbe8qdl0][warning][yii\debug\Module::checkAccess] Access to debugger is denied due to IP address restriction. The requesting IP address is 172.16.3.96
+    in /Users/cc/Sites/wifiservice/views/layouts/main.php:75
+2016-04-13 10:43:00 [172.16.3.96][-][hu68n6nark8i53or3glbe8qdl0][info][application] $_COOKIE = [
+    'PHPSESSID' => 'hu68n6nark8i53or3glbe8qdl0'
+    '_csrf' => 'f48d8584ef967ebc75765d993062c4a9260d7007bf90a860fb24501ab39987e6a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"M0bebOkzmidIeaftjl4XLSk-mcL4YAm5\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => '172.16.3.89'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36'
+    'HTTP_ORIGIN' => 'http://172.16.3.89'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_REFERER' => 'http://172.16.3.89/wifiservice/web/assets/css/ace-fonts.css'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=hu68n6nark8i53or3glbe8qdl0; _csrf=f48d8584ef967ebc75765d993062c4a9260d7007bf90a860fb24501ab39987e6a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22M0bebOkzmidIeaftjl4XLSk-mcL4YAm5%22%3B%7D'
+    'PATH' => '/usr/bin:/bin:/usr/sbin:/sbin'
+    'SERVER_SIGNATURE' => ''
+    'SERVER_SOFTWARE' => 'Apache/2.4.18 (Unix) PHP/5.5.31'
+    'SERVER_NAME' => '172.16.3.89'
+    'SERVER_ADDR' => '172.16.3.89'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '172.16.3.96'
+    'DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'SERVER_ADMIN' => 'vin_120@163.com'
+    'SCRIPT_FILENAME' => '/Users/cc/Sites/wifiservice/web/index.php'
+    'REMOTE_PORT' => '56727'
+    'REDIRECT_URL' => '/wifiservice/web/assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/wifiservice/web/assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff'
+    'SCRIPT_NAME' => '/wifiservice/web/index.php'
+    'PATH_INFO' => '/assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff'
+    'PATH_TRANSLATED' => '/Users/cc/Sites/assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff'
+    'PHP_SELF' => '/wifiservice/web/index.php/assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff'
+    'REQUEST_TIME_FLOAT' => 1460515380.56
+    'REQUEST_TIME' => 1460515380
+]
+2016-04-13 10:43:00 [172.16.3.96][-][hu68n6nark8i53or3glbe8qdl0][error][yii\web\HttpException:404] exception 'yii\base\InvalidRouteException' with message 'Unable to resolve the request "assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff".' in /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Module.php:460
+Stack trace:
+#0 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/web/Application.php(84): yii\base\Module->runAction('assets/font/DXI...', Array)
+#1 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 /Users/cc/Sites/wifiservice/web/index.php(14): yii\base\Application->run()
+#3 {main}
+
+Next exception 'yii\web\NotFoundHttpException' with message 'Page not found.' in /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/web/Application.php:96
+Stack trace:
+#0 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 /Users/cc/Sites/wifiservice/web/index.php(14): yii\base\Application->run()
+#2 {main}
+2016-04-13 10:43:00 [172.16.3.96][-][hu68n6nark8i53or3glbe8qdl0][warning][yii\debug\Module::checkAccess] Access to debugger is denied due to IP address restriction. The requesting IP address is 172.16.3.96
+    in /Users/cc/Sites/wifiservice/views/layouts/main.php:75
+2016-04-13 10:43:00 [172.16.3.96][-][hu68n6nark8i53or3glbe8qdl0][info][application] $_COOKIE = [
+    'PHPSESSID' => 'hu68n6nark8i53or3glbe8qdl0'
+    '_csrf' => 'f48d8584ef967ebc75765d993062c4a9260d7007bf90a860fb24501ab39987e6a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"M0bebOkzmidIeaftjl4XLSk-mcL4YAm5\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => '172.16.3.89'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36'
+    'HTTP_ORIGIN' => 'http://172.16.3.89'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_REFERER' => 'http://172.16.3.89/wifiservice/web/assets/css/ace-fonts.css'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=hu68n6nark8i53or3glbe8qdl0; _csrf=f48d8584ef967ebc75765d993062c4a9260d7007bf90a860fb24501ab39987e6a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22M0bebOkzmidIeaftjl4XLSk-mcL4YAm5%22%3B%7D'
+    'PATH' => '/usr/bin:/bin:/usr/sbin:/sbin'
+    'SERVER_SIGNATURE' => ''
+    'SERVER_SOFTWARE' => 'Apache/2.4.18 (Unix) PHP/5.5.31'
+    'SERVER_NAME' => '172.16.3.89'
+    'SERVER_ADDR' => '172.16.3.89'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '172.16.3.96'
+    'DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'SERVER_ADMIN' => 'vin_120@163.com'
+    'SCRIPT_FILENAME' => '/Users/cc/Sites/wifiservice/web/index.php'
+    'REMOTE_PORT' => '56728'
+    'REDIRECT_URL' => '/wifiservice/web/assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/wifiservice/web/assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff'
+    'SCRIPT_NAME' => '/wifiservice/web/index.php'
+    'PATH_INFO' => '/assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff'
+    'PATH_TRANSLATED' => '/Users/cc/Sites/assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff'
+    'PHP_SELF' => '/wifiservice/web/index.php/assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff'
+    'REQUEST_TIME_FLOAT' => 1460515380.56
+    'REQUEST_TIME' => 1460515380
+]
+2016-04-13 10:43:09 [172.16.3.96][-][-][warning][yii\debug\Module::checkAccess] Access to debugger is denied due to IP address restriction. The requesting IP address is 172.16.3.96
+    in /Users/cc/Sites/wifiservice/modules/wifibillingmanagement/themes/basic/layouts/main.php:119
+    in /Users/cc/Sites/wifiservice/modules/wifibillingmanagement/controllers/DefaultController.php:17
+2016-04-13 10:43:09 [172.16.3.96][-][-][info][application] $_COOKIE = [
+    '_csrf' => 'f48d8584ef967ebc75765d993062c4a9260d7007bf90a860fb24501ab39987e6a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"M0bebOkzmidIeaftjl4XLSk-mcL4YAm5\";}'
+    'PHPSESSID' => 'hu68n6nark8i53or3glbe8qdl0'
+]
+
+$_SESSION = [
+    '__flash' => []
+    'admin_id' => 1
+    'admin_name' => 'super_admin'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => '172.16.3.89'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36'
+    'HTTP_REFERER' => 'http://172.16.3.89/wifiservice/web/wifibilling/login/login'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => '_csrf=f48d8584ef967ebc75765d993062c4a9260d7007bf90a860fb24501ab39987e6a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22M0bebOkzmidIeaftjl4XLSk-mcL4YAm5%22%3B%7D; PHPSESSID=hu68n6nark8i53or3glbe8qdl0'
+    'PATH' => '/usr/bin:/bin:/usr/sbin:/sbin'
+    'SERVER_SIGNATURE' => ''
+    'SERVER_SOFTWARE' => 'Apache/2.4.18 (Unix) PHP/5.5.31'
+    'SERVER_NAME' => '172.16.3.89'
+    'SERVER_ADDR' => '172.16.3.89'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '172.16.3.96'
+    'DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'SERVER_ADMIN' => 'vin_120@163.com'
+    'SCRIPT_FILENAME' => '/Users/cc/Sites/wifiservice/web/index.php'
+    'REMOTE_PORT' => '56730'
+    'REDIRECT_URL' => '/wifiservice/web/wifibilling'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/wifiservice/web/wifibilling'
+    'SCRIPT_NAME' => '/wifiservice/web/index.php'
+    'PATH_INFO' => '/wifibilling'
+    'PATH_TRANSLATED' => '/Users/cc/Sites/wifibilling'
+    'PHP_SELF' => '/wifiservice/web/index.php/wifibilling'
+    'REQUEST_TIME_FLOAT' => 1460515389.113
+    'REQUEST_TIME' => 1460515389
+]
+2016-04-13 10:43:53 [172.16.3.96][-][-][warning][yii\debug\Module::checkAccess] Access to debugger is denied due to IP address restriction. The requesting IP address is 172.16.3.96
+    in /Users/cc/Sites/wifiservice/modules/wifibillingmanagement/themes/basic/layouts/main.php:119
+    in /Users/cc/Sites/wifiservice/modules/wifibillingmanagement/controllers/IndataController.php:347
+2016-04-13 10:43:53 [172.16.3.96][-][-][info][application] $_COOKIE = [
+    '_csrf' => 'f48d8584ef967ebc75765d993062c4a9260d7007bf90a860fb24501ab39987e6a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"M0bebOkzmidIeaftjl4XLSk-mcL4YAm5\";}'
+    'PHPSESSID' => 'hu68n6nark8i53or3glbe8qdl0'
+]
+
+$_SESSION = [
+    '__flash' => []
+    'admin_id' => 1
+    'admin_name' => 'super_admin'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => '172.16.3.89'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36'
+    'HTTP_REFERER' => 'http://172.16.3.89/wifiservice/web/wifibilling'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => '_csrf=f48d8584ef967ebc75765d993062c4a9260d7007bf90a860fb24501ab39987e6a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22M0bebOkzmidIeaftjl4XLSk-mcL4YAm5%22%3B%7D; PHPSESSID=hu68n6nark8i53or3glbe8qdl0'
+    'PATH' => '/usr/bin:/bin:/usr/sbin:/sbin'
+    'SERVER_SIGNATURE' => ''
+    'SERVER_SOFTWARE' => 'Apache/2.4.18 (Unix) PHP/5.5.31'
+    'SERVER_NAME' => '172.16.3.89'
+    'SERVER_ADDR' => '172.16.3.89'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '172.16.3.96'
+    'DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'SERVER_ADMIN' => 'vin_120@163.com'
+    'SCRIPT_FILENAME' => '/Users/cc/Sites/wifiservice/web/index.php'
+    'REMOTE_PORT' => '56761'
+    'REDIRECT_URL' => '/wifiservice/web/wifibilling/indata/pay'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/wifiservice/web/wifibilling/indata/pay'
+    'SCRIPT_NAME' => '/wifiservice/web/index.php'
+    'PATH_INFO' => '/wifibilling/indata/pay'
+    'PATH_TRANSLATED' => '/Users/cc/Sites/wifibilling/indata/pay'
+    'PHP_SELF' => '/wifiservice/web/index.php/wifibilling/indata/pay'
+    'REQUEST_TIME_FLOAT' => 1460515433.508
+    'REQUEST_TIME' => 1460515433
+]
+2016-04-13 10:45:36 [172.16.3.96][-][-][warning][yii\debug\Module::checkAccess] Access to debugger is denied due to IP address restriction. The requesting IP address is 172.16.3.96
+    in /Users/cc/Sites/wifiservice/modules/wifibillingmanagement/themes/basic/layouts/main.php:119
+    in /Users/cc/Sites/wifiservice/modules/wifibillingmanagement/controllers/IndataController.php:347
+2016-04-13 10:45:36 [172.16.3.96][-][-][info][application] $_COOKIE = [
+    '_csrf' => 'f48d8584ef967ebc75765d993062c4a9260d7007bf90a860fb24501ab39987e6a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"M0bebOkzmidIeaftjl4XLSk-mcL4YAm5\";}'
+    'PHPSESSID' => 'hu68n6nark8i53or3glbe8qdl0'
+]
+
+$_SESSION = [
+    '__flash' => []
+    'admin_id' => 1
+    'admin_name' => 'super_admin'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => '172.16.3.89'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36'
+    'HTTP_REFERER' => 'http://172.16.3.89/wifiservice/web/wifibilling/indata/pay'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => '_csrf=f48d8584ef967ebc75765d993062c4a9260d7007bf90a860fb24501ab39987e6a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22M0bebOkzmidIeaftjl4XLSk-mcL4YAm5%22%3B%7D; PHPSESSID=hu68n6nark8i53or3glbe8qdl0'
+    'PATH' => '/usr/bin:/bin:/usr/sbin:/sbin'
+    'SERVER_SIGNATURE' => ''
+    'SERVER_SOFTWARE' => 'Apache/2.4.18 (Unix) PHP/5.5.31'
+    'SERVER_NAME' => '172.16.3.89'
+    'SERVER_ADDR' => '172.16.3.89'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '172.16.3.96'
+    'DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'SERVER_ADMIN' => 'vin_120@163.com'
+    'SCRIPT_FILENAME' => '/Users/cc/Sites/wifiservice/web/index.php'
+    'REMOTE_PORT' => '56813'
+    'REDIRECT_URL' => '/wifiservice/web/wifibilling/indata/pay'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/wifiservice/web/wifibilling/indata/pay'
+    'SCRIPT_NAME' => '/wifiservice/web/index.php'
+    'PATH_INFO' => '/wifibilling/indata/pay'
+    'PATH_TRANSLATED' => '/Users/cc/Sites/wifibilling/indata/pay'
+    'PHP_SELF' => '/wifiservice/web/index.php/wifibilling/indata/pay'
+    'REQUEST_TIME_FLOAT' => 1460515536.124
+    'REQUEST_TIME' => 1460515536
+]
+2016-04-13 14:01:44 [::1][-][-][error][yii\base\ErrorException:2] exception 'yii\base\ErrorException' with message 'Missing argument 2 for app\components\WifiPay::folioBalance(), called in /Users/cc/Sites/wifiservice/controllers/WifiController.php on line 84 and defined' in /Users/cc/Sites/wifiservice/components/WifiPay.php:8
+Stack trace:
+#0 /Users/cc/Sites/wifiservice/components/WifiPay.php(8): yii\base\ErrorHandler->handleError(2, 'Missing argumen...', '/Users/cc/Sites...', 8, Array)
+#1 /Users/cc/Sites/wifiservice/controllers/WifiController.php(84): app\components\WifiPay::folioBalance('123456')
+#2 [internal function]: app\controllers\WifiController->actionPayment()
+#3 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/InlineAction.php(55): call_user_func_array(Array, Array)
+#4 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Controller.php(154): yii\base\InlineAction->runWithParams(Array)
+#5 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Module.php(454): yii\base\Controller->runAction('payment', Array)
+#6 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/web/Application.php(84): yii\base\Module->runAction('wifi/payment', Array)
+#7 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#8 /Users/cc/Sites/wifiservice/web/index.php(14): yii\base\Application->run()
+#9 {main}
+2016-04-13 14:01:44 [::1][-][-][info][application] $_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'en-US,en;q=0.8'
+    'PATH' => '/usr/bin:/bin:/usr/sbin:/sbin'
+    'SERVER_SIGNATURE' => ''
+    'SERVER_SOFTWARE' => 'Apache/2.4.18 (Unix) PHP/5.5.31'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'SERVER_ADMIN' => 'vin_120@163.com'
+    'SCRIPT_FILENAME' => '/Users/cc/Sites/wifiservice/web/index.php'
+    'REMOTE_PORT' => '51944'
+    'REDIRECT_URL' => '/wifiservice/web/wifi/payment'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/wifiservice/web/wifi/payment'
+    'SCRIPT_NAME' => '/wifiservice/web/index.php'
+    'PATH_INFO' => '/wifi/payment'
+    'PATH_TRANSLATED' => '/Users/cc/Sites/wifi/payment'
+    'PHP_SELF' => '/wifiservice/web/index.php/wifi/payment'
+    'REQUEST_TIME_FLOAT' => 1460527304.834
+    'REQUEST_TIME' => 1460527304
+]
+2016-04-13 14:06:54 [::1][-][-][error][yii\base\ErrorException:8] exception 'yii\base\ErrorException' with message 'Undefined variable: 99.99' in /Users/cc/Sites/wifiservice/controllers/WifiController.php:88
+Stack trace:
+#0 /Users/cc/Sites/wifiservice/controllers/WifiController.php(88): yii\base\ErrorHandler->handleError(8, 'Undefined varia...', '/Users/cc/Sites...', 88, Array)
+#1 [internal function]: app\controllers\WifiController->actionPayment()
+#2 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/InlineAction.php(55): call_user_func_array(Array, Array)
+#3 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Controller.php(154): yii\base\InlineAction->runWithParams(Array)
+#4 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Module.php(454): yii\base\Controller->runAction('payment', Array)
+#5 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/web/Application.php(84): yii\base\Module->runAction('wifi/payment', Array)
+#6 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#7 /Users/cc/Sites/wifiservice/web/index.php(14): yii\base\Application->run()
+#8 {main}
+2016-04-13 14:06:54 [::1][-][-][info][application] $_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'en-US,en;q=0.8'
+    'PATH' => '/usr/bin:/bin:/usr/sbin:/sbin'
+    'SERVER_SIGNATURE' => ''
+    'SERVER_SOFTWARE' => 'Apache/2.4.18 (Unix) PHP/5.5.31'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'SERVER_ADMIN' => 'vin_120@163.com'
+    'SCRIPT_FILENAME' => '/Users/cc/Sites/wifiservice/web/index.php'
+    'REMOTE_PORT' => '52013'
+    'REDIRECT_URL' => '/wifiservice/web/wifi/payment'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/wifiservice/web/wifi/payment'
+    'SCRIPT_NAME' => '/wifiservice/web/index.php'
+    'PATH_INFO' => '/wifi/payment'
+    'PATH_TRANSLATED' => '/Users/cc/Sites/wifi/payment'
+    'PHP_SELF' => '/wifiservice/web/index.php/wifi/payment'
+    'REQUEST_TIME_FLOAT' => 1460527614.078
+    'REQUEST_TIME' => 1460527614
+]
+2016-04-13 15:00:15 [172.16.3.96][-][vnvq8ktdbkt7kvincjuiq07u20][error][yii\web\HttpException:404] exception 'yii\base\InvalidRouteException' with message 'Unable to resolve the request "assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff".' in /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Module.php:460
+Stack trace:
+#0 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/web/Application.php(84): yii\base\Module->runAction('assets/font/cJZ...', Array)
+#1 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 /Users/cc/Sites/wifiservice/web/index.php(14): yii\base\Application->run()
+#3 {main}
+
+Next exception 'yii\web\NotFoundHttpException' with message 'Page not found.' in /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/web/Application.php:96
+Stack trace:
+#0 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 /Users/cc/Sites/wifiservice/web/index.php(14): yii\base\Application->run()
+#2 {main}
+2016-04-13 15:00:15 [172.16.3.96][-][vnvq8ktdbkt7kvincjuiq07u20][warning][yii\debug\Module::checkAccess] Access to debugger is denied due to IP address restriction. The requesting IP address is 172.16.3.96
+    in /Users/cc/Sites/wifiservice/views/layouts/main.php:75
+2016-04-13 15:00:15 [172.16.3.96][-][vnvq8ktdbkt7kvincjuiq07u20][info][application] $_COOKIE = [
+    'PHPSESSID' => 'vnvq8ktdbkt7kvincjuiq07u20'
+    '_csrf' => '86c34b32d8caa4bd0b4b247306010ad9adfd552fc456c748a2f6533a6484206da:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"ThjId8Y75j_kqlERHrjnaMyHuZ1pqAHi\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => '172.16.3.89'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36'
+    'HTTP_ORIGIN' => 'http://172.16.3.89'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_REFERER' => 'http://172.16.3.89/wifiservice/web/assets/css/ace-fonts.css'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=vnvq8ktdbkt7kvincjuiq07u20; _csrf=86c34b32d8caa4bd0b4b247306010ad9adfd552fc456c748a2f6533a6484206da%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22ThjId8Y75j_kqlERHrjnaMyHuZ1pqAHi%22%3B%7D'
+    'PATH' => '/usr/bin:/bin:/usr/sbin:/sbin'
+    'SERVER_SIGNATURE' => ''
+    'SERVER_SOFTWARE' => 'Apache/2.4.18 (Unix) PHP/5.5.31'
+    'SERVER_NAME' => '172.16.3.89'
+    'SERVER_ADDR' => '172.16.3.89'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '172.16.3.96'
+    'DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'SERVER_ADMIN' => 'vin_120@163.com'
+    'SCRIPT_FILENAME' => '/Users/cc/Sites/wifiservice/web/index.php'
+    'REMOTE_PORT' => '60384'
+    'REDIRECT_URL' => '/wifiservice/web/assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/wifiservice/web/assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff'
+    'SCRIPT_NAME' => '/wifiservice/web/index.php'
+    'PATH_INFO' => '/assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff'
+    'PATH_TRANSLATED' => '/Users/cc/Sites/assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff'
+    'PHP_SELF' => '/wifiservice/web/index.php/assets/font/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff'
+    'REQUEST_TIME_FLOAT' => 1460530815.298
+    'REQUEST_TIME' => 1460530815
+]
+2016-04-13 15:00:15 [172.16.3.96][-][vnvq8ktdbkt7kvincjuiq07u20][error][yii\web\HttpException:404] exception 'yii\base\InvalidRouteException' with message 'Unable to resolve the request "assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff".' in /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Module.php:460
+Stack trace:
+#0 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/web/Application.php(84): yii\base\Module->runAction('assets/font/DXI...', Array)
+#1 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 /Users/cc/Sites/wifiservice/web/index.php(14): yii\base\Application->run()
+#3 {main}
+
+Next exception 'yii\web\NotFoundHttpException' with message 'Page not found.' in /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/web/Application.php:96
+Stack trace:
+#0 /Users/cc/Sites/wifiservice/vendor/yiisoft/yii2/base/Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 /Users/cc/Sites/wifiservice/web/index.php(14): yii\base\Application->run()
+#2 {main}
+2016-04-13 15:00:15 [172.16.3.96][-][vnvq8ktdbkt7kvincjuiq07u20][warning][yii\debug\Module::checkAccess] Access to debugger is denied due to IP address restriction. The requesting IP address is 172.16.3.96
+    in /Users/cc/Sites/wifiservice/views/layouts/main.php:75
+2016-04-13 15:00:15 [172.16.3.96][-][vnvq8ktdbkt7kvincjuiq07u20][info][application] $_COOKIE = [
+    'PHPSESSID' => 'vnvq8ktdbkt7kvincjuiq07u20'
+    '_csrf' => '86c34b32d8caa4bd0b4b247306010ad9adfd552fc456c748a2f6533a6484206da:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"ThjId8Y75j_kqlERHrjnaMyHuZ1pqAHi\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => '172.16.3.89'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36'
+    'HTTP_ORIGIN' => 'http://172.16.3.89'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_REFERER' => 'http://172.16.3.89/wifiservice/web/assets/css/ace-fonts.css'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=vnvq8ktdbkt7kvincjuiq07u20; _csrf=86c34b32d8caa4bd0b4b247306010ad9adfd552fc456c748a2f6533a6484206da%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22ThjId8Y75j_kqlERHrjnaMyHuZ1pqAHi%22%3B%7D'
+    'PATH' => '/usr/bin:/bin:/usr/sbin:/sbin'
+    'SERVER_SIGNATURE' => ''
+    'SERVER_SOFTWARE' => 'Apache/2.4.18 (Unix) PHP/5.5.31'
+    'SERVER_NAME' => '172.16.3.89'
+    'SERVER_ADDR' => '172.16.3.89'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '172.16.3.96'
+    'DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'SERVER_ADMIN' => 'vin_120@163.com'
+    'SCRIPT_FILENAME' => '/Users/cc/Sites/wifiservice/web/index.php'
+    'REMOTE_PORT' => '60384'
+    'REDIRECT_URL' => '/wifiservice/web/assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/wifiservice/web/assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff'
+    'SCRIPT_NAME' => '/wifiservice/web/index.php'
+    'PATH_INFO' => '/assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff'
+    'PATH_TRANSLATED' => '/Users/cc/Sites/assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff'
+    'PHP_SELF' => '/wifiservice/web/index.php/assets/font/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff'
+    'REQUEST_TIME_FLOAT' => 1460530815.368
+    'REQUEST_TIME' => 1460530815
+]
+2016-04-13 15:00:16 [172.16.3.96][-][-][warning][yii\debug\Module::checkAccess] Access to debugger is denied due to IP address restriction. The requesting IP address is 172.16.3.96
+    in /Users/cc/Sites/wifiservice/modules/wifibillingmanagement/themes/basic/layouts/main.php:119
+    in /Users/cc/Sites/wifiservice/modules/wifibillingmanagement/controllers/DefaultController.php:17
+2016-04-13 15:00:16 [172.16.3.96][-][-][info][application] $_COOKIE = [
+    '_csrf' => '86c34b32d8caa4bd0b4b247306010ad9adfd552fc456c748a2f6533a6484206da:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"ThjId8Y75j_kqlERHrjnaMyHuZ1pqAHi\";}'
+    'PHPSESSID' => 'vnvq8ktdbkt7kvincjuiq07u20'
+]
+
+$_SESSION = [
+    '__flash' => []
+    'admin_id' => 1
+    'admin_name' => 'super_admin'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => '172.16.3.89'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36'
+    'HTTP_REFERER' => 'http://172.16.3.89/wifiservice/web/wifibilling/login/login'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => '_csrf=86c34b32d8caa4bd0b4b247306010ad9adfd552fc456c748a2f6533a6484206da%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22ThjId8Y75j_kqlERHrjnaMyHuZ1pqAHi%22%3B%7D; PHPSESSID=vnvq8ktdbkt7kvincjuiq07u20'
+    'PATH' => '/usr/bin:/bin:/usr/sbin:/sbin'
+    'SERVER_SIGNATURE' => ''
+    'SERVER_SOFTWARE' => 'Apache/2.4.18 (Unix) PHP/5.5.31'
+    'SERVER_NAME' => '172.16.3.89'
+    'SERVER_ADDR' => '172.16.3.89'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '172.16.3.96'
+    'DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => '/Users/cc/Sites/'
+    'SERVER_ADMIN' => 'vin_120@163.com'
+    'SCRIPT_FILENAME' => '/Users/cc/Sites/wifiservice/web/index.php'
+    'REMOTE_PORT' => '60384'
+    'REDIRECT_URL' => '/wifiservice/web/wifibilling'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/wifiservice/web/wifibilling'
+    'SCRIPT_NAME' => '/wifiservice/web/index.php'
+    'PATH_INFO' => '/wifibilling'
+    'PATH_TRANSLATED' => '/Users/cc/Sites/wifibilling'
+    'PHP_SELF' => '/wifiservice/web/index.php/wifibilling'
+    'REQUEST_TIME_FLOAT' => 1460530816.777
+    'REQUEST_TIME' => 1460530816
+]

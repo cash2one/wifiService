@@ -38,32 +38,49 @@ class Wifi
 	
 
 	
-	//购买上网卡
-	public static function wifiCardBuy($wifi_id,$passport,$pay_log_id)
+	//查询卡号是否存在，并把卡号设置成售出状态
+	public static function CheckCardAndSetSold($wifi_id)
 	{
-		//生成一张上网卡
-		$wifi_info_id = self::wifiCard($wifi_id);
-		
+		$sql = "SELECT wifi_info_id FROM wifi_info WHERE wifi_id='$wifi_id' AND status_sale=0 LIMIT 1";
+		$wifi_info_id = Yii::$app->db->createCommand($sql)->queryOne()['wifi_info_id'];
+		if($wifi_info_id){
+			$sql = "UPDATE wifi_info SET status_sale='1' WHERE wifi_info_id='$wifi_info_id'";
+			Yii::$app->db->createCommand($sql)->execute();
+			return $wifi_info_id;
+		}else {
+			return false;
+		}
+	}
+	
+	
+	//设置卡号为未售出
+	public static function SetUnsold($wifi_info_id)
+	{
+		$sql = "UPDATE wifi_info SET status_sale='0' WHERE wifi_info_id='$wifi_info_id'";
+		Yii::$app->db->createCommand($sql)->execute();
+	}
+	
+	
+	
+	
+	//购买上网卡
+	public static function wifiCardBuy($wifi_info_id,$passport,$pay_log_id)
+	{
+		$time = date('Y-m-d h:i:s',time());
+		//设置wifi_info表中的开通时间
+		self::setWifiInfoTime($wifi_info_id,$time);
 		//把相关信息保存到wifi_item_status
 		self::wifiItemSave($passport,$wifi_info_id,$pay_log_id);
 		
 	}
 	
-	//生成一张上网卡
-	private static function wifiCard($wifi_id)
+	//设置wifi_info表中的开通时间
+	private static function setWifiInfoTime($wifi_info_id,$time)
 	{
-		//通过wifi_id 更改wifi_info表中的数据状态,并获取被更改数据的wifi_info_id
-		$time = date('Y-m-d H:i:s',time());
-		$sql = "SELECT wifi_info_id FROM wifi_info WHERE wifi_id='$wifi_id' AND status_sale=0 LIMIT 1";
-		$wifi_info_id = Yii::$app->db->createCommand($sql)->queryOne()['wifi_info_id'];
-		if($wifi_info_id){
-			$sql = "UPDATE wifi_info SET status_sale='1' ,time='$time' WHERE wifi_info_id='$wifi_info_id'";
-			Yii::$app->db->createCommand($sql)->execute();
-			return $wifi_info_id;
-		}else {
-			return 0;
-		}
+		$sql = "UPDATE wifi_info SET time='$time'  WHERE wifi_info_id='$wifi_info_id'";
+		Yii::$app->db->createCommand($sql)->execute();
 	}
+	
 	
 	//把相关信息保存到wifi_item_status
 	private  static function wifiItemSave($passport,$wifi_info_id,$pay_log_id)
@@ -73,13 +90,15 @@ class Wifi
 	}
 	
 	
-	//获取游客购买的上网卡  
+
+	
+	// 获取游客购买的上网卡
 	// 判断有效期
 	public static function getWifiItemStatus($passport)
 	{
 		//1.查找 wifi_info 的开通时间
 		//2.查找 wifi_item 的有效时间
-		//3.对比当前时间和开通时间，如果小于有效时决，显示
+		//3.对比当前时间和开通时间，如果小于有效时间，显示
 
 		$time = date('Y-m-d H:i:s',time());
 		
@@ -145,7 +164,7 @@ class Wifi
 			curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
 			
 		}
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);		//return the transfer as a string
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);		// return the transfer as a string
 		$output = curl_exec($curl);							// $output contains the output string
 		curl_close($curl);									// close curl resource to free up system resources
 		return $output;

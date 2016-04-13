@@ -15,8 +15,6 @@ class WifiConnect
 		return $response;
 	}
 	
-	
-	
 	//portal认证，登录
 	public static function PortalLogin($username,$userpasswd)
 	{
@@ -56,15 +54,15 @@ class WifiConnect
 		preg_match('/Location:(.*?)\n/',$header,$matches);
 		if($matches){
 			return $matches[0];
-		}else 
+		}else {
 			return false;
+		}
 	}
 	
 	
 	//解析url的参数
 	private static function ParseURL($url)
 	{
-		
 		$arr = parse_url($url);
 		$arr_query = self::convertUrlQuery($arr['query']);
 		return $arr_query;

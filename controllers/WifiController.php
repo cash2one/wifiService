@@ -46,73 +46,189 @@ class WifiController extends Controller
     }
     
     
-/*
     //支付wifi套餐
     public function actionPayment()
     {
-    	$wifi_id = Yii::$app->request->post('wifi_id');
-    	$passport = Yii::$app->request->post('PassportNO');
-    	$TenderType = Yii::$app->request->post('TenderType');
-    	$name = Yii::$app->request->post('Name');
-    	$iso = Yii::$app->request->post('iso');
+//     	$wifi_id = Yii::$app->request->post('wifi_id');
+//     	$passport = Yii::$app->request->post('PassportNO');
+//     	$TenderType = Yii::$app->request->post('TenderType');
+//     	$name = Yii::$app->request->post('Name');
+//     	$iso = Yii::$app->request->post('iso');
+    	 
+//     	if($iso === 'null'){
+//     		$iso = 'zh_cn';
+//     	}
+    	 
     	
-    	if($iso === 'null'){
-    		$iso = 'zh_cn';
-    	}
-    	$identififer = $passport.".".time();
+    	//--test code begin--
+    	$wifi_id = '2';
+    	$passport = '123456';
+    	$TenderType = '02';
+    	$name='zhangsan';
+    	$iso = 'zh_cn';
+    	//--test code end ---
+    	
+    	
+    	
     	$wifi_item = Wifi::getWifiItem($wifi_id,$iso);
-    	$checkNumber = WifiPay::createChecknum(); 
-    	$type = WifiPay::isIBSPay(); //是否通过ibs收费系统计费
+    	$checkNumber = WifiPay::createChecknum();
+    	$identififer = $passport.".".time();
     	
-    	if($type){
-    		//---sql事务---
-    		$transaction = Yii::$app->db->beginTransaction();
-    		try {
-    			//.调用支付接口
-    			$postResponse = WifiPay::DTSPostCharge($passport,$TenderType,$checkNumber,$wifi_item['sale_price'],$identififer);
-    			//.判断 PostchargeResponse XML
-    			$PostchargeResponse = Wifi::xmlUnparsed($postResponse);
-    			if(isset($PostchargeResponse->attributes()->Code)){
-    				// 如果error，就返回 '{"status":"ERROR"}'，
-    				$result = '{"status":"ERROR"}';
+    	//.先查询上网卡是否存在, 如果存在, 把卡号的状态设置为已售出,  通过wifi_id来查找
+    	$wifi_info_id = Wifi::CheckCardAndSetSold($wifi_id);
+    	if($wifi_info_id){
+    		
+    		$ibsPayType = WifiPay::isIBSPay(); //是否通过ibs收费系统计费
+    		if($ibsPayType){
+    			//通过ibs系统支付
+    			$checkBalance = WifiPay::isCheckBalance();  //是否需要查询余额
+    		
+    			if($checkBalance){
+    				//需要查询余额
+    		
+    				//.发送 xml,请求FolioBalance接口
+    				$balanceResponse = WifiPay::folioBalance($passport,$identififer);
+    				 
+    				//.解析FolioBalance xml报文格式
+    				$balance = Wifi::xmlUnparsed($balanceResponse);
+    				 
+    				//.判断 FolioBalance xml 报文格式是否正确
+    				if(isset($balance->Body->FolioBalance->attributes()->BalanceDue)){
+    		
+    					$balanceDue = $balance->Body->FolioBalance->attributes()->BalanceDue;		//解析xml，ibs返回的余额
+    					if($balanceDue < $wifi_item['sale_price']){
+    						//余额不足，返回 '{"status":"FAIL"}'，
+    						$result = '{"status":"FAIL"}';
+    						//把卡号的状态设置为代售状态
+    						Wifi::SetUnsold($wifi_info_id);
+    					}else{
+    						
+    						//---sql事务---begin--
+    						$transaction = Yii::$app->db->beginTransaction();
+    						try {
+    							//.调用支付接口
+    							$postResponse = WifiPay::DTSPostCharge($passport,$TenderType,$checkNumber,$wifi_item['sale_price'],$identififer);
+    							
+    							if($postResponse != ""){
+    								//.判断 PostchargeResponse XML
+    								$PostchargeResponse = Wifi::xmlUnparsed($postResponse);
+    								
+    								if(isset($PostchargeResponse->attributes()->Code)){
+    									// 解析DTSPostCharge xml报文出错，返回 '{"status":"ERROR"}'，
+    									$result = '{"status":"ERROR"}';
+    									
+    									//把卡号的状态设置为代售状态
+    									Wifi::SetUnsold($wifi_info_id);
+    								}else {
+    									//.记录本地数据库的支付信息
+    									$pay_log_id = Wifi::writePayLogToDB($checkNumber,$passport,$name,$wifi_item['sale_price']);
+    									
+    									//.购买上网卡
+    									Wifi::wifiCardBuy($wifi_info_id,$passport,$pay_log_id);
+    									$result = '{"status":"OK"}';
+    								}
+    								
+    								$transaction->commit();
+    							}else {
+    								//支付时，收到的DTSPostCharge xml报文为空，出错
+    								$result = '{"status":"ERROR"}';
+    								//把卡号的状态设置为代售状态
+    								Wifi::SetUnsold($wifi_info_id);
+    							}
+    						}catch(Exception $e){
+    							$transaction->rollBack();
+    							$result = '{"status":"ERROR"}';
+    							//把卡号的状态设置为代售状态
+    							Wifi::SetUnsold($wifi_info_id);
+    							
+    						}
+    						//---sql事务---end---
+    						
+    					}
+    				}else{
+    					//.接收到的FolioBalance xml 报文解析出错，或者接收不到报文
+    					$result = '{"status":"ERROR"}';
+    					//把卡号的状态设置为代售状态
+    					Wifi::SetUnsold($wifi_info_id);
+    				}
     			}else {
-    				//.记录本地数据库的支付信息
-    				$pay_log_id = Wifi::writePayLogToDB($checkNumber,$passport,$name,$wifi_item['sale_price']);
-    				//.购买上网卡
-    				Wifi::wifiCardBuy($wifi_id,$passport,$pay_log_id);
-    				$result = '{"status":"OK"}';
+    				//不查询余额，直接支付
+    				
+    				//---sql事务---begin--
+    				$transaction = Yii::$app->db->beginTransaction();
+    				try {
+    					//.调用支付接口
+    					$postResponse = WifiPay::DTSPostCharge($passport,$TenderType,$checkNumber,$wifi_item['sale_price'],$identififer);
+    						
+    					if($postResponse != ""){
+    						//.判断 PostchargeResponse XML
+    						$PostchargeResponse = Wifi::xmlUnparsed($postResponse);
+    				
+    						if(isset($PostchargeResponse->attributes()->Code)){
+    							// 解析DTSPostCharge xml报文出错，返回 '{"status":"ERROR"}'，
+    							$result = '{"status":"ERROR"}';
+    								
+    							//把卡号的状态设置为代售状态
+    							Wifi::SetUnsold($wifi_info_id);
+    						}else {
+    							//.记录本地数据库的支付信息
+    							$pay_log_id = Wifi::writePayLogToDB($checkNumber,$passport,$name,$wifi_item['sale_price']);
+    								
+    							//.购买上网卡
+    							Wifi::wifiCardBuy($wifi_info_id,$passport,$pay_log_id);
+    							$result = '{"status":"OK"}';
+    						}
+    				
+    						$transaction->commit();
+    					}else {
+    						//支付时，收到的DTSPostCharge xml报文为空，出错
+    						$result = '{"status":"ERROR"}';
+    						//把卡号的状态设置为代售状态
+    						Wifi::SetUnsold($wifi_info_id);
+    					}
+    				}catch(Exception $e){
+    					$transaction->rollBack();
+    					$result = '{"status":"ERROR"}';
+    					//把卡号的状态设置为代售状态
+    					Wifi::SetUnsold($wifi_info_id);
+    						
+    				}
+    				//---sql事务---end---
+    				
     			}
-    			$transaction->commit();
-    		}catch(Exception $e){
-    			$transaction->rollBack();
-    			$result = '{"status":"ERROR"}';
+    		
+    		}else{
+    			//不通过ibs系统支付
+    			
+    			//---sql事务---begin--
+    			$transaction = Yii::$app->db->beginTransaction();
+    			try {
+    				//.记录本地数据库的支付信息
+	    			$pay_log_id = Wifi::writePayLogToDB($checkNumber,$passport,$name,$wifi_item['sale_price']);
+	    			
+	    			//.购买上网卡
+	    			Wifi::wifiCardBuy($wifi_info_id,$passport,$pay_log_id);
+	    			$result = '{"status":"OK"}';
+	    			$transaction->commit();
+    			}catch(Exception $e){
+    				$transaction->rollBack();
+    				$result = '{"status":"ERROR"}';
+    				//把卡号的状态设置为代售状态
+    				Wifi::SetUnsold($wifi_info_id);
+    			}
+    			//---sql事务---end--
+    		
     		}
-    		//---sql事务---end-- 
-	    	
     	}else{
-    		//不通过ibs系统支付
-    		//---sql事务---
-    		$transaction = Yii::$app->db->beginTransaction();
-    		try {
-	    		//1.记录本地数据库的支付信息
-	    		$pay_log_id = Wifi::writePayLogToDB($checkNumber,$passport,$name,$wifi_item['sale_price']);
-	    		//2.购买上网卡
-	    		Wifi::wifiCardBuy($wifi_id,$passport,$pay_log_id);
-	    		
-	    		$transaction->commit();
-	    		$result = '{"status":"OK","name":"'.$name.'"}';
-	    		
-    		}catch(Exception $e){
-    			$transaction->rollBack();
-    			$result = '{"status":"ERROR"}';
-    		}
-    		//---sql事务---end--
+    		$result = '{"status":"NoCard"}';
     	}
     	echo $result;
     }
+
     
-*/
-    //支付wifi套餐
+    
+    /*
+   	//支付wifi套餐
     public function actionPayment()
     {
     	$wifi_id = Yii::$app->request->post('wifi_id');
@@ -130,38 +246,59 @@ class WifiController extends Controller
     	$checkNumber = WifiPay::createChecknum();
     	$identififer = $passport.".".time();
     
-    	$type = WifiPay::isIBSPay(); //是否通过ibs收费系统计费
+    	$ibsPayType = WifiPay::isIBSPay(); //是否通过ibs收费系统计费
     	 
-    	if($type){
-    
+    	if($ibsPayType){
     		//通过ibs系统支付
-    		//---sql事务---
-			$transaction = Yii::$app->db->beginTransaction();
-    		try {
-    			//3.调用支付接口
-    			$postResponse = WifiPay::DTSPostCharge($passport,$TenderType,$checkNumber,$wifi_item['sale_price'],$identififer);
-    			if($postResponse != ""){
-    				//4.判断 PostchargeResponse XML
-    				$PostchargeResponse = Wifi::xmlUnparsed($postResponse);
-    				if(isset($PostchargeResponse->attributes()->Code)){
-    					// 如果error，就返回 '{"status":"ERROR"}'，
-    					$result = '{"status":"ERROR"}';
-    				}else {
-    					//5.记录本地数据库的支付信息
-    					$pay_log_id = Wifi::writePayLogToDB($checkNumber,$passport,$name,$wifi_item['sale_price']);
-    					//6.购买上网卡
-    					Wifi::wifiCardBuy($wifi_id,$passport,$pay_log_id);
-    					$result = '{"status":"OK"}';
-    				}
-    				$transaction->commit();
+    		$checkBalance = WifiPay::isCheckBalance();  //是否需要查询余额
+    		
+    		if($checkBalance){
+    			//需要查询余额
+    			//构造XML数据，接口对接
+    			//1.发送 xml,请求FolioBalance接口， 返回参数 ：BalanceDue , 判断余额
+    			$balance = WifiPay::folioBalance($passport);
+    			
+    			//2.判断余额是否充足
+    			if($balance < $wifi_item['sale_price']){
+    				// 如果余额不足，返回 '{"status":"FAIL"}'，
+    				$result = '{"status":"FAIL"}';
     			}else {
-    				$result = '{"status":"ERROR"}';
+    				//---sql事务---
+    				$transaction = Yii::$app->db->beginTransaction();
+    				try {
+    					
+    					
+    					
+    					//3.调用支付接口
+    					$postResponse = WifiPay::DTSPostCharge($passport,$TenderType,$checkNumber,$wifi_item['sale_price'],$identififer);
+    					if($postResponse != ""){
+    						//4.判断 PostchargeResponse XML
+    						$PostchargeResponse = Wifi::xmlUnparsed($postResponse);
+    						if(isset($PostchargeResponse->attributes()->Code)){
+    							// 如果error，就返回 '{"status":"ERROR"}'，
+    							$result = '{"status":"ERROR"}';
+    						}else {
+    							//5.记录本地数据库的支付信息
+    							$pay_log_id = Wifi::writePayLogToDB($checkNumber,$passport,$name,$wifi_item['sale_price']);
+    							//6.购买上网卡
+    							Wifi::wifiCardBuy($wifi_id,$passport,$pay_log_id);
+    							$result = '{"status":"OK"}';
+    						}
+    						$transaction->commit();
+    					}else {
+    						$result = '{"status":"ERROR"}';
+    					}
+    				}catch(Exception $e){
+    					$transaction->rollBack();
+    					$result = '{"status":"ERROR"}';
+    				}
+    				//---sql事务---end--
     			}
-    		}catch(Exception $e){
-    			$transaction->rollBack();
-    			$result = '{"status":"ERROR"}';
+    		}else {
+    			//不查询余额，直接支付
+    			//todo
     		}
-    		//---sql事务---end--
+    		
     	}else{
     		//不通过ibs系统支付
     		//---sql事务---
@@ -185,139 +322,9 @@ class WifiController extends Controller
     	echo $result;
     
     }
-
-     
-  /*  
-    //支付wifi套餐
-    public function actionPayment()
-    {
-    	$url = Wifi::selectUrl('ibs_request_url');
-    	$content = file_get_contents('php://input');
-    	if($content){
-    		if(isset( Wifi::xmlUnparsed($content)->Header)){
-    			$type_response = 0; 	//'类型，0:接收 1:发送',
-    			$PostchargeResponse = Wifi::xmlUnparsed($content);
-    			$header = $PostchargeResponse->Header;
-    			$time = date('Y-m-d H:i:s',time());
-    			$identififer = $header->attributes()->MessageIdentifier;
-    			//记录 PostchargeResponse 返回的XML内容
-    			Wifi::writeXMLToDB($content,$type_response,$time,$identififer);
-    			exit;
-    		}else{
-    			//发送xml内容
-    			$wifi_id = Yii::$app->request->post('wifi_id');
-    			$passport = Yii::$app->request->post('PassportNO');
-    			$TenderType = Yii::$app->request->post('TenderType');
-    			$name = Yii::$app->request->post('Name');
-    			$iso = Yii::$app->request->post('iso');
-    			if($iso === 'null'){
-    				$iso = 'zh_cn';
-    			}
-    			 
-    			$identififer = $passport.".".time();
-    			$wifi_item = Wifi::getWifiItem($wifi_id,$iso);
-    			$checkNumber = WifiPay::createChecknum();
-    			$type = WifiPay::isIBSPay();
-    			if($type){
-    				//通过ibs收费系统计费
-    				WifiPay::DTSPostCharge($passport,$TenderType,$checkNumber,$wifi_item['sale_price'],$identififer);
-    				//把$identififer传到前端
-    				$result = '{"status":"OK","type":"1","server_name":"'.$_SERVER["SERVER_NAME"].'","url":"'.$url.'","identififer":"'.$identififer.'"}';
-    			}else{
-    				//不通过ibs系统支付
-    				//---sql事务---
-    				$transaction = Yii::$app->db->beginTransaction();
-    				try {
-    					//1.记录本地数据库的支付信息
-    					$pay_log_id = Wifi::writePayLogToDB($checkNumber,$passport,$name,$wifi_item['sale_price']);
-    					//2.购买上网卡
-    					Wifi::wifiCardBuy($wifi_id,$passport,$pay_log_id);
-    			
-    					$transaction->commit();
-    					$result = '{"status":"OK","type":"0","identififer":"'.$identififer.'"}';
-    			
-    				}catch(Exception $e){
-    					$transaction->rollBack();
-    					$result = '{"status":"ERROR","type":"0"}';
-    				}
-    				//---sql事务---end--
-    			}
-    			echo $result;
-    		}
-    	}
-    }
-	
+    */
     
-   	
- */ 
     
-  /*  
-    //IBSwifi的回传内容,保存到数据库中  todo
-    public function actionIbsresponse()
-    {
-    	if( $_SERVER['REQUEST_METHOD'] === 'POST' ){
-    		// 接收
-    		$content = file_get_contents('php://input');
-    		$type_response = 0; 	//'类型，0:接收 1:发送',
-    		if($content){
-    			$PostchargeResponse = Wifi::xmlUnparsed($content);
-    			$header = $PostchargeResponse->Header;
-    			$time = date('Y-m-d H:i:s',time());
-    			$identififer = $header->attributes()->MessageIdentifier;
-    			//记录 PostchargeResponse 返回的XML内容
-    			Wifi::writeXMLToDB($content,$type_response,$time,$identififer);
-    		}
-    		exit;
-    	}
-    }
-   
-    
-    //ajax查找数据库，并且下单
-    public function actionGetxmlfromdb()
-    {
-    	$identififer = Yii::$app->request->post('identififer');
-    	$wifi_id = Yii::$app->request->post('wifi_id');
-    	$passport = Yii::$app->request->post('PassportNO');
-    	$iso = Yii::$app->request->post('iso');
-    	if($iso === 'null'){
-    		$iso = 'zh_cn';
-    	}
-    	$name = Yii::$app->request->post('Name');
-    	$wifi_item = Wifi::getWifiItem($wifi_id,$iso);
-    	$checkNumber = WifiPay::createChecknum();
-    	
-    	//查找数据表
-    	$sql = " SELECT content FROM ibsxml_log WHERE identififer='$identififer' AND type=0 ";
-    	$data = Yii::$app->db->createCommand($sql)->queryOne()['content'];
-    	if($data){
-    		//解析数据
-    		$PostchargeResponse = Wifi::xmlUnparsed($data);
-    		$body = $PostchargeResponse->Body;
-    		if($body->attributes()->Code){
-    			//支付失败
-    			$result = '{"status":"Fail"}';
-    		}else{
-    			$transaction = Yii::$app->db->beginTransaction();
-    			try {
-    				//1.记录本地数据库的支付信息
-    				$pay_log_id = Wifi::writePayLogToDB($checkNumber,$passport,$name,$wifi_item['sale_price']);
-    				//2.购买上网卡
-    				Wifi::wifiCardBuy($wifi_id,$passport,$pay_log_id);
-    				$transaction->commit();
-    				$result = '{"status":"OK","$pay_log_id":"'.$pay_log_id.'"}';
-    			}catch(Exception $e){
-    				$transaction->rollBack();
-    				$result = '{"status":"Fail"}';
-    			}
-    		}
-    	}else{
-    		//没找到数据
-    		$result = '{"status":"Noitem","$identififer":"'.$identififer.'"}';
-    	}
-    	echo $result;
-    }
-    
-   */
     //获取游客购买的套餐
     public function actionGetwifiitemstatus()
     {
@@ -396,11 +403,24 @@ class WifiController extends Controller
     
     
     //test code
-    public function actionTest()
+    public function actionTestbalance()
     {
 //     	$url = "http://localhost/wifiservice/web/wifi/payment";
-    	$xml = "<?xml version='1.0' encoding='utf-8' ?><DTSPostChargeResponse><Header Action='Lufthansa' CreationDateTime='2016-03-22 02:50:03' DocumentDefinition='DTSPostChargeResponse' MessageIdentifier='13408515.20160322' SourceApplication='DTS'/><Body><PostCharge CheckNum='L490282' FolioID='0000902524' PassportNO='H123456' PostingDate='2016-03-22' PostingTime='02:50:03'/></Body></DTSPostChargeResponse>";
+
+    	
+    	$xml = "<?xml version='1.0' ?><DTSFolioBalanceResponse><Header Action='PMS' Comment='' CreationDateTime='2016-03-22 06:47:40' DocumentDefinition='' MessageIdentifier='7b6e2866-f5e9-48c1-8b27-9568946e3eed' SourceApplication='WIFI'/><Body><FolioBalance PassportNO='H123456' BalanceDue='200'/></Body></DTSFolioBalanceResponse>";
 //     	$res = Wifi::httpsRequest($url,$xml);
+		
+    	echo $xml;
+    }
+    
+    public function actionTestpost()
+    {
+//     	$url = "http://localhost/wifiservice/web/wifi/payment";
+    	
+    	$xml = "<?xml version='1.0' encoding='utf-8' ?><DTSPostChargeResponse><Header Action='Lufthansa' CreationDateTime='2016-03-22 02:50:03' DocumentDefinition='DTSPostChargeResponse' MessageIdentifier='13408515.20160322' SourceApplication='DTS'/><Body><PostCharge CheckNum='L490282' FolioID='0000902524' PassportNO='H123456' PostingDate='2016-03-22' PostingTime='02:50:03'/></Body></DTSPostChargeResponse>";
+    
+    	
     	echo $xml;
     }
     
