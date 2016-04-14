@@ -236,7 +236,7 @@ function ShowPayFailPage()
 	$(".payment").replaceWith(
 		"<div class='content payment'>"+
 			"<h3>Wifi订单支付失败！</h3>"+
-			"<p>很抱歉，您的房卡账户余额不足，请先到前台充值后，再购买！</p>"+
+			"<p>很抱歉，您的房卡账户余额不足，请先到前台充值后再购买！</p>"+
 		"</div>"
 	);
 	

@@ -46,6 +46,7 @@ class WifiConnect
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 		curl_setopt($ch, CURLOPT_VERBOSE, 1);
 		$response = curl_exec($ch);
+		curl_close($ch);
 		
 		// Then, after your curl_exec call:
 		$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
