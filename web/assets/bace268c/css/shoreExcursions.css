@@ -1,8 +1,0 @@
-#shoreExcursions_content div:nth-of-type(2) { padding: 22px; background: #fafafa; }
-#shoreExcursions_content .form { position: relative; padding: 26px; border: 1px solid #e0e9f4; }
-#shoreExcursions_content .form span, .form input, .form select { vertical-align: middle; }
-#shoreExcursions_content .form span { display: inline-block; width: 112px; text-align: right; }
-#shoreExcursions_content .form input[type='text'] { width: 180px; height: 20px; }
-#shoreExcursions_content .form input[type='checkbox'] { width: 16px; height: 16px; }
-#shoreExcursions_content .form select { width: 186px; height: 28px; margin-right: 70px; }
-#shoreExcursions_content .form textarea { width: 554px; height: 60px; vertical-align: top; }
