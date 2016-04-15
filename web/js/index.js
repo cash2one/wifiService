@@ -179,8 +179,6 @@ var WifiConnect = {
 				str = "<div class='content connect'><h3>失败：</h3><p>停用网络失败，请联系相关人员处理</p></div><div class='btn'><input id='backBtn' type='button' value='返回'></input></div>";		
 				return str;
 			}
-			
-			
 		
 		},
 		backBtn : function() {

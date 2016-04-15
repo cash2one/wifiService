@@ -26,14 +26,21 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 			<script src="<?php echo $baseUrl?>js/jqPaginator.js"></script>	
 </head>
 <body>
-	
 		<div class="r content" id="user_content">
 			<div class="topNav">Wifi Billing&nbsp;&gt;&gt;&nbsp;<a href="#">Curr Card</a></div>
 			<form id='member_list' method="post">
-				<div class="search" style="margin-left: 26%">
+				<div class="search" style="margin-left:3%">
+				<label>
+					<span>Status Sale:</span>
+				<select style="width:150px" name="status_sale">
+				<option selected='selected' value="2">All</option>
+				<option value="1" <?php echo $status_sale==1?"selected='selected'":''?>>Sale</option>
+				<option value="0"  <?php echo $status_sale==0?"selected='selected'":''?>>NotSale</option>
+				</select>
+				</label>
 				<label>
 					<span>Wifi Pakage:</span>
-				<select  style="width: 250px;height:30px" name="wifi_id">
+				<select  style="width:150px" name="wifi_id">
 					<option selected='selected' value="">All</option>
 					<?php foreach ($wifi_items_info as $k=>$v):?>				
 					<option value="<?=$v['wifi_id']?>" <?php echo $v['wifi_id']==$wifi_id?"selected='selected'":''?> ><?=$v['wifi_name']?></option>
@@ -50,7 +57,6 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 						<tr style="height:35px;">
 						<th style="text-align:center">Num</th>
 						<th style="text-align:center">wifi_code</th>
-						<th style="text-align:center">wifi_password</th>
 						<th style="text-align:center">expiry_day</th>
 						<th style="text-align:center">Wifi Pakage</th>
 						<th style="text-align:center">status_sale</th>
@@ -62,10 +68,9 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 						<tr style="height:35px">
 							<td><?php echo $k+1?></td>
 							<td><?php echo $v['wifi_code']?></td>
-							<td><?php echo $v['wifi_password']?></td>
 							<td><?php echo $v['expiry_day']?></td>
 							<td><?php echo $v['wifi_name']?></td>
-							<td><?php echo $v['status_sale']==0?'usable':'unusable'?></td>
+							<td><?php echo $v['status_sale']==0?'notsale':'sale'?></td>
 							<td><?php echo $v['time']?></td>
 						</tr>
 					<?php }?>

@@ -45,6 +45,7 @@ class WifiController extends Controller
     }
     
     
+
     //支付wifi套餐
     public function actionPayment()
     {
@@ -57,7 +58,7 @@ class WifiController extends Controller
     	if($iso === 'null'){
     		$iso = 'zh_cn';
     	}
-    	
+    	 	
     	$wifi_item = Wifi::getWifiItem($wifi_id,$iso);
     	$checkNumber = WifiPay::createChecknum();
     	$identififer = $passport.".".time();
@@ -81,8 +82,7 @@ class WifiController extends Controller
     				$balance = Wifi::xmlUnparsed($balanceResponse);
     				 
     				//.判断 FolioBalance xml 报文格式是否正确
-    				if(isset($balance->Body->FolioBalance->attributes()->BalanceDue)){
-    		
+    				if(isset($balance->Body)){
     					$balanceDue = $balance->Body->FolioBalance->attributes()->BalanceDue;		//解析xml，ibs返回的余额
     					if($balanceDue < $wifi_item['sale_price']){
     						//余额不足，返回 '{"status":"FAIL"}'，
@@ -213,7 +213,7 @@ class WifiController extends Controller
     	echo $result;
     }
 
-    
+
     
     //获取游客购买的套餐
     public function actionGetwifiitemstatus()
@@ -267,9 +267,7 @@ class WifiController extends Controller
     	echo $result;
     }
     
-    
-    
-
+  
     //停用网络  
     public function actionLogoutwificonnect()
     {

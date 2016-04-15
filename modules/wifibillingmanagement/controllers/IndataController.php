@@ -135,7 +135,7 @@ class IndataController extends Controller
         			return $this->redirect("$weburl/indata/index?massage=success");
         		} catch(Exception $e) {
         			$transaction->rollBack();
-        				return $this->redirect("$weburl/indata/index?massage=fail");
+        				return $this->render("$weburl/indata/index",array('massage'=>'fail'));
         		}	
         	}
         
@@ -247,7 +247,6 @@ class IndataController extends Controller
     				$data[] = $data_child;
     					
     			}
-    			
     		}
     		return $this->render('updata',array('data'=>$data,'wifi_id'=>$_POST['wifi_id']));
     		 
@@ -270,16 +269,22 @@ class IndataController extends Controller
     	->where(['iso'=>'zh_cn'])
     	->all();
     		$wifi_id= isset($_POST['wifi_id'])?$_POST['wifi_id']:'';
+    		$status_sale= isset($_POST['status_sale'])?$_POST['status_sale']:'2';
     		$sql="select *from wifi_info join wifi_item_language on wifi_info.wifi_id=wifi_item_language.wifi_id";
     		$count_sql="select *from wifi_info join wifi_item_language on wifi_info.wifi_id=wifi_item_language.wifi_id";
     		if ($wifi_id!=''){
     			$sql.=" and wifi_info.wifi_id=$wifi_id";
     			$count_sql.=" and wifi_info.wifi_id=$wifi_id";
     		}
+    		if ($status_sale!='2'){
+    			$sql.=" and wifi_info.status_sale=$status_sale";
+    			$count_sql.=" and wifi_info.status_sale=$status_sale";
+    		}
     		$selecedata=new seletedata();
     		$data=$selecedata->paging($sql, $count_sql);
     		$data['wifi_items_info']=$wifi_items_info;
     		$data['wifi_id']=$wifi_id;
+    		$data['status_sale']=$status_sale;
     		return $this->render('currdata',$data);
 
     }

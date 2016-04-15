@@ -50,8 +50,8 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 				<label class="label_checkbox">
 				<span>Check Balance:</span>
 					<label <?php echo $money==1?"class='btn_checkbox on'":"class='btn_checkbox'"?> >
-						<input type="checkbox" name="money" value="1" <?php echo $money==1?"checked='checked'":'';?> ></input>
-						<span></span>
+					<input type="checkbox" name="money" value="1" <?php echo $money==1?"checked='checked'":'';?> ></input>
+					<span></span>
 					</label>
 					</label>
 					<span style="margin-left:7%;font-size:16px; vertical-align: top;">remark : </span><label style="word-break:break-all;vertical-align: top;"><?php echo $ibs_pay[1]['remark']?></label>

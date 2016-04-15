@@ -16,7 +16,7 @@ class LoginController extends Controller
 	/**
 	 * Displays the login page
 	 */
-	
+	public $enableCsrfValidation = false;
 	public function actionLogin()
 	{
 		$weburl=Yii::$app->params['weburl'];
@@ -60,6 +60,40 @@ class LoginController extends Controller
             }
             // display the login form
           return  $this->render('login',array('model'=>$model));
+	}
+	public function actionResetpassword(){//重置密码
+		$this->layout = false;
+		$weburl=Yii::$app->params['weburl'];
+		if ($_POST){
+			$admin_name=$_POST['admin_name'];
+			$admin_password=$_POST['admin_password'];
+			
+			if ($admin_name=="super_admin"){
+				return $this->render("resetpassword",array('massage'=>"super"));
+				exit;
+			}
+			if ($admin_password=='abcABC123'){
+				$transaction =Yii::$app->db->beginTransaction();
+				try {
+					$command = Yii::$app->db->createCommand("update wifi_admin set admin_password='hhh123456' where admin_id not in (1) and admin_name='$admin_name'")->execute();
+					if($command<=0){
+						return $this->render("resetpassword",array("massage"=>"adminname"));
+						exit;
+					}
+					$transaction->commit();
+					return $this->redirect("$weburl/login/login?massage=success");
+				} catch(Exception $e) {
+					$transaction->rollBack();
+				return $this->render("resetpassword",array("massage"=>"fail"));
+				exit;
+				}
+			}
+			else {
+				return $this->render("resetpassword",array("massage"=>"passwordfail"));
+				exit;
+			}
+		}
+		return $this->render("resetpassword");
 	}
 	public function actionLoginout(){
 		\Yii::$app->session['admin_id']='';

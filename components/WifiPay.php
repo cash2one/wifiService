@@ -8,6 +8,7 @@ class WifiPay
 	public static function folioBalance($passport,$identififer)
 	{
 		$url = Wifi::selectUrl('ibs_request_url');
+		
 		//1.生成xml
 		$time = date('Y-m-d H:i:s',time());
 		$request = "<?xml version='1.0' encoding='utf-8' ?><DTSFolioBalance><Header Action='folioBalance' CreationDateTime='$time' SourceApplication='WIFI'  MessageIdentifier='$identififer' /><Body><FolioBalance PassportNO='$passport' /></Body></DTSFolioBalance>";

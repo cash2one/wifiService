@@ -211,7 +211,7 @@ $weburl=Yii::$app->params['weburl'];
 				alert("Please select Admin of Edit");
 				return false;
 				}
-			});
+			})
     <?php
  	 $massage=isset($_GET['massage'])?$_GET['massage']:'';?>
     <?php if ($massage=="success"){?>

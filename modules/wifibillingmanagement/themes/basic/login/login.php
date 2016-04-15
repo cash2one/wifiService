@@ -6,12 +6,16 @@
 	//$assets = '@app/modules/membermanagement/themes/basic/static';
 	//$baseUrl = Yii::$app->assetManager->publish($assets);
 ?>
+<?php 
+	use Yii as myyii;
+	$weburl=Yii::$app->params['weburl'];
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8" />
         <title>Welcome to Wifi Admin</title>
-
         <meta name="description" content="User login page" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -117,6 +121,7 @@
                                                         <button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
                                                          		submit
                                                         </button>
+                                                        <a href="resetpassword">Reset Password</a>
                                                     </div>
 
                                                     <div class="space-4"></div>
@@ -199,7 +204,16 @@
                         form.submit();
                     }
                 });
-            })
+                <?php $massage=isset($_GET['massage'])?$_GET['massage']:''?>
+            	<?php if($massage=='success'){/* 重置密码判断*/
+        			?>
+        			alert('Reset Password is success');
+        			window.location = "<?php echo $weburl?>/login/login";
+        			<?php
+        		}	
+        		?>
+               
+            });
         </script>
     </body>
 </html>
