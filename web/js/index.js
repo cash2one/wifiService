@@ -2,9 +2,6 @@ $(document).ready(function(){
 	tab();
 });
 
-
-
-
 var WifiConnect = {
 		init : function () {
 			this.show_connectBtn();
@@ -125,7 +122,7 @@ var WifiConnect = {
 						"<p>账号："+item.wifi_code+"</p>"+
 						"<p>密码："+item.wifi_password+"</p>"+
 						"<p>开通的时间 : "+item.turnOnTime+"</p>"+
-						"<p>流量状态 : 已用 "+item.left_flow+"M / 剩余 "+item.flow_start+"M </p></div><div class='btn'><input id='disConnectBtn' value='断开连接' type='button'></div>";
+						"<p>流量状态 : 剩余 "+item.left_flow+"M / 总流量 "+item.flow_start+"M </p></div><div class='btn'><input id='disConnectBtn' value='断开连接' type='button'></div>";
 				return wifi_status;
 			}
 
@@ -363,7 +360,7 @@ $("body").on("click","#payment",function(){
 					$(".tab_title li:nth-of-type(2)").addClass("active");
 					
 					//显示上网连接界面
-					ShowConnectPage();
+					WifiConnect.show_connectBtn();
 				},3000);
 			}else if(response.status == "FAIL"){
 				//显示支付失败界面

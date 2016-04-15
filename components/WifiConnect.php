@@ -53,6 +53,7 @@ class WifiConnect
 		//发送请求，带上参数
 		$portal_url = Wifi::selectUrl('portal_url');
 		$url = $portal_url."?version=2.0&action=logout&wlanuserip=".$wlanuserip."&wlanacip=".$wlanacip;
+		return $url;
 		if(isset(json_decode(trim(Wifi::httpsRequest($url),"()"))->errorCode)){
 			$errorCode = json_decode(trim(Wifi::httpsRequest($url),"()"))->errorCode;
 		}else {
