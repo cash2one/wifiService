@@ -94,7 +94,7 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 							<td  >
 						
 								<a href="<?php echo $weburl?>/indata/edit?wifi_id=<?php echo $v['wifi_id']?>"><img src="<?php echo $baseUrl?>images/write.png"></a>
-								<img class="delete" onclick="infodata('<?php echo $v['wifi_id']?>')" src="<?php echo $baseUrl?>images/delete.png">
+								<img class="delete" style="cursor: pointer;" onclick="infodata('<?php echo $v['wifi_id']?>')" src="<?php echo $baseUrl?>images/delete.png">
 							</td>
 						</tr>
 					<?php }?>

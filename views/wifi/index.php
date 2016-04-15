@@ -22,7 +22,7 @@
 					<p>欢迎选购辉煌号邮轮Wifi套餐。</p>
 					<ul id="ul_wifi_item">
 					<?php foreach($wifi_items as $key => $wifi_item){ ?>
-						<li><label><input type="radio" name="wifi_item" value="<?php echo $wifi_item['wifi_id']?>"  <?php if($key == 0){?>  checked="checked" <?php }?>></input><?php echo $wifi_item['wifi_name']."&nbsp&nbsp&nbsp".$wifi_item['wifi_flow']."M&nbsp&nbsp&nbsp$".$wifi_item['sale_price']?></label></li>
+						<li><label><input type="radio" name="wifi_item" value="<?php echo $wifi_item['wifi_id']?>"  <?php if($key == 0){?>  checked="checked" <?php }?>></input><?php echo $wifi_item['wifi_name']." &nbsp&nbsp&nbsp(<span style='color:#f63;'>$".$wifi_item['sale_price']."</span>)"?></label></li>
 					<?php }?>
 					</ul>
 				</div>

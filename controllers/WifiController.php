@@ -27,7 +27,6 @@ class WifiController extends Controller
     public function actionGetwifi()
     {
     	$wifi_id = Yii::$app->request->post('wifi_id');
-    	$wifi_id = Yii::$app->request->post('wifi_id');
     	$iso = Yii::$app->request->post('iso');
 
     	if($iso === 'null'){
@@ -255,32 +254,33 @@ class WifiController extends Controller
     	echo $result;
     }
     
-    
+
     //网络连接
     public function actionWificonnect()
     {
+    	
     	$wifi_code = Yii::$app->request->post('wifi_code');
     	$wifi_password = Yii::$app->request->post('wifi_password');
-    	
+    	 
     	$flow_start = isset(WifiConnect::getWifiFlow($wifi_code)->flow_start) ? WifiConnect::getWifiFlow($wifi_code)->flow_start : 0; 	//总流量
     	$left_flow  = isset(WifiConnect::getWifiFlow($wifi_code)->left_flow) ? WifiConnect::getWifiFlow($wifi_code)->left_flow : 0 ;  	//剩余流量
-    	
+    	 
     	$sql = " SELECT time FROM wifi_info WHERE wifi_code = '$wifi_code'";
     	$turnOnTime = Yii::$app->db->createCommand($sql)->queryOne()['time'];
-    	
     	//认证
     	$response = WifiConnect::PortalLogin($wifi_code,$wifi_password);
-    	if($response != ''){
-    		$errorCode = $response['errorCode'];
-    		$wlanuserip = $response['wlanuserip'];
-    		$wlanacip = $response['wlanacip'];
-    		//$wlanuserip，$wlanacip 存储到数据库中
-    		WifiConnect::SaveWlanParams($wifi_code,$wlanuserip,$wlanacip);
+
+    	
+    	if($response == 0 || $response==2 || $response==9){
+    		$result = '{"status":"OK","data":{"wifi_code":"'.$wifi_code.'","wifi_password":"'.$wifi_password.'","turnOnTime":"'.$turnOnTime.'","flow_start":"'.$flow_start.'","left_flow":"'.$left_flow.'"}}';
+    	}else {
+    		$result = '{"status":"ERROR","errorCode":"'.$response.'"}';
     	}
     	
-    	$result = '{"status":"OK","data":{"wifi_code":"'.$wifi_code.'","wifi_password":"'.$wifi_password.'","turnOnTime":"'.$turnOnTime.'","flow_start":"'.$flow_start.'","left_flow":"'.$left_flow.'"}}';
     	echo $result;
     }
+    
+    
     
 
     //停用网络  
@@ -293,12 +293,12 @@ class WifiController extends Controller
     	
     	if($response == 0){
     		//注销完成
-    		
+    		$result = '{"status":"OK"}';
+    	}else {
+    		$result = '{"status":"ERROR","errorCode":"'.$response.'"}';
     	}
-    	$result = '{"status":"OK"}';
     	echo $result;
     }
-    
     
     
     
@@ -337,6 +337,13 @@ class WifiController extends Controller
     
     //test code end
     
+    
+    public function actionTestjson()
+    {
+    	$json = '({"version":"2.0","errorCode":"0"})';
+    	return $json;
+    			
+    }
     
     
 }

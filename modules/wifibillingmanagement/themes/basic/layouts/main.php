@@ -28,6 +28,9 @@ $import = false;
 $pay=false;
 $pinformation=false;
 $report=false;
+$authcontroller=false;
+$wlan_params=false;
+$changepassword=false;
 $ids=isset(Yii::$app->session['ids'])?Yii::$app->session['ids']:array();
 foreach ($ids as $k=>$v){
 	if ($v==1){
@@ -52,9 +55,19 @@ foreach ($ids as $k=>$v){
 	if ($v==7){
 		$report=true;
 	}
+	if ($v==8){
+		$authcontroller=true;
+	}
+	if ($v==9){
+		$wlan_params=true;
+	}
+	if ($v==10){
+		$changepassword=true;
+	}
+	
 }
 $info=Auth::GetRole($permissionName);
-
+/* Auth::GetRole($permissionName); */
 
 /*  */
 $Wifi_package_active = false;
@@ -64,6 +77,9 @@ $import_active = false;
 $pay_active=false;
 $report_active=false;
 $pinformation_active=false;
+$auth_action=false;
+$wlan_params_action=false;
+$changepassword_action=false;
 if($permissionName == 'wifibilling/indata/index'||$permissionName=='wifibilling/indata/edit' ){
 	
 	$Wifi_package_active = true;
@@ -84,10 +100,18 @@ elseif ($permissionName=='wifibilling/indata/pay'){
 elseif ($permissionName=='wifibilling/indata/report'){
 	$report_active=true;
 }
-elseif ($permissionName=='wifibilling/indata/report'){
+elseif ($permissionName=='wifibilling/indata/payinformation'){
 	$pinformation_active=true;
 }
-
+elseif ($permissionName=='wifibilling/indata/authcontroller'){
+	$auth_action=true;
+}
+elseif ($permissionName=='wifibilling/indata/wlanparams'){
+	$wlan_params_action=true;
+}
+elseif ($permissionName=='wifibilling/indata/changepassword'){
+	$changepassword_action=true;
+}
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -104,8 +128,8 @@ elseif ($permissionName=='wifibilling/indata/report'){
 <?php $this->beginBody() ?>
 <!-- header start -->
 <header id="header" style="width:1010px">
-    <div class="l" id="title" >
-        <img src="<?=$baseUrl ?>images/logo.png">
+    <div class="l" id="title">
+        <img style="margin-top:-17px" src="<?=$baseUrl ?>images/logo.png">
         <h1><?= \Yii::t('app', "Wifi Billing  Management") ?></h1>
     </div>
     <div class="r" id="user">
@@ -146,6 +170,12 @@ elseif ($permissionName=='wifibilling/indata/report'){
                      <li class="<?php echo $pinformation_active?'active':''?>"><a href="<?php echo $weburl?>/indata/payinformation"><?= \Yii::t('app', 'Pay Information') ?></a></li>
                      <?php }if ($report){?>
                    	 <li class="<?php echo ($report_active ? 'active':'')?>"><a href="<?php echo $weburl?>/indata/report"><?= \Yii::t('app', 'Report') ?></a></li>
+               		  <?php }if ($authcontroller){?>
+                   	 <li class="<?php echo ($auth_action ? 'active':'')?>"><a href="<?php echo $weburl?>/indata/authcontroller"><?= \Yii::t('app', 'Auth Controller') ?></a></li>
+               		 <?php }if ($wlan_params){?>
+                   	 <li class="<?php echo ($wlan_params_action ? 'active':'')?>"><a href="<?php echo $weburl?>/indata/wlanparams"><?= \Yii::t('app', 'Wlan Params') ?></a></li>
+               		 <?php }if ($changepassword){?>
+                   	 <li class="<?php echo ($changepassword_action ? 'active':'')?>"><a href="<?php echo $weburl?>/indata/changepassword"><?= \Yii::t('app', 'Change Password') ?></a></li>
                		 <?php }?>
 		              </ul>
 		            </ul>

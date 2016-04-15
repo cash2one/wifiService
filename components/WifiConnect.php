@@ -15,117 +15,60 @@ class WifiConnect
 		return $response;
 	}
 	
+
+	
 	//portal认证，登录
 	public static function PortalLogin($username,$userpasswd)
 	{
-		//请求一次qq，如果有返回字段参数，获取字段参数，再把参数带到url 请求认证，返回字段参数，以便注销时使用
-		$request_url = Wifi::selectUrl('request_url');
+		//获取user的ip地址
+		$wlanuserip = $_SERVER["REMOTE_ADDR"];
+		//参数在数据库中查找
 		$portal_url = Wifi::selectUrl('portal_url');
+		$portal_params = Wifi::getParamsOfPortal();
 		
-		$response = array();
-		$content = self::RequireBeforeLogin($request_url);
-		if($content !== false){
-			$response_url = trim(str_replace('\r\n',null,str_replace("Location:",null, $content)));
-			$url = $portal_url."?username=".$username."&userpasswd=".$userpasswd."&".$response_url;
-			
-			//解析 url 里面的参数
-			$response = self::ParseURL($response_url);
-			$errorCode = json_decode(Wifi::httpsRequest($url))->errorCode;
-			$response['errorCode'] = $errorCode;
-			
-			return $response;
+		
+// 		return '0';
+// 		exit;
+		//拼接字符串
+		$str = '';
+		$portal_params = Wifi::getParamsOfPortal();
+		foreach ($portal_params as $params ){
+			$str .= "&".$params['params_key']."=".$params['params_value'];
 		}
-	}
-	
-	//认证之前请求一次qq，获取相关信息
-	private static function RequireBeforeLogin($url)
-	{
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_HEADER, TRUE);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-		curl_setopt($ch, CURLOPT_VERBOSE, 1);
-		$response = curl_exec($ch);
-		curl_close($ch);
-		
-		// Then, after your curl_exec call:
-		$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-		$header = substr($response, 0, $header_size);
-		$matches = array();
-		preg_match('/Location:(.*?)\n/',$header,$matches);
-		if($matches){
-			return $matches[0];
+		$url = $portal_url."?username=".$username."&userpasswd=".$userpasswd."&version=2.0&action=login"."&wlanuserip=".$wlanuserip.$str;	//url + params
+		if(isset(json_decode(trim(Wifi::httpsRequest($url),"()"))->errorCode)){
+			$errorCode = json_decode(trim(Wifi::httpsRequest($url),"()"))->errorCode;
 		}else {
-			return false;
-		}
-	}
-	
-	
-	//解析url的参数
-	private static function ParseURL($url)
-	{
-		$arr = parse_url($url);
-		$arr_query = self::convertUrlQuery($arr['query']);
-		return $arr_query;
-	}
-		
-	//把url的参数放进数组中
-	private static function	convertUrlQuery($query)
-	{
-		$queryParts = explode('&', $query);
-		 
-		$params = array();
-		foreach ($queryParts as $param){
-			$item = explode('=', $param);
-			$params[$item[0]] = $item[1];
-		}
-		 
-		return $params;
-	}
-	
-
-	//portal认证，注销
-	public static function PortaLogout($wifi_code)
-	{
-		//从数据库中查找出 $wlanuserip，$wlanacip
-		$response = self::GetWlanParams($wifi_code);
-		$wlanuserip = $response['wlanuserip'];
-		$wlanacip = $response['wlanacip'];
-		//发送请求，带上参数
-		$portal_url = Wifi::selectUrl('portal_url');
-		$url = $portal_url."?versions=2.0&action=logout&wlanuserip=".$wlanuserip."&wlanacip=".$wlanacip;
-		if(isset(json_decode(Wifi::httpsRequest($url))->errorCode)){
-			$errorCode = json_decode(Wifi::httpsRequest($url))->errorCode;
-		}else {
-			$errorCode = 0;
+			$errorCode = '404';
 		}
 		return $errorCode;
 	}
 	
+
 	
-	//$wlanuserip，$wlanacip 存储到数据库中  
-	public static function SaveWlanParams($wifi_code,$wlanuserip,$wlanacip)
+	//portal认证，注销
+	public static function PortaLogout($wifi_code)
 	{
-		//1.先查找数据库
-		$sql = "SELECT * FROM wifi_wlan_params WHERE wifi_code='$wifi_code'";
-		$wlan_params = Yii::$app->db->createCommand($sql)->queryOne();
-		if(!$wlan_params){
-			//insert
-			$sql_insert = "INSERT INTO wifi_wlan_params (`wifi_code`,`wlanuserip`,`wlanacip`) VALUES ('$wifi_code','$wlanuserip','$wlanacip')";
-			Yii::$app->db->createCommand($sql_insert)->execute();
-		}else{
-			//update
-			$sql_update = "UPDATE wifi_wlan_params SET wlanuserip='$wlanuserip' , wlanacip='$wlanacip' WHERE wifi_code='$wifi_code'";
-			Yii::$app->db->createCommand($sql_update)->execute();
+		//从数据库中查找出 $wlanuserip，$wlanacip
+		$wlanuserip = $_SERVER["REMOTE_ADDR"];
+		$wlanacip = self::GetWlanParams('wlanacip');
+		//发送请求，带上参数
+		$portal_url = Wifi::selectUrl('portal_url');
+		$url = $portal_url."?version=2.0&action=logout&wlanuserip=".$wlanuserip."&wlanacip=".$wlanacip;
+		if(isset(json_decode(trim(Wifi::httpsRequest($url),"()"))->errorCode)){
+			$errorCode = json_decode(trim(Wifi::httpsRequest($url),"()"))->errorCode;
+		}else {
+			$errorCode = '404';
 		}
+		return $errorCode;
 	}
 	
-	//$wlanuserip，$wlanacip 从数据库中拿到
-	private static function GetWlanParams($wifi_code)
+	//$wlanacip 从数据库中拿到
+	private static function GetWlanParams($params_key)
 	{
 		//根据wifi_code从数据库中查找对应的 $wlanuserip，$wlanacip 
-		$sql = "SELECT wlanuserip ,wlanacip FROM wifi_wlan_params WHERE wifi_code='$wifi_code'";
-		$wlan_params = Yii::$app->db->createCommand($sql)->queryOne();
+		$sql = "SELECT params_value FROM wifi_wlan_params WHERE params_key='$params_key'";
+		$wlan_params = Yii::$app->db->createCommand($sql)->queryOne()['params_value'];
 		return $wlan_params;
 	}
 	

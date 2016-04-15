@@ -7,8 +7,8 @@ class WifiPay
 	//请求IBS系统查询余额
 	public static function folioBalance($passport,$identififer)
 	{
-// 		$url = Wifi::selectUrl('ibs_request_url');
-		$url = "http://localhost/wifiservice/web/wifi/testbalance";  //test url
+		$url = Wifi::selectUrl('ibs_request_url');
+// 		$url = "http://localhost/wifiservice/web/wifi/testbalance";  //test url
 		//1.生成xml
 		$time = date('Y-m-d H:i:s',time());
 		$request = "<?xml version='1.0' encoding='utf-8' ?><DTSFolioBalance><Header Action='folioBalance' CreationDateTime='$time' SourceApplication='WIFI'  MessageIdentifier='$identififer' /><Body><FolioBalance PassportNO='$passport' /></Body></DTSFolioBalance>";
@@ -32,8 +32,8 @@ class WifiPay
 	//请求DTSPostCharge
 	public static function DTSPostCharge($passport,$TenderType,$checkNumber,$price,$identififer)
 	{
-// 		$url = Wifi::selectUrl('ibs_request_url');
-		$url = "http://localhost/wifiservice/web/wifi/testpost";   //test url
+		$url = Wifi::selectUrl('ibs_request_url');
+// 		$url = "http://localhost/wifiservice/web/wifi/testpost";   //test url
 		//1.生成xml
 		$time = date('Y-m-d H:i:s',time());
 		$request = "<?xml version='1.0' encoding='utf-8' ?><DTSPostCharge><Header Action='DTSPostCharge' CreationDateTime='$time' SourceApplication='WIFI' MessageIdentifier='$identififer' /><Body><PostCharge  OriginatingSystemID='WIFI' Department='WIFI' CheckNumber='$checkNumber'  PassportNo='$passport'  TenderType='$TenderType'  Gratuity=''  SalesAmount='$price' TaxAmount=''  TotalSales='$price' /></Body></DTSPostCharge>";

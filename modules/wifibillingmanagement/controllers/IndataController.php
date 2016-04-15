@@ -328,7 +328,7 @@ public function actionPay(){
 	$ibs_pay = (new \yii\db\Query())
 		->from('ibs_pay')
 		->all();
-	
+	$massage='';
 	if ($_POST){
 		$type=isset($_POST['type'])?$_POST['type']:'0';
 		$money=isset($_POST['money'])?$_POST['money']:'0';
@@ -337,14 +337,18 @@ public function actionPay(){
 		$command = \Yii::$app->db->createCommand("UPDATE ibs_pay SET type='$type' where id=1")->execute();
 		$command = \Yii::$app->db->createCommand("UPDATE ibs_pay SET type='$money' where id=2")->execute();
 		$transaction->commit();
-		
-		return $this->render("pay",array('massage'=>1,'type'=>$type,'money'=>$money));
+		$massage=1;
 		} catch(Exception $e) {
 			$transaction->rollBack();
-			return $this->render("pay",array('massage'=>2,'type'=>$ibs_pay['type']));
+			$massage=2;
 		}
 	}
-	return $this->render("pay",array('ibs_pay'=>$ibs_pay));
+			$ibs_pay = (new \yii\db\Query())
+			->from('ibs_pay')
+			->all();
+			$type=$ibs_pay[0]['type'];
+			$money=$ibs_pay[1]['type'];
+			return $this->render("pay",array('massage'=>$massage,'type'=>$type,'money'=>$money,'ibs_pay'=>$ibs_pay));
 }
 public function actionReport(){
 	$weburl=Yii::$app->params['weburl'];
@@ -483,5 +487,189 @@ public function actionDeleteallurl(){//点击删除全部
 		}
 	}
 }
+/*权限控制  */
+public function actionAuthcontroller(){
+	$weburl=Yii::$app->params['weburl'];
+	$auth=Auth::getAuth();
+	if ($auth=="false"){
+		return $this->redirect("$weburl/login/login");
+	}//判断有没登陆
+	$db=\Yii::$app->db;
+	if ($_POST){
+		$aid=$_POST['admin_id'];
+		$id=$_POST['type'];
+		$id=implode(",",$id);
+		$transaction =\Yii::$app->db->beginTransaction();
+		try {
+			$command = $db->createCommand("update admin_role set permission_menu='$id' where admin_id=$aid")->execute();
+			$transaction->commit();
+			return $this->redirect("$weburl/indata/authcontroller?massage=success");
+		} catch(Exception $e) {
+			$transaction->rollBack();
+			return $this->redirect("$weburl/indata/authcontroller?massage=fail");
+		}
+		
+	}
+	$adminsql="select * from wifi_admin where admin_id not in(1)";
+	$admininfo= \Yii::$app->db->createCommand($adminsql)->queryAll();
+	$admin_id=isset($_POST['admin_id'])?$_POST['admin_id']:'';
+	return $this->render("authcontroller",array("admininfo"=>$admininfo,"admin_id"=>$admin_id));
+}
+/* wlan 显示 */
+public function actionWlanparams(){
+	$weburl=Yii::$app->params['weburl'];
+	$auth=Auth::getAuth();
+	if ($auth=="false"){
+		return $this->redirect("$weburl/login/login");
+	}//判断有没登陆
+	$db= \Yii::$app->db;
+	$sql="select *from wifi_wlan_params";
+	$count_sql="select *from wifi_wlan_params";
+	/* $wifi_params =$db->createCommand($sql)->queryAll(); */
+	$massage=isset($_GET['massage'])?$_GET['massage']:'';
+	$selectdata=new seletedata();
+	$data=$selectdata->paging($sql, $count_sql);
+	$data['massage']=$massage;
+	return $this->render("wlanparams",$data);
+	}
+	/* wlan编辑 增加 */
+	public function actionEditwlan(){
+		$weburl=Yii::$app->params['weburl'];
+		$auth=Auth::getAuth();
+		if ($auth=="false"){
+			return $this->redirect("$weburl/login/login");
+		}//判断有没登陆
+		$db=\Yii::$app->db;
+		if ($_POST){
+			$id= $_POST['id'];
+			if ($id==''){//没有id就插入数据
+				$info=$_POST;
+				$params_key=$info['params_key'];
+				$params_value=$info['params_value'];
+				$transaction =\Yii::$app->db->beginTransaction();
+				try {
+					$command = $db->createCommand("insert into wifi_wlan_params(params_key,params_value) values('$params_key','$params_value')")->execute();
+					$transaction->commit();
+					return $this->redirect("$weburl/indata/wlanparams?massage=success");
+				} catch(Exception $e) {
+					$transaction->rollBack();
+					return $this->redirect("$weburl/indata/wlanparams?massage=fail");
+				}
+		
+			}
+			else {//有id就更新
+				$transaction =\Yii::$app->db->beginTransaction();
+				try {
+					$params_key=$_POST['params_key'];
+					$params_value=$_POST['params_value'];
+					$command = $db->createCommand("update wifi_wlan_params set params_key='$params_key',params_value='$params_value' where id=$id")->execute();
+					$transaction->commit();
+					return $this->redirect("$weburl/indata/wlanparams?massage=success");
+				} catch(Exception $e) {
+					$transaction->rollBack();
+					return $this->redirect("$weburl/indata/wlanparams?massage=fail");
+				}
+			}
+		
+		}
+		else {
+			$id=isset($_GET['id'])?$_GET['id']:'';//点编辑或者增加时的操作
+			if (!empty($id)){
+				$sql="select * from wifi_wlan_params where id=$id";
+				$data = $db->createCommand($sql)->queryAll();
+				return $this->render('editwlan',array('data'=>$data));
+			}
+			else{
+				return $this->render('editwlan');
+			}
+		}
+	}
+	/* wlan 删除多条数据 */
+	public function actionDeleteallwlan(){//点击删除全部
+		$weburl=Yii::$app->params['weburl'];
+		$ids=isset($_POST['ids'])?$_POST['ids']:'';
+		if ($ids==''){
+			return $this->redirect("$weburl/indata/wlanparams?massage=fail");
+		}
+		else {
+			$ids=implode('\',\'',$ids);
+			$sql="delete from wifi_wlan_params where id in('$ids')";
+			$transaction =\Yii::$app->db->beginTransaction();
+			try {
+				$command2= \Yii::$app->db->createCommand($sql)->execute();
+				$transaction->commit();
+	
+				return $this->redirect("$weburl/indata/wlanparams?massage=success");
+			} catch(Exception $e) {
+				$transaction->rollBack();
+				return $this->redirect("$weburl/indata/wlanparams?massage=fail");
+			}
+		}
+	}
+public function actionDeletewlan(){
+	
+	$weburl=Yii::$app->params['weburl'];
+	$id=isset($_POST['id'])?$_POST['id']:'';
+	$transaction =\Yii::$app->db->beginTransaction();
+	try {
+		$command =\Yii::$app->db->createCommand("delete from wifi_wlan_params where id=$id")->execute();
+		$transaction->commit();
+		 
+		return $this->redirect("$weburl/indata/wlanparams?massage=success");
+	} catch(Exception $e) {
+		$transaction->rollBack();
+		return $this->redirect("$weburl/indata/wlanparams?massage=fail");
+	}
+}
+/*修改密码  */
+public function actionChangepassword(){
+	$admin_id=isset(\Yii::$app->session['admin_id'])?\Yii::$app->session['admin_id']:'';
+	$massage=0;
+	if ($_POST){
+		$info=$_POST;
+		if ($admin_id==''){
+			$massage=2;
+		return $this->render("changepassword",array('massage'=>$massage));
+		exit;
+		}
+		else {
+			$oldpassword=$_POST['oldpassword'];
+			$password = \Yii::$app->db->createCommand("select admin_password from wifi_admin where admin_id=$admin_id and admin_password='$oldpassword'")->queryAll();
+		    if (empty($password)){
+		    	$massage=3;
+		    	return $this->render("changepassword",array('massage'=>$massage));
+		    }
+		    else{	
+			$transaction =\Yii::$app->db->beginTransaction();
+			try {
+				$admin_password=$_POST['newpassword'];
+				$command = \Yii::$app->db->createCommand("update wifi_admin set admin_password='$admin_password' where admin_id=$admin_id")->execute();
+				$transaction->commit();
+				$massage=1;
+				return $this->render("changepassword",array('massage'=>$massage));
+			} catch(Exception $e) {
+				$transaction->rollBack();
+				$massage=2;
+			return $this->render("changepassword",array('massage'=>$massage));
+			}
+		}
+		}
+	}
+	return $this->render("changepassword",array('massage'=>$massage));
+}
+/* 权限控制请求ajax */
+public function actionAjaxtrain(){
+	$weburl=Yii::$app->params['weburl'];
+	$admin_id=isset($_GET['admin_id'])?$_GET['admin_id']:'';
+	if ($admin_id==100){
+		echo 100;
+	}
+	else{
+		$rolesql="select * from admin_role where admin_id=$admin_id";
+		$role= \Yii::$app->db->createCommand($rolesql)->queryAll();
+		$roleinfo=$role[0]['permission_menu'];
+		echo $roleinfo;
+	}
 
+}
 }

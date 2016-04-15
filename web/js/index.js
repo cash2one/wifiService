@@ -3,6 +3,7 @@ $(document).ready(function(){
 });
 
 
+
 //切换tab
 function tab() {
 	changeWidthAndHeight();
@@ -34,6 +35,8 @@ function tab() {
 		$(".tab_content > div").css("height", ($(window).height() - $(".tab_title").height()) + "px");
 	}
 }
+
+
 
 
 
@@ -92,7 +95,6 @@ function ShowJumpingPage()
 
 var wifi_name ;		//套餐的名字
 var wifi_price ;	//套餐的价格
-var wifi_flow ;		//套餐的流量
 //------ 得到wifi套餐信息，并显示确认支付页面---
 function GetNameAndShowConfirm(wifi_id)
 {
@@ -105,7 +107,6 @@ function GetNameAndShowConfirm(wifi_id)
             if(response.status == "OK"){
                 wifi_name = response.data['wifi_name'];
                 wifi_price = response.data['sale_price'];
-                wifi_flow = response.data['wifi_flow'];
                 PayConfirm(wifi_name,wifi_price);
             }
         },
@@ -115,6 +116,8 @@ function GetNameAndShowConfirm(wifi_id)
     });
 	
 	
+
+	
 	//------ 显示确认支付页面-------
 	function PayConfirm(wifi_name,wifi_price)
 	{
@@ -122,10 +125,10 @@ function GetNameAndShowConfirm(wifi_id)
 			"<div class='content payment'>"+
 				"<h3>Wifi订单确认</h3>"+
 				"<ul>"+
-					"<li>商品名称："+wifi_name+"&nbsp;&nbsp;"+wifi_flow+"M</li>"+
+					"<li>商品名称："+wifi_name+"</li>"+
 					"<li>订单金额：$"+wifi_price+"</li>"+
 				"</ul>"+
-				"<p style='color:#666;'>购买前请确保您的房卡中余额充足，支付成功后，系统将自动从您的房卡中扣除对应的余额。</p>"+
+				"<p>购买前请确保您的房卡中余额充足，支付成功后，系统将自动从您的房卡中扣除对应的余额。</p>"+
 			"</div>"
 		);
 
@@ -176,6 +179,7 @@ $("body").on("click","#payment",function(){
 		}
 	});
 });
+
 
 
 
@@ -292,8 +296,11 @@ function ShowPaySuccess()
 			"<p>订单支付成功, 3秒后自动跳转</p>"+
 		"</div>"
 	);
-}
 
+	$("#payment").replaceWith(
+		""
+	);
+}
 
 
 
@@ -347,6 +354,8 @@ function ClickWifiConnectBtn(data)
 	$("body").on("click","#connect",function(){
 		//获取点击的套餐
     	index = SelectWifiItem();
+		//显示正在登录中
+		 ShowOperatingPage();
 		$.ajax({
 		 url: "wifi/wificonnect",
 	        data: 'wifi_code='+index[0]+'&wifi_password='+index[1],
@@ -356,6 +365,9 @@ function ClickWifiConnectBtn(data)
 	            if(response.status == "OK"){
 	            	//显示 停用wifi页面
 	            	ShowLogOutWifiConnect(response.data);
+	            }else{
+	            	//显示登录失败
+	            	ShowLoginError();
 	            }
 	        },
 	        error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -365,50 +377,22 @@ function ClickWifiConnectBtn(data)
 	});
 }
 
-//停用wifi页面
-function ShowLogOutWifiConnect(item)
+
+
+//正在操作中
+function ShowOperatingPage()
 {
-	var wifi_status = "<div class='content connect'><h3>当前连接的套餐：</h3>";
-	wifi_status +=
-			"<p>账号："+item.wifi_code+"</p>"+
-			"<p>密码："+item.wifi_password+"</p>"+
-			"<p>开通的时间 : "+item.turnOnTime+"</p>"+
-			"<p>流量状态 : 已用 "+item.left_flow+"M / 剩余 "+item.flow_start+"M </p>";
-	$(".connect").replaceWith(wifi_status);
-	
-	//动态生成立即联网按钮
-	$("#connect").replaceWith(
-		"<input id='connect_logout' type='button' value='停用网络'></input>"
+	$(".connect").replaceWith(
+		"<div class='content connect'><h3>正在处理:</h3>"+
+		"<p>正在处理中，请稍等片刻</p>"+
+		"</div>"
 	);
-	
-	ClickLogoutWifiBtn(item);
-	
+	$("#connect").replaceWith(
+		""
+	);
 }
 
 
-// 停用网络按钮  
-function ClickLogoutWifiBtn(item)
-{
-	//点击connect按钮  --立即联网 ---
-	$("body").off("click","#connect_logout");
-	$("body").on("click","#connect_logout",function(){
-		$.ajax({
-			url: "wifi/logoutwificonnect",
-	        data: 'wifi_code='+item.wifi_code+'&wifi_password='+item.wifi_password,
-	        type: 'post',
-	        dataType: 'json',
-	        success : function(response) {
-	            if(response.status == "OK"){
-	            	//显示购买页面
-	            	ShowConnectPage();
-	            }
-	        },
-	        error: function(XMLHttpRequest, textStatus, errorThrown) {
-				console.log("error");
-	        }
-		});
-	});
-}
 
 
 //获取 上网选择套餐的index
@@ -421,8 +405,105 @@ function SelectWifiItem()
 			index[1] = $(this).find("ul li input#wifi_password").val();
 		}
 	});
+	
 	return index ;
 }
+
+
+
+//停用wifi页面
+function ShowLogOutWifiConnect(item)
+{
+	var wifi_status = "<div class='content'><h3>当前连接的套餐：</h3>";
+	wifi_status +=
+			"<p>账号："+item.wifi_code+"</p>"+
+			"<p>密码："+item.wifi_password+"</p>"+
+			"<p>开通的时间 : "+item.turnOnTime+"</p>"+
+			"<p>流量状态 : 已用 "+item.left_flow+"M / 剩余 "+item.flow_start+"M </p></div>";
+	$(".connect").replaceWith(wifi_status);
+	
+	//动态生成立即联网按钮
+	$(".btn").append(
+		"<input id='connect_logout' type='button' value='停用网络'></input>"
+	);
+	
+	ClickLogoutWifiBtn(item);
+	
+}
+
+
+// 停用网络按钮  
+function ClickLogoutWifiBtn(item)
+{
+	//正在处理中
+	ShowOperatingPage()
+	//点击connect按钮  --立即联网 ---
+	$("body").off("click","#connect_logout");
+	$("body").on("click","#connect_logout",function(){
+		$.ajax({
+			url: "wifi/logoutwificonnect",
+	        data: 'wifi_code='+item.wifi_code+'&wifi_password='+item.wifi_password,
+	        type: 'post',
+	        dataType: 'json',
+	        success : function(response) {
+	            if(response.status == "OK"){
+	            	//显示购买页面
+	            	ShowConnectPage();
+	            }else{
+	            	ShowLogoutError();
+	            }
+	        },
+	        error: function(XMLHttpRequest, textStatus, errorThrown) {
+				console.log("error");
+	        }
+		});
+	});
+}
+
+
+
+
+//登录失败
+function ShowLoginError()
+{
+	$(".connect").replaceWith(
+		"<div class='content connect'><h3>连接失败：</h3>"+
+		"<p>连接失败，请联系相关人员处理</p>"+
+		"</div>"
+	);
+	
+	//动态生成立即联网按钮
+	$(".btn").append(
+		"<input id='connect_return' type='button' value='返回'></input>"
+	);
+	
+	
+	$("body").on("click","#connect_return",function(){
+		location.reload();	//重载页面
+	});
+}
+
+
+//下线失败
+function ShowLogoutError()
+{
+	$(".connect").replaceWith(
+		"<div class='content connect'><h3>失败：</h3>"+
+		"<p>停用网络失败，请联系相关人员处理</p>"+
+		"</div>"
+	);
+	
+	//动态生成立即联网按钮
+	$(".btn").append(
+		"<input id='connect_return' type='button' value='返回'></input>"
+	);
+	
+	
+	$("body").on("click","#connect_return",function(){
+		location.reload();	//重载页面
+	});
+}
+
 
 
 //显示没有购买套餐界面

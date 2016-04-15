@@ -42,20 +42,16 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl.'/';
 <body>
 
 		<div class="r content" id="user_content">
-			<div class="topNav">Wifi Billing&nbsp;&gt;&gt;&nbsp;<a href="#">Wifi URL</a></div>
+			<div class="topNav">Wifi Billing&nbsp;&gt;&gt;&nbsp;<a href="#">Wlan Params</a></div>
 	
 			<div class="searchResult">
-			<form action="<?php echo $weburl?>/indata/deleteallurl" class="formindex" method="post">
+			<form action="<?php echo $weburl?>/indata/deleteallwlan" class="formindex" method="post">
 				<table  >
 					<thead>
 						<tr style="height:35px">
 							<th style="width:50px"><center><input type=checkbox name=All onclick="checkAll('ids[]')"></input></center></th>
-							<th style="text-align:center">name</th>
-							<th style="text-align:center">url</th>
-						
-							<th style="text-align:center">remark</th>
-							
-							
+							<th style="text-align:center">params_key</th>
+							<th style="text-align:center">params_value</th>
 							<th style="text-align:center">Operate</th>
 						</tr>
 					</thead>
@@ -63,15 +59,10 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl.'/';
 						<?php foreach ($wifi_item as $k=>$v){?>
 						<tr style="height:35px">
 							<td><input type=checkbox name="ids[]" value="<?php echo $v['id']?>" onclick="checkItem('All')"></input></td>
-							<td  align="left"><?php echo $v['name']?></td>
-							<td  align="left"><?php echo $v['url']?></td>
-							
-						
-							<td  align="left"><?php echo $v['remark']?></td>
-							
+							<td  align="left"><?php echo $v['params_key']?></td>
+							<td  align="left"><?php echo $v['params_value']?></td>
 							<td  align="left">
-						
-								<a href="<?php echo $weburl?>/indata/editurl?id=<?php echo $v['id']?>"><img src="<?php echo $baseUrl?>images/write.png"></a>
+								<a href="<?php echo $weburl?>/indata/editwlan?id=<?php echo $v['id']?>"><img src="<?php echo $baseUrl?>images/write.png"></a>
 								<img class="delete" style="cursor: pointer;" onclick="infodata('<?php echo $v['id']?>')" src="<?php echo $baseUrl?>images/delete.png">
 							</td>
 						</tr>
@@ -83,7 +74,7 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl.'/';
 				
 				<p class="records">Records:<span><?php echo $maxcount?></span></p>
 				<div class="btn">
-					<a href="editurl"><input type="button" value="Add"></input></a>
+					<a href="editwlan"><input type="button" value="Add"></input></a>
 					<input type="button" id="deleteall" class='delete' value="Del Selected"></input>
 				</div>
 				
@@ -98,7 +89,7 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl.'/';
 			</div>
 		</div>
 	
-<form action="<?php echo $weburl?>/indata/deleteurl" method="post" id="formpost"><!-- 表单按删除按钮时提交的 -->
+<form action="<?php echo $weburl?>/indata/deletewlan" method="post" id="formpost"><!-- 表单按删除按钮时提交的 -->
 <input type="hidden" name="id" id="id">
 </form>
 	<!-- main end -->
@@ -158,12 +149,12 @@ $("#formpost").submit();
     if ($massage==''){}
 	elseif ($massage=='success'){?>//操作信息弹出框
 	alert('Option success');
-	window.location = "<?php echo $weburl?>/indata/wifiurl";
+	window.location = "<?php echo $weburl?>/indata/wlanparams";
 	<?php }
 else {
 	?>
 	alert('Option fail');
-	window.location = "<?php echo $weburl?>/indata/wifiurl";
+	window.location = "<?php echo $weburl?>/indata/wlanparams";
 	<?php
 }	
 ?>

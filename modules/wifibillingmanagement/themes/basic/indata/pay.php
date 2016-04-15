@@ -44,13 +44,19 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 						<span></span>
 					</label>
 					</label>
-				<label class="label_checkbox" style="margin-left: 30px">
+					<span style="margin-left:10%;font-size:16px;vertical-align: top;">remark : </span><label style="word-break:break-all;vertical-align: top;"><?php echo $ibs_pay[0]['remark']?></label>
+					<br>
+					<br>
+				<label class="label_checkbox">
 				<span>Check Balance:</span>
 					<label <?php echo $money==1?"class='btn_checkbox on'":"class='btn_checkbox'"?> >
 						<input type="checkbox" name="money" value="1" <?php echo $money==1?"checked='checked'":'';?> ></input>
 						<span></span>
 					</label>
 					</label>
+					<span style="margin-left:7%;font-size:16px; vertical-align: top;">remark : </span><label style="word-break:break-all;vertical-align: top;"><?php echo $ibs_pay[1]['remark']?></label>
+					<br>
+					<br>
 				<input type="hidden" name='t' value='1'>
 				<span class="btn"><input type="submit" value="submit"></input></span>
 			
@@ -64,9 +70,9 @@ $baseUrl = $this->assetBundles[ThemeAsset::className()]->baseUrl . '/';
 $(function(){
     <?php $massage=isset($massage)?$massage:'';?>
     <?php if ($massage==1){?>
-    alert("操作成功");
+    alert("Option success");
     <?php }elseif ($massage==2){?>
-    alert("操作失败");
+    alert("Option Fail");
     <?php }?>
   
     //操作后弹出框

@@ -178,6 +178,16 @@ class Wifi
 		return $url;
 	}
 	
+	
+	//通过数据库获取portal认证时所需要的参数
+	public static function getParamsOfPortal()
+	{
+		$sql = " SELECT params_key,params_value FROM wifi_wlan_params ";
+		$params = Yii::$app->db->createCommand($sql)->queryAll();
+		return $params;
+	}
+	
+	
 	//判断是不是xml格式
 	public static function xml_parser($str){
 		$xml_parser = xml_parser_create();
