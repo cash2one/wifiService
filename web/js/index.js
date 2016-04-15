@@ -4,6 +4,209 @@ $(document).ready(function(){
 
 
 
+
+var WifiConnect = {
+		init : function () {
+			this.show_connectBtn();
+		},
+		show : function (content) {
+			$("#connectBox").html(content);
+		},
+		show_connectBtn : function () {
+			var that = this;
+			$.ajax({
+		        url: "wifi/getwifiitemstatus",
+		        data: 'PassportNO='+getQueryString("PassportNO"),
+		        type: 'post',
+		        dataType: 'json',
+		        success : function(response) {
+		            if(response.status == "OK"){
+		            	if(response.data != ''){
+		            		//游客购买了上网卡
+		            		//显示上网连接--立即上网界面
+		            		that.show(ShowConnectSelect(response.data));
+		            		that.connectBtn();
+		            	}else {
+		            		//游客没有购买上网卡
+		            		//显示没有购买上网卡界面
+		            		that.show(ShowNoItem());
+		            		that.noItemBtn();
+		            	}
+		            }
+		        },
+		        error: function(XMLHttpRequest, textStatus, errorThrown) {
+					console.log("error");
+		        }
+		    });
+			
+			function ShowConnectSelect(data)
+			{
+				//动态生成当前有效套餐
+				var wifi_status = "<div class='content connect'><h3>当前有效套餐：</h3><ul id='ul_wifi_connect'>";
+				$.each(data,function(index,item){
+					wifi_status += "<li><label>";
+					
+					if(index == 0){
+						wifi_status += "<input type='radio' checked='checked' name='wifi_connect' value="+item.wifi_info_id+"></input>"+item.wifi_name;
+					}else{
+						wifi_status += "<input type='radio' name='wifi_connect' value="+item.wifi_info_id+"></input>"+item.wifi_name;
+					}
+						
+					wifi_status +=
+						"<ul>"+
+							"<li>账号："+item.wifi_code+" <input type='hidden' id='wifi_code' value="+item.wifi_code+" /></li>"+
+							"<li>密码："+item.wifi_password+"<input type='hidden' id='wifi_password' value="+item.wifi_password+" /></li>"+
+						"</ul>"+
+						"</label></li>";
+				});
+				
+				wifi_status += "</ul></div><div class='btn'><input id='connect' value='立即联网' type='button'></div>";
+				
+				return wifi_status;
+			}
+			
+			//显示没有购买套餐界面
+			function ShowNoItem()
+			{
+				var wifi_status = "<div class='content connect'><h3>当前有效套餐：</h3><p>暂无可用的套餐，请购买上网套餐。</p></div><div class='btn'><input id='noItemBtn' value='返回' type='button'></div>";
+				return wifi_status;
+			}
+			
+		},
+		connectBtn : function() {
+			var that = this;
+			$("body").off("click","#connect");
+			$("body").on("click","#connect",function(){
+				//获取点击的套餐
+		    	index = SelectWifiItem();
+		    	//显示正在处理中
+				that.show(that.ShowOperatingPage());
+				$.ajax({
+				 url: "wifi/wificonnect",
+			        data: 'wifi_code='+index[0]+'&wifi_password='+index[1],
+			        type: 'post',
+			        dataType: 'json',
+			        success : function(response) {
+			            if(response.status == "OK"){
+			            	//显示 停用wifi页面
+			            	that.show(ShowLogOutWifiConnect(response.data));
+			            	that.disConnectBtn(response.data);
+			            }else{
+			            	//显示登录失败
+			            	that.show(ShowLoginError());
+			            	that.backBtn();
+			            }
+			        },
+			        error: function(XMLHttpRequest, textStatus, errorThrown) {
+						console.log("error");
+			        }
+				});
+			});
+			
+			//获取点击的套餐
+			function SelectWifiItem()
+			{
+				var index = [];	//定义一个数组存放 wifi套餐
+				$("#ul_wifi_connect>li").each(function(){
+					if($(this).find("input").prop("checked")) {
+						index[0] = $(this).find("ul li input#wifi_code").val();
+						index[1] = $(this).find("ul li input#wifi_password").val();
+					}
+				});
+				
+				return index ;
+			}
+			
+			//停用wifi页面
+			function ShowLogOutWifiConnect(item)
+			{
+				var wifi_status = "<div class='content connect'><h3>当前连接的套餐：</h3>";
+				wifi_status +=
+						"<p>账号："+item.wifi_code+"</p>"+
+						"<p>密码："+item.wifi_password+"</p>"+
+						"<p>开通的时间 : "+item.turnOnTime+"</p>"+
+						"<p>流量状态 : 已用 "+item.left_flow+"M / 剩余 "+item.flow_start+"M </p></div><div class='btn'><input id='disConnectBtn' value='断开连接' type='button'></div>";
+				return wifi_status;
+			}
+
+
+			//登录失败
+			function ShowLoginError()
+			{
+				str = "<div class='content connect'><h3>连接失败：</h3><p>连接失败，请联系相关人员处理</p></div><div class='btn'><input id='backBtn' type='button' value='返回'></div>";
+				return str;
+			}
+
+			
+		},
+		ShowOperatingPage : function(){
+			return "<div class='content connect'><h3>正在处理:</h3>"+
+				"<p>正在处理中，请稍等片刻</p>"+
+				"</div>";
+		},
+		
+		disConnectBtn : function(item) {
+			var that = this;
+			$("body").off("click","#disConnectBtn");
+			$("body").on("click","#disConnectBtn",function(){
+				//显示正在处理中
+				that.show(that.ShowOperatingPage());
+				$.ajax({
+					url: "wifi/logoutwificonnect",
+			        data: 'wifi_code='+item.wifi_code+'&wifi_password='+item.wifi_password,
+			        type: 'post',
+			        dataType: 'json',
+			        success : function(response) {
+			            if(response.status == "OK"){
+			            	//显示购买页面
+			            	that.show_connectBtn();
+			            }else{
+			            	//显示出错页面
+			            	that.show(ShowLogoutError());
+			            	that.backBtn();
+			            }
+			        },
+			        error: function(XMLHttpRequest, textStatus, errorThrown) {
+						console.log("error");
+			        }
+				});
+			});
+			
+			
+			//下线失败
+			function ShowLogoutError()
+			{				
+				str = "<div class='content connect'><h3>失败：</h3><p>停用网络失败，请联系相关人员处理</p></div><div class='btn'><input id='backBtn' type='button' value='返回'></input></div>";		
+				return str;
+			}
+			
+			
+		
+		},
+		backBtn : function() {
+			var that = this;
+			$("body").off("click","#backBtn");
+			$("body").on("click","#backBtn",function(){
+				that.show_connectBtn();
+			})
+			
+		},
+		noItemBtn : function(){
+			var that = this;
+			$("body").off("click","#noItemBtn");
+			$("body").on("click","#noItemBtn",function(){
+				var index = $(".tab_title li").index($(this));
+				var left = index * $(window).width();
+				$(".tab_content").css("left",(-left + "px"));
+				$("li.active").removeClass("active");
+				$(this).addClass("active");
+				location.reload();
+			});
+		},
+}
+
+
+
 //切换tab
 function tab() {
 	changeWidthAndHeight();
@@ -23,7 +226,7 @@ function tab() {
 			location.reload();
 		}else if(index == 1){
 			//点击  上网连接 tab 显示上网连接页面
-			ShowConnectPage();
+			WifiConnect.init();
 		}
 	});
 	
@@ -39,13 +242,14 @@ function tab() {
 
 
 
-
 //------ 获取get请求的参数------
 function getQueryString(name) {
 	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
 	var r = window.location.search.substr(1).match(reg);
 	if (r != null) return unescape(r[2]); return null;
 }
+
+
 
 //------ 获取get请求的参数------  使用这个中文不乱码-------
 function request(paras) {
@@ -126,7 +330,7 @@ function GetNameAndShowConfirm(wifi_id)
 				"<h3>Wifi订单确认</h3>"+
 				"<ul>"+
 					"<li>商品名称："+wifi_name+"</li>"+
-					"<li>订单金额：$"+wifi_price+"</li>"+
+					"<li>订单金额：<span style='color:#f63;'>$"+wifi_price+"</span></li>"+
 				"</ul>"+
 				"<p>购买前请确保您的房卡中余额充足，支付成功后，系统将自动从您的房卡中扣除对应的余额。</p>"+
 			"</div>"
@@ -148,7 +352,6 @@ $("body").on("click","#payment",function(){
 	$.ajax({
 		url:"wifi/payment",
 		data:"wifi_id="+wifi_id+"&PassportNO="+getQueryString("PassportNO")+"&Name="+decodeURI(request("Name"))+"&TenderType="+getQueryString("TenderType")+"&iso="+getQueryString("iso"),
-//		data:"wifi_id="+wifi_id+"&PassportNO="+getQueryString("PassportNO")+"&Name="+getQueryString("Name")+"&TenderType="+getQueryString("TenderType")+"&iso="+getQueryString("iso"),
 		type:'post',
 		dataType:'json', 
 		success:function(response){
@@ -181,37 +384,25 @@ $("body").on("click","#payment",function(){
 });
 
 
-
-
-//显示上网连接界面
-function ShowConnectPage()
+//显示支付失败界面
+function ShowPayFailPage()
 {
-	$.ajax({
-        url: "wifi/getwifiitemstatus",
-        data: 'PassportNO='+getQueryString("PassportNO"),
-        type: 'post',
-        dataType: 'json',
-        success : function(response) {
-            if(response.status == "OK"){
-            	
-            	if(response.data != ''){
-            		//游客购买了上网卡
-            		//显示上网连接--立即上网界面
-            		ShowConnectSelect(response.data);
-            		
-            	}else {
-            		//游客没有购买上网卡
-            		//显示没有购买上网卡界面
-            		ShowNoItem();
-            	}
-            }
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
-			console.log("error");
-        }
-    });
+	$(".payment").replaceWith(
+		"<div class='content payment'>"+
+			"<h3>Wifi订单支付失败！</h3>"+
+			"<p>很抱歉，您的房卡账户余额不足，请先到前台充值后再购买！</p>"+
+		"</div>"
+	);
 	
+	$(".btn").append(
+		"<input id='return' type='button' value='返回'></input>"
+	);
+	
+	$("body").on("click","#return",function(){
+		location.reload();	//重载页面
+	});
 }
+
 
 
 //显示没有套餐页面(卡卖完了)
@@ -234,24 +425,6 @@ function ShowNoCardPage()
 }
 
 
-//显示支付失败界面
-function ShowPayFailPage()
-{
-	$(".payment").replaceWith(
-		"<div class='content payment'>"+
-			"<h3>Wifi订单支付失败！</h3>"+
-			"<p>很抱歉，您的房卡账户余额不足，请先到前台充值后再购买！</p>"+
-		"</div>"
-	);
-	
-	$(".btn").append(
-		"<input id='return' type='button' value='返回'></input>"
-	);
-	
-	$("body").on("click","#return",function(){
-		location.reload();	//重载页面
-	});
-}
 
 //显示支付出错界面
 function ShowPayErrorPage()
@@ -301,227 +474,3 @@ function ShowPaySuccess()
 		""
 	);
 }
-
-
-
-//显示选择上网连接 ---- 立即上网 界面
-function ShowConnectSelect(data)
-{
-	//动态生成当前有效套餐
-	var wifi_status = "<div class='content connect'><h3>当前有效套餐：</h3><ul id='ul_wifi_connect'>";
-	$.each(data,function(index,item){
-		wifi_status += "<li><label>";
-		
-		if(index == 0){
-			wifi_status += "<input type='radio' checked='checked' name='wifi_connect' value="+item.wifi_info_id+"></input>"+item.wifi_name;
-		}else{
-			wifi_status += "<input type='radio' name='wifi_connect' value="+item.wifi_info_id+"></input>"+item.wifi_name;
-		}
-			
-		wifi_status +=
-			"<ul>"+
-				"<li>账号："+item.wifi_code+" <input type='hidden' id='wifi_code' value="+item.wifi_code+" /></li>"+
-				"<li>密码："+item.wifi_password+"<input type='hidden' id='wifi_password' value="+item.wifi_password+" /></li>"+
-			"</ul>"+
-			"</label></li>";
-	});
-	
-	wifi_status += "</ul></div>";
-	$(".connect").replaceWith(wifi_status);
-	
-	//动态生成立即联网按钮
-	$("#connect").replaceWith(
-		"<input id='connect' type='button' value='立即联网'></input>"
-	);
-	
-	//动态生成立即联网按钮
-	$("#connect_logout").replaceWith(
-		"<input id='connect' type='button' value='立即联网'></input>"
-	);
-	
-	
-	
-	//点击 立即联网 按钮
-	ClickWifiConnectBtn(data);
-	
-}
-
-//点击  --立即联网 ---
-function ClickWifiConnectBtn(data)
-{
-	//点击connect按钮  --立即联网 ---
-	$("body").off("click","#connect");
-	$("body").on("click","#connect",function(){
-		//获取点击的套餐
-    	index = SelectWifiItem();
-		//显示正在登录中
-		 ShowOperatingPage();
-		$.ajax({
-		 url: "wifi/wificonnect",
-	        data: 'wifi_code='+index[0]+'&wifi_password='+index[1],
-	        type: 'post',
-	        dataType: 'json',
-	        success : function(response) {
-	            if(response.status == "OK"){
-	            	//显示 停用wifi页面
-	            	ShowLogOutWifiConnect(response.data);
-	            }else{
-	            	//显示登录失败
-	            	ShowLoginError();
-	            }
-	        },
-	        error: function(XMLHttpRequest, textStatus, errorThrown) {
-				console.log("error");
-	        }
-		});
-	});
-}
-
-
-
-//正在操作中
-function ShowOperatingPage()
-{
-	$(".connect").replaceWith(
-		"<div class='content connect'><h3>正在处理:</h3>"+
-		"<p>正在处理中，请稍等片刻</p>"+
-		"</div>"
-	);
-	$("#connect").replaceWith(
-		""
-	);
-}
-
-
-
-
-//获取 上网选择套餐的index
-function SelectWifiItem()
-{
-	var index = [];	//定义一个数组存放 wifi套餐
-	$("#ul_wifi_connect>li").each(function(){
-		if($(this).find("input").prop("checked")) {
-			index[0] = $(this).find("ul li input#wifi_code").val();
-			index[1] = $(this).find("ul li input#wifi_password").val();
-		}
-	});
-	
-	return index ;
-}
-
-
-
-//停用wifi页面
-function ShowLogOutWifiConnect(item)
-{
-	var wifi_status = "<div class='content'><h3>当前连接的套餐：</h3>";
-	wifi_status +=
-			"<p>账号："+item.wifi_code+"</p>"+
-			"<p>密码："+item.wifi_password+"</p>"+
-			"<p>开通的时间 : "+item.turnOnTime+"</p>"+
-			"<p>流量状态 : 已用 "+item.left_flow+"M / 剩余 "+item.flow_start+"M </p></div>";
-	$(".connect").replaceWith(wifi_status);
-	
-	//动态生成立即联网按钮
-	$(".btn").append(
-		"<input id='connect_logout' type='button' value='停用网络'></input>"
-	);
-	
-	ClickLogoutWifiBtn(item);
-	
-}
-
-
-// 停用网络按钮  
-function ClickLogoutWifiBtn(item)
-{
-	//正在处理中
-	ShowOperatingPage()
-	//点击connect按钮  --立即联网 ---
-	$("body").off("click","#connect_logout");
-	$("body").on("click","#connect_logout",function(){
-		$.ajax({
-			url: "wifi/logoutwificonnect",
-	        data: 'wifi_code='+item.wifi_code+'&wifi_password='+item.wifi_password,
-	        type: 'post',
-	        dataType: 'json',
-	        success : function(response) {
-	            if(response.status == "OK"){
-	            	//显示购买页面
-	            	ShowConnectPage();
-	            }else{
-	            	ShowLogoutError();
-	            }
-	        },
-	        error: function(XMLHttpRequest, textStatus, errorThrown) {
-				console.log("error");
-	        }
-		});
-	});
-}
-
-
-
-
-//登录失败
-function ShowLoginError()
-{
-	$(".connect").replaceWith(
-		"<div class='content connect'><h3>连接失败：</h3>"+
-		"<p>连接失败，请联系相关人员处理</p>"+
-		"</div>"
-	);
-	
-	//动态生成立即联网按钮
-	$(".btn").append(
-		"<input id='connect_return' type='button' value='返回'></input>"
-	);
-	
-	
-	$("body").on("click","#connect_return",function(){
-		location.reload();	//重载页面
-	});
-}
-
-
-//下线失败
-function ShowLogoutError()
-{
-	$(".connect").replaceWith(
-		"<div class='content connect'><h3>失败：</h3>"+
-		"<p>停用网络失败，请联系相关人员处理</p>"+
-		"</div>"
-	);
-	
-	//动态生成立即联网按钮
-	$(".btn").append(
-		"<input id='connect_return' type='button' value='返回'></input>"
-	);
-	
-	
-	$("body").on("click","#connect_return",function(){
-		location.reload();	//重载页面
-	});
-}
-
-
-
-//显示没有购买套餐界面
-function ShowNoItem()
-{
-	$(".connect").replaceWith(
-		"<div class='content connect'><h3>当前有效套餐：</h3>"+
-		"<p>暂无可用的套餐，请购买上网套餐。</p>"+
-		"</div>"
-	);
-	
-	//动态生成立即联网按钮
-	$("#connect").replaceWith(
-		"<input id='connect_return' type='button' value='返回购买'></input>"
-	);
-	
-	$("body").on("click","#connect_return",function(){
-		location.reload();	//重载页面
-	});
-}
-

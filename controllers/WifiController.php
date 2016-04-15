@@ -57,17 +57,6 @@ class WifiController extends Controller
     	if($iso === 'null'){
     		$iso = 'zh_cn';
     	}
-    	 
-    	
-    	//--test code begin--
-//     	$wifi_id = '2';
-//     	$passport = '123456';
-//     	$TenderType = '02';
-//     	$name='zhangsan';
-//     	$iso = 'zh_cn';
-    	//--test code end ---
-    	
-    	
     	
     	$wifi_item = Wifi::getWifiItem($wifi_id,$iso);
     	$checkNumber = WifiPay::createChecknum();
@@ -258,7 +247,6 @@ class WifiController extends Controller
     //网络连接
     public function actionWificonnect()
     {
-    	
     	$wifi_code = Yii::$app->request->post('wifi_code');
     	$wifi_password = Yii::$app->request->post('wifi_password');
     	 
@@ -270,7 +258,6 @@ class WifiController extends Controller
     	//认证
     	$response = WifiConnect::PortalLogin($wifi_code,$wifi_password);
 
-    	
     	if($response == 0 || $response==2 || $response==9){
     		$result = '{"status":"OK","data":{"wifi_code":"'.$wifi_code.'","wifi_password":"'.$wifi_password.'","turnOnTime":"'.$turnOnTime.'","flow_start":"'.$flow_start.'","left_flow":"'.$left_flow.'"}}';
     	}else {
@@ -290,7 +277,7 @@ class WifiController extends Controller
     	$wifi_password = Yii::$app->request->post('wifi_password');
     	//访问下线接口
     	$response = WifiConnect::PortaLogout($wifi_code);
-    	
+ 
     	if($response == 0){
     		//注销完成
     		$result = '{"status":"OK"}';
@@ -299,52 +286,6 @@ class WifiController extends Controller
     	}
     	echo $result;
     }
-    
-    
-    
-    //test code
-    public function actionTestbalance()
-    {
-//     	$url = "http://localhost/wifiservice/web/wifi/payment";
-
-    	
-    	$xml = "<?xml version='1.0' ?><DTSFolioBalanceResponse><Header Action='PMS' Comment='' CreationDateTime='2016-03-22 06:47:40' DocumentDefinition='' MessageIdentifier='7b6e2866-f5e9-48c1-8b27-9568946e3eed' SourceApplication='WIFI'/><Body><FolioBalance PassportNO='H123456' BalanceDue='200'/></Body></DTSFolioBalanceResponse>";
-//     	$res = Wifi::httpsRequest($url,$xml);
-		
-    	echo $xml;
-    }
-    
-    public function actionTestpost()
-    {
-//     	$url = "http://localhost/wifiservice/web/wifi/payment";
-    	
-    	$xml = "<?xml version='1.0' encoding='utf-8' ?><DTSPostChargeResponse><Header Action='Lufthansa' CreationDateTime='2016-03-22 02:50:03' DocumentDefinition='DTSPostChargeResponse' MessageIdentifier='13408515.20160322' SourceApplication='DTS'/><Body><PostCharge CheckNum='L490282' FolioID='0000902524' PassportNO='H123456' PostingDate='2016-03-22' PostingTime='02:50:03'/></Body></DTSPostChargeResponse>";
-    
-    	
-    	echo $xml;
-    }
-    
-    
-    public function actionSend()
-    {
-    	$passport = '123456';
-    	$TenderType='02';
-    	$checkNumber = WifiPay::createChecknum(); 
-    	$identififer = $passport.".".time();
-    	$res = WifiPay::DTSPostCharge($passport,$TenderType,$checkNumber,'100',$identififer);
-    	echo $res;
-    }
-    
-    //test code end
-    
-    
-    public function actionTestjson()
-    {
-    	$json = '({"version":"2.0","errorCode":"0"})';
-    	return $json;
-    			
-    }
-    
     
 }
     

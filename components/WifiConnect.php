@@ -26,9 +26,6 @@ class WifiConnect
 		$portal_url = Wifi::selectUrl('portal_url');
 		$portal_params = Wifi::getParamsOfPortal();
 		
-		
-// 		return '0';
-// 		exit;
 		//拼接字符串
 		$str = '';
 		$portal_params = Wifi::getParamsOfPortal();
@@ -52,6 +49,7 @@ class WifiConnect
 		//从数据库中查找出 $wlanuserip，$wlanacip
 		$wlanuserip = $_SERVER["REMOTE_ADDR"];
 		$wlanacip = self::GetWlanParams('wlanacip');
+		
 		//发送请求，带上参数
 		$portal_url = Wifi::selectUrl('portal_url');
 		$url = $portal_url."?version=2.0&action=logout&wlanuserip=".$wlanuserip."&wlanacip=".$wlanacip;

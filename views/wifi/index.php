@@ -30,7 +30,7 @@
 					<input id="buy" type="button" value="购买选择的套餐"></input>
 				</div>
 			</div>
-			<div>
+			<div id="connectBox">
 				<div class="content connect">
 					<h3>当前有效套餐：</h3>
 					<ul id="ul_wifi_connect">
