@@ -16,7 +16,6 @@ class WifiConnect
 	}
 	
 
-	
 	//portal认证，登录
 	public static function PortalLogin($username,$userpasswd)
 	{
@@ -33,16 +32,11 @@ class WifiConnect
 			$str .= "&".$params['params_key']."=".$params['params_value'];
 		}
 		$url = $portal_url."?username=".$username."&userpasswd=".$userpasswd."&version=2.0&action=login"."&wlanuserip=".$wlanuserip.$str;	//url + params
-		if(isset(json_decode(trim(Wifi::httpsRequest($url),"()"))->errorCode)){
-			$errorCode = json_decode(trim(Wifi::httpsRequest($url),"()"))->errorCode;
-		}else {
-			$errorCode = '404';
-		}
+		$errorCode = json_decode(trim(Wifi::httpsRequest($url),"()"))->errorCode;
 		return $errorCode;
 	}
 	
 
-	
 	//portal认证，注销
 	public static function PortaLogout()
 	{
@@ -52,15 +46,11 @@ class WifiConnect
 		
 		//发送请求，带上参数
 		$portal_url = Wifi::selectUrl('portal_url');
-		$url = $portal_url."?version=2.0&action=logout&wlanuserip=".$wlanuserip."&wlanacip=".$wlanacip;
-		return $url;
-		if(isset(json_decode(trim(Wifi::httpsRequest($url),"()"))->errorCode)){
-			$errorCode = json_decode(trim(Wifi::httpsRequest($url),"()"))->errorCode;
-		}else {
-			$errorCode = '404';
-		}
+		$url = $portal_url."?&version=2.0&action=logout&wlanacip=".$wlanacip."&wlanuserip=".$wlanuserip;
+		$errorCode = json_decode(trim(Wifi::httpsRequest($url),"()"))->errorCode;
 		return $errorCode;
 	}
+	
 	
 	//$wlanacip 从数据库中拿到
 	private static function GetWlanParams($params_key)
@@ -70,6 +60,5 @@ class WifiConnect
 		$wlan_params = Yii::$app->db->createCommand($sql)->queryOne()['params_value'];
 		return $wlan_params;
 	}
-	
 	
 }

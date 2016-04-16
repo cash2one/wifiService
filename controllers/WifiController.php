@@ -250,7 +250,6 @@ class WifiController extends Controller
     	
     	//认证
     	$response = WifiConnect::PortalLogin($wifi_code,$wifi_password);
-		
 		//如果查询的卡号剩余流量为0，设置他为流量耗尽
 		if($left_flow == 0){
 			$sql = "SELECT wifi_info_id FROM wifi_info WHERE wifi_code='$wifi_code'";
@@ -258,7 +257,6 @@ class WifiController extends Controller
 			$update_sql = "UPDATE wifi_item_status  SET status=1 WHERE wifi_info_id='$wifi_info_id'";
 			Yii::$app->db->createCommand($update_sql)->execute();
 		}
-		 
 		$sql = " SELECT time FROM wifi_info WHERE wifi_code = '$wifi_code'";
 		$turnOnTime = Yii::$app->db->createCommand($sql)->queryOne()['time'];
     	if($response == 0 || $response==2 ){
@@ -280,7 +278,7 @@ class WifiController extends Controller
     	$response = WifiConnect::PortaLogout();
     	if($response == 0){
     		//注销完成
-    		$result = '{"status":"OK"}';
+    		$result = '{"status":"OK","errorCode":"'.$response.'"}';
     	}else {
     		$result = '{"status":"ERROR","errorCode":"'.$response.'"}';
     	}

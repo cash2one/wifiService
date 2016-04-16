@@ -326,9 +326,6 @@ function GetNameAndShowConfirm(wifi_id)
         }
     });
 	
-	
-
-	
 	//------ 显示确认支付页面-------
 	function PayConfirm(wifi_name,wifi_price)
 	{

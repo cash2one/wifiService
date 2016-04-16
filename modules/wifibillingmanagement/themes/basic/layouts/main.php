@@ -34,7 +34,7 @@ $changepassword=false;
 $ids=isset(Yii::$app->session['ids'])?Yii::$app->session['ids']:array();
 foreach ($ids as $k=>$v){
 	if ($v==1){
-	$Wifi_package=true;
+		$Wifi_package=true;
 	}
 	if ($v==2){
 		$url=true;
@@ -50,7 +50,6 @@ foreach ($ids as $k=>$v){
 	}
 	if ($v==6){
 		$pinformation=true;
-	
 	}
 	if ($v==7){
 		$report=true;
