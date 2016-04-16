@@ -44,7 +44,7 @@ class WifiConnect
 
 	
 	//portal认证，注销
-	public static function PortaLogout($wifi_code)
+	public static function PortaLogout()
 	{
 		//从数据库中查找出 $wlanuserip，$wlanacip
 		$wlanuserip = $_SERVER["REMOTE_ADDR"];

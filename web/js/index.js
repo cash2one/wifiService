@@ -87,8 +87,13 @@ var WifiConnect = {
 			            if(response.status == "OK"){
 			            	//显示 停用wifi页面
 			            	that.show(ShowLogOutWifiConnect(response.data));
-			            	that.disConnectBtn(response.data);
-			            }else{
+			            	that.disConnectBtn();
+			            }else if(response.status == "MULTIPLE"){
+			            	//已经有帐号在登录了
+			            	that.show(ShowMultipleLogin());
+			            	that.disConnectBtn();
+			            	that.backBtn();
+			            } else{
 			            	//显示登录失败
 			            	that.show(ShowLoginError());
 			            	that.backBtn();
@@ -126,7 +131,14 @@ var WifiConnect = {
 				return wifi_status;
 			}
 
-
+			//已经有帐号登录了 
+			function ShowMultipleLogin()
+			{
+				str = "<div class='content connect'><h3>重复登录：</h3><p>已经有别的帐号连接了，请先断开连接。</p></div><div class='btn'><input style='margin-right:20px;' id='disConnectBtn' type='button' value='断开连接'><input id='backBtn' type='button' value='返回'></div>";
+				return str;
+			}
+			
+			
 			//登录失败
 			function ShowLoginError()
 			{
@@ -142,7 +154,7 @@ var WifiConnect = {
 				"</div>";
 		},
 		
-		disConnectBtn : function(item) {
+		disConnectBtn : function() {
 			var that = this;
 			$("body").off("click","#disConnectBtn");
 			$("body").on("click","#disConnectBtn",function(){
@@ -150,7 +162,7 @@ var WifiConnect = {
 				that.show(that.ShowOperatingPage());
 				$.ajax({
 					url: "wifi/logoutwificonnect",
-			        data: 'wifi_code='+item.wifi_code+'&wifi_password='+item.wifi_password,
+			        data: '',
 			        type: 'post',
 			        dataType: 'json',
 			        success : function(response) {

@@ -128,10 +128,8 @@ class WifiController extends Controller
     							$result = '{"status":"ERROR"}';
     							//把卡号的状态设置为代售状态
     							Wifi::SetUnsold($wifi_info_id);
-    							
     						}
     						//---sql事务---end---
-    						
     					}
     				}else{
     					//.接收到的FolioBalance xml 报文解析出错，或者接收不到报文
@@ -179,10 +177,8 @@ class WifiController extends Controller
     					$result = '{"status":"ERROR"}';
     					//把卡号的状态设置为代售状态
     					Wifi::SetUnsold($wifi_info_id);
-    						
     				}
     				//---sql事务---end---
-    				
     			}
     		
     		}else{
@@ -205,7 +201,6 @@ class WifiController extends Controller
     				Wifi::SetUnsold($wifi_info_id);
     			}
     			//---sql事务---end--
-    		
     		}
     	}else{
     		$result = '{"status":"NoCard"}';
@@ -252,20 +247,24 @@ class WifiController extends Controller
     	 
     	$flow_start = isset(WifiConnect::getWifiFlow($wifi_code)->flow_start) ? WifiConnect::getWifiFlow($wifi_code)->flow_start : 0; 	//总流量
     	$left_flow  = isset(WifiConnect::getWifiFlow($wifi_code)->left_flow) ? WifiConnect::getWifiFlow($wifi_code)->left_flow : 0 ;  	//剩余流量
-    	 
-    	//如果查询的卡号剩余流量为0，设置他为流量耗尽
-    	if($left_flow == 0){
-    		$sql = "UPDATE wifi_item_status  SET status=1 WHERE wifi_info_id=(SELECT wifi_info_id FROM wifi_info WHERE wifi_code=$wifi_code)";
-    		Yii::$app->db->createCommand($sql)->execute();
-    	}
     	
-    	$sql = " SELECT time FROM wifi_info WHERE wifi_code = '$wifi_code'";
-    	$turnOnTime = Yii::$app->db->createCommand($sql)->queryOne()['time'];
     	//认证
     	$response = WifiConnect::PortalLogin($wifi_code,$wifi_password);
-
-    	if($response == 0 || $response==2 || $response==9){
+		
+		//如果查询的卡号剩余流量为0，设置他为流量耗尽
+		if($left_flow == 0){
+			$sql = "SELECT wifi_info_id FROM wifi_info WHERE wifi_code='$wifi_code'";
+			$wifi_info_id = Yii::$app->db->createCommand($sql)->queryOne()['wifi_info_id'];
+			$update_sql = "UPDATE wifi_item_status  SET status=1 WHERE wifi_info_id='$wifi_info_id'";
+			Yii::$app->db->createCommand($update_sql)->execute();
+		}
+		 
+		$sql = " SELECT time FROM wifi_info WHERE wifi_code = '$wifi_code'";
+		$turnOnTime = Yii::$app->db->createCommand($sql)->queryOne()['time'];
+    	if($response == 0 || $response==2 ){
     		$result = '{"status":"OK","errorCode":"'.$response.'","data":{"wifi_code":"'.$wifi_code.'","wifi_password":"'.$wifi_password.'","turnOnTime":"'.$turnOnTime.'","flow_start":"'.$flow_start.'","left_flow":"'.$left_flow.'"}}';
+    	}else if($response == 9){
+    		$result ='{"status":"MULTIPLE","errorCode":"'.$response.'"}';
     	}else {
     		$result = '{"status":"ERROR","errorCode":"'.$response.'"}';
     	}
@@ -277,11 +276,8 @@ class WifiController extends Controller
     //停用网络  
     public function actionLogoutwificonnect()
     {
-    	$wifi_code = Yii::$app->request->post('wifi_code');
-    	$wifi_password = Yii::$app->request->post('wifi_password');
     	//访问下线接口
-    	$response = WifiConnect::PortaLogout($wifi_code);
- 		echo $response;exit;
+    	$response = WifiConnect::PortaLogout();
     	if($response == 0){
     		//注销完成
     		$result = '{"status":"OK"}';
