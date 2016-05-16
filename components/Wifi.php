@@ -7,7 +7,7 @@ class Wifi
 	//获取wifi的名字，价格
 	public static function getWifiItem($wifi_id, $iso = 'zh_cn' )
 	{
-		$sql = " SELECT a.sale_price ,a.wifi_flow,b.wifi_name 
+		$sql = " SELECT a.wifi_id,a.sale_price ,a.wifi_flow,b.wifi_name 
 			FROM wifi_item a ,wifi_item_language b 
 			WHERE a.wifi_id = b.wifi_id 
 			AND a.wifi_id ='$wifi_id' AND b.iso='$iso'";
@@ -31,7 +31,7 @@ class Wifi
 	//获取wifi的帐号，密码
 	public static function getWifiInfo($wifi_info_id)
 	{
-		$sql = "SELECT wifi_info_id,wifi_code, wifi_password FROM wifi_info WHERE wifi_info_id='$wifi_info_id'";
+		$sql = "SELECT wifi_info_id,wifi_id,wifi_code, wifi_password FROM wifi_info WHERE wifi_info_id='$wifi_info_id'";
 		$wifi_info = Yii::$app->db->createCommand($sql)->queryOne();
 		return $wifi_info;
 	}
@@ -102,10 +102,16 @@ class Wifi
 
 		$time = date('Y-m-d H:i:s',time());
 		
-		$sql = " SELECT a.*,b.wifi_id FROM wifi_item_status a,wifi_info b,wifi_item c 
-					WHERE a.wifi_info_id=b.wifi_info_id AND b.wifi_id = c.wifi_id 
-					AND a.passport_num='$passport' AND a.status=0 AND '$time' < DATE_ADD(b.time,INTERVAL b.expiry_day day)";
+// 		$sql = " SELECT a.*,b.wifi_id FROM wifi_item_status a,wifi_info b,wifi_item c 
+// 					WHERE a.wifi_info_id=b.wifi_info_id AND b.wifi_id = c.wifi_id 
+// 					AND a.passport_num='$passport' AND a.status=0 AND '$time' < DATE_ADD(b.time,INTERVAL b.expiry_day day)";
 		
+		
+		$sql = " SELECT a.*,b.wifi_id FROM wifi_item_status a
+				LEFT JOIN wifi_info b ON a.wifi_info_id=b.wifi_info_id
+				WHERE a.passport_num='$passport' AND a.status=0 AND '$time' < DATE_ADD(b.time,INTERVAL b.expiry_day day)";
+					
+					
 		$wifi_item_status = Yii::$app->db->createCommand($sql)->queryAll();
 		
 		return $wifi_item_status;

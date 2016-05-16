@@ -14,81 +14,39 @@ class WifiController extends Controller
 	public $enableCsrfValidation = false; // csrf validation can't work
 	
 	
-	//选择套餐界面
     public function actionIndex()
     {
-    	$Name = Yii::$app->request->get('Name','');
-    	$PassportNO = Yii::$app->request->get('PassportNO','');
-    	$TenderType = Yii::$app->request->get('TenderType','');
     	$iso = Yii::$app->request->get('iso','zh_cn');
-    	
     	$wifi_items = Wifi::getAllWifiItem($iso);
+        return $this->render('index',['wifi_items'=>$wifi_items]);
+    }
+    
+    
+    
+    //获取wifi信息
+    public function actionGetwifi()
+    {
+    	$wifi_id = Yii::$app->request->post('wifi_id');
+    	$iso = Yii::$app->request->post('iso');
+
+    	if($iso === 'null'){
+    		$iso = 'zh_cn';
+    	}
     	
-        return $this->render('index',['wifi_items'=>$wifi_items,'Name'=>$Name,'PassportNO'=>$PassportNO,'TenderType'=>$TenderType]);
-    }
-    
-    //确认支付界面
-    public function actionConfirmorder()
-    {
-    	$Name = Yii::$app->request->get('Name','');
-    	$PassportNO = Yii::$app->request->get('PassportNO','');
-    	$TenderType = Yii::$app->request->get('TenderType','');
-    	$iso = Yii::$app->request->get('iso','zh_cn');
-    	$WifiItemId = Yii::$app->request->get('WifiItemId');
+    	if(isset($wifi_id)){
+    		$wifi_item = Wifi::getWifiItem($wifi_id,$iso);
+    		$item = '{"sale_price":"'.$wifi_item['sale_price'].'","wifi_flow":"'.$wifi_item['wifi_flow'].'","wifi_name":"'.$wifi_item['wifi_name'].'"}';
+    	}else{
+    		$item = '';
+    	}
     	
-    	$WifiItem = Wifi::getWifiItem($WifiItemId,$iso);
-    	
-    	return $this->render('confirm_order',['Name'=>$Name,'PassportNO'=>$PassportNO,'TenderType'=>$TenderType,'WifiItemId'=>$WifiItemId,'WifiItem'=>$WifiItem,'iso'=>$iso]);
-    	
-    }
-    
-    //支付成功界面
-    public function actionPaymentsuccessful()
-    {
-    	$Name = Yii::$app->request->get('Name','');
-    	$PassportNO = Yii::$app->request->get('PassportNO','');
-    	$TenderType = Yii::$app->request->get('TenderType','');
-    	 
-    	return $this->render('paymentsuccessful',['Name'=>$Name,'PassportNO'=>$PassportNO,'TenderType'=>$TenderType]);
-    	 
+    	$result = '{"status":"OK","data":'.$item.'}';
+    	echo $result;
     }
     
     
-    //支付失败界面
-    public function actionPaymentfail()
-    {
-    	$Name = Yii::$app->request->get('Name','');
-    	$PassportNO = Yii::$app->request->get('PassportNO','');
-    	$TenderType = Yii::$app->request->get('TenderType','');
-    	 
-    	return $this->render('paymentfail',['Name'=>$Name,'PassportNO'=>$PassportNO,'TenderType'=>$TenderType]);
-    }
-    
-    
-    
-    //支付出错界面
-    public function actionPaymenterror()
-    {
-    	$Name = Yii::$app->request->get('Name','');
-    	$PassportNO = Yii::$app->request->get('PassportNO','');
-    	$TenderType = Yii::$app->request->get('TenderType','');
-    	 
-    	return $this->render('paymenterror',['Name'=>$Name,'PassportNO'=>$PassportNO,'TenderType'=>$TenderType]);
-    }
-    
-    //套餐售罄
-    public function actionSoldout()
-    {
-    	$Name = Yii::$app->request->get('Name','');
-    	$PassportNO = Yii::$app->request->get('PassportNO','');
-    	$TenderType = Yii::$app->request->get('TenderType','');
-    	 
-    	return $this->render('soldout',['Name'=>$Name,'PassportNO'=>$PassportNO,'TenderType'=>$TenderType]);
-    }
-    
-    
-    
-	//支付wifi套餐
+
+    //支付wifi套餐
     public function actionPayment()
     {
     	$wifi_id = Yii::$app->request->post('wifi_id');
@@ -248,112 +206,85 @@ class WifiController extends Controller
     		$result = '{"status":"NoCard"}';
     	}
     	echo $result;
-    	
-    	
-    	
-// //     	$result = '{"status":"NoCard"}';
-// //     	$result = '{"status":"ERROR"}';
-//     	$result = '{"status":"OK"}';
-// //     	$result = '{"status":"FAIL"}';
-//     	echo $result;
     }
+
+
     
-    
-    
-    //显示游客购买的wifi套餐
-    public function actionGetwifipackage()
+    //获取游客购买的套餐
+    public function actionGetwifiitemstatus()
     {
-    	$Name = Yii::$app->request->get('Name','');
-    	$PassportNO = Yii::$app->request->get('PassportNO','');
-    	$TenderType = Yii::$app->request->get('TenderType','');
+    	$passport = Yii::$app->request->post('PassportNO');
+    	$wifi_status = Wifi::getWifiItemStatus($passport);
+    	$item = '';
     	
-    	$WifiStatus = Wifi::getWifiItemStatus($PassportNO);
+    	$wifi_count = count($wifi_status);	//游客购买上网卡的数量
+    	$index = 1;	//计数标志，用于计算是否最后一条上网卡信息
     	
-    	$tmp_Wifi_array = [];
-    	$tmp_Wifi_info_array = [];
-    	$Wifi_array = [];
-
-    	if($WifiStatus){
+    	foreach ($wifi_status as $wifi){
     		
-    		foreach ($WifiStatus as $wifi){
-    			
-    			$tmp_wifi_id = $wifi['wifi_id'];
-    			$tmp_wifi_info_id = $wifi['wifi_info_id'];
-    			
-    			$Wifi_array[$tmp_wifi_id] = Wifi::getWifiItem($wifi['wifi_id']);
-    			
-    			$tmp_Wifi_array[$tmp_wifi_id] = Wifi::getWifiItem($wifi['wifi_id']);
-    			$tmp_Wifi_info_array[$tmp_wifi_info_id] = Wifi::getWifiInfo($wifi['wifi_info_id']);
-    			
+    		$wifi_item = Wifi::getWifiItem($wifi['wifi_id']);
+    		$wifi_info = Wifi::getWifiInfo($wifi['wifi_info_id']);
+    		if($index < $wifi_count ){
+    			//不是最后一条，在末尾加 ','
+    			$index++;
+    			$item .= '{"wifi_name" : "'.$wifi_item['wifi_name'].'","wifi_code":"'.$wifi_info['wifi_code'].'","wifi_info_id":"'.$wifi_info['wifi_info_id'].'","wifi_password":"'.$wifi_info['wifi_password'].'"},';
+    		}else{
+    			// 最后一条，不用加在末尾加 ','
+    			$item .= '{"wifi_name" : "'.$wifi_item['wifi_name'].'","wifi_code":"'.$wifi_info['wifi_code'].'","wifi_info_id":"'.$wifi_info['wifi_info_id'].'","wifi_password":"'.$wifi_info['wifi_password'].'"}';
     		}
-
-    		foreach($tmp_Wifi_array as $item_key => $wifi_item){  				// loop 2 times
-    			$k=1;
-    			foreach($tmp_Wifi_info_array as $info_key => $wifi_info){		// loop 3 times
-    				if($wifi_item['wifi_id'] == $wifi_info['wifi_id']){
-    					$Wifi_array[$item_key]['wifi_info'][$info_key] = $wifi_info;
-    					$Wifi_array[$item_key]['wifi_info'][$info_key]['index'] = $k++;
-    				}
-    			}
-    		}
-
-    		return $this->render('selectpackage',['Name'=>$Name,'PassportNO'=>$PassportNO,'TenderType'=>$TenderType,'Wifi'=>$Wifi_array]);
-    	}else{
-    		//查找不到套餐时，显示没有套餐界面
-    		return $this->render('noneavaliable',['Name'=>$Name,'PassportNO'=>$PassportNO,'TenderType'=>$TenderType]);
     	}
+    
+    	$result = '{"status":"OK","data":['.$item.']}';
+    	echo $result;
     }
     
-    
+
     //网络连接
     public function actionWificonnect()
     {
-    	$WifiInfoId = Yii::$app->request->get('WifiInfoId');
-    	$Name = Yii::$app->request->get('Name','');
-    	$PassportNO = Yii::$app->request->get('PassportNO','');
-    	$TenderType = Yii::$app->request->get('TenderType','');
+    	$wifi_code = Yii::$app->request->post('wifi_code');
+    	$wifi_password = Yii::$app->request->post('wifi_password');
+    	 
+    	$flow_start = isset(WifiConnect::getWifiFlow($wifi_code)->flow_start) ? WifiConnect::getWifiFlow($wifi_code)->flow_start : 0; 	//总流量
+    	$left_flow  = isset(WifiConnect::getWifiFlow($wifi_code)->left_flow) ? WifiConnect::getWifiFlow($wifi_code)->left_flow : 0 ;  	//剩余流量
     	
-    	if(isset($WifiInfoId)){
-    		
-    		$wifi_info = Wifi::getWifiInfo($WifiInfoId);
-    		$wifi_code = $wifi_info['wifi_code'];
-    		$wifi_password = $wifi_info['wifi_password'];
-    		$flow_start = isset(WifiConnect::getWifiFlow($wifi_code)->flow_start) ? WifiConnect::getWifiFlow($wifi_code)->flow_start : 0; 	//总流量
-    		$left_flow  = isset(WifiConnect::getWifiFlow($wifi_code)->left_flow) ? WifiConnect::getWifiFlow($wifi_code)->left_flow : 0 ;  	//剩余流量
-    		
-    		//认证
-    		$response = WifiConnect::PortalLogin($wifi_code,$wifi_password);
-    		//如果查询的卡号剩余流量为0，设置他为流量耗尽
-    		if($left_flow == 0){
-    			$sql = "SELECT wifi_info_id FROM wifi_info WHERE wifi_code='$wifi_code'";
-    			$wifi_info_id = Yii::$app->db->createCommand($sql)->queryOne()['wifi_info_id'];
-    			$update_sql = "UPDATE wifi_item_status  SET status=1 WHERE wifi_info_id='$wifi_info_id'";
-    			Yii::$app->db->createCommand($update_sql)->execute();
-    		}
-    		$sql = " SELECT time FROM wifi_info WHERE wifi_code = '$wifi_code'";
-    		$turnOnTime = Yii::$app->db->createCommand($sql)->queryOne()['time'];
-    		 
-    		 
-    		if($response == 0 || $response==2 ){
-    			//连接成功
-    			$result = '{"status":"OK","errorCode":"'.$response.'","data":{"wifi_code":"'.$wifi_code.'","wifi_password":"'.$wifi_password.'","turnOnTime":"'.$turnOnTime.'","flow_start":"'.$flow_start.'","left_flow":"'.$left_flow.'"}}';
-    		}else if($response == 9){
-    			//多次连接
-    			$result ='{"status":"MULTIPLE","errorCode":"'.$response.'"}';
-    		}else {
-    			//连接出错
-    			$result = '{"status":"ERROR","errorCode":"'.$response.'"}';
-    		}
-    		
-    		echo $result;
-    	}else{
-    		return $this->render('emptyitem',['Name'=>$Name,'PassportNO'=>$PassportNO,'TenderType'=>$TenderType]);
+    	//认证
+    	$response = WifiConnect::PortalLogin($wifi_code,$wifi_password);
+		//如果查询的卡号剩余流量为0，设置他为流量耗尽
+		if($left_flow == 0){
+			$sql = "SELECT wifi_info_id FROM wifi_info WHERE wifi_code='$wifi_code'";
+			$wifi_info_id = Yii::$app->db->createCommand($sql)->queryOne()['wifi_info_id'];
+			$update_sql = "UPDATE wifi_item_status  SET status=1 WHERE wifi_info_id='$wifi_info_id'";
+			Yii::$app->db->createCommand($update_sql)->execute();
+		}
+		$sql = " SELECT time FROM wifi_info WHERE wifi_code = '$wifi_code'";
+		$turnOnTime = Yii::$app->db->createCommand($sql)->queryOne()['time'];
+    	if($response == 0 || $response==2 ){
+    		$result = '{"status":"OK","errorCode":"'.$response.'","data":{"wifi_code":"'.$wifi_code.'","wifi_password":"'.$wifi_password.'","turnOnTime":"'.$turnOnTime.'","flow_start":"'.$flow_start.'","left_flow":"'.$left_flow.'"}}';
+    	}else if($response == 9){
+    		$result ='{"status":"MULTIPLE","errorCode":"'.$response.'"}';
+    	}else {
+    		$result = '{"status":"ERROR","errorCode":"'.$response.'"}';
     	}
+    	
+    	echo $result;
     }
     
+  
+    //停用网络  
+    public function actionLogoutwificonnect()
+    {
+    	//访问下线接口
+    	$response = WifiConnect::PortaLogout();
+    	if($response == 0){
+    		//注销完成
+    		$result = '{"status":"OK","errorCode":"'.$response.'"}';
+    	}else {
+    		$result = '{"status":"ERROR","errorCode":"'.$response.'"}';
+    	}
+    	echo $result;
+    }
     
-    
-   
 }
     
   
