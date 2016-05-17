@@ -38,3 +38,9 @@
 #currentPackage .packageInfo { background-color: #fff; }
 #currentPackage .packageInfo:first-child { margin-bottom: 20px; }
 #currentPackage .packageInfo p { padding: 0 20px; line-height: 2em; }
+
+
+/*重复登录*/
+#repeatLogin .iconBox h2 { font-size: 1.2rem; }
+#repeatLogin .iconBox p { line-height: 1.4em; }
+#repeatLogin .btnBox input { width: 45%; }

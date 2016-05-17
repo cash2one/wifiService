@@ -340,13 +340,12 @@ class WifiController extends Controller
     		$sql = " SELECT time FROM wifi_info WHERE wifi_code = '$wifi_code'";
     		$turnOnTime = Yii::$app->db->createCommand($sql)->queryOne()['time'];
     		
-    		
     		if($response == 0 || $response==2 ){
     			//连接成功，返回错误代码0
     			return $this->render('connect',['Name'=>$Name,'PassportNO'=>$PassportNO,'TenderType'=>$TenderType,'iso'=>$iso,'WifiInfoId'=>$wifi_info_id,'WifiCode'=>$wifi_code,'WifiPassword'=>$wifi_password,'TurnOnTime'=>$turnOnTime,'FlowStart'=>$flow_start,'LeftFlow'=>$left_flow,'errorCode'=>'0']);
     		}else if($response == 9){
     			//多次连接，返回错误代码9
-    			return $this->render('connect_error',['Name'=>$Name,'PassportNO'=>$PassportNO,'TenderType'=>$TenderType,'errorCode'=>'9']);
+    			return $this->render('repeatlogin',['Name'=>$Name,'PassportNO'=>$PassportNO,'TenderType'=>$TenderType,'errorCode'=>'9']);
     		}else {
     			//连接出错,返回错误代码-1
     			return $this->render('connect_error',['Name'=>$Name,'PassportNO'=>$PassportNO,'TenderType'=>$TenderType,'errorCode'=>'-1']);
@@ -362,7 +361,6 @@ class WifiController extends Controller
     {
     	//访问下线接口
     	$response = WifiConnect::PortaLogout();
-  
     	if($response == 0){
     		//注销完成
     		$result = '{"status":"OK","errorCode":"'.$response.'"}';
@@ -379,9 +377,6 @@ class WifiController extends Controller
     	$TenderType = Yii::$app->request->get('TenderType','');
     	return $this->render('logoutfail',['Name'=>$Name,'PassportNO'=>$PassportNO,'TenderType'=>$TenderType,]);
     }
-    
-    
-    
    
 }
     

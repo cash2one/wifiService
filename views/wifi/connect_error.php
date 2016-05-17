@@ -44,10 +44,6 @@ window.onload = function(){
 		//连接出错,返回错误代码-1
 		var str = '<p>连接出错</p>';
 		$(".iconBox").html(str);
-	}else if(errorCode == 9){
-		//多次连接，返回错误代码9
-		var str = '<p>该套餐已连接</p>';
-		$(".iconBox").html(str);
 	}
 
 
