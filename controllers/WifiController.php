@@ -324,26 +324,22 @@ class WifiController extends Controller
     		$wifi_code = $wifi_info['wifi_code'];
     		$wifi_password = $wifi_info['wifi_password'];
     		$wifi_info_id = $wifi_info['wifi_info_id'];
-//     		$flow_start = isset(WifiConnect::getWifiFlow($wifi_code)->flow_start) ? WifiConnect::getWifiFlow($wifi_code)->flow_start : 0; 	//总流量
-//     		$left_flow  = isset(WifiConnect::getWifiFlow($wifi_code)->left_flow) ? WifiConnect::getWifiFlow($wifi_code)->left_flow : 0 ;  	//剩余流量
+    		$flow_start = isset(WifiConnect::getWifiFlow($wifi_code)->flow_start) ? WifiConnect::getWifiFlow($wifi_code)->flow_start : 0; 	//总流量
+    		$left_flow  = isset(WifiConnect::getWifiFlow($wifi_code)->left_flow) ? WifiConnect::getWifiFlow($wifi_code)->left_flow : 0 ;  	//剩余流量
     		
-//     		//认证
-//     		$response = WifiConnect::PortalLogin($wifi_code,$wifi_password);
-//     		//如果查询的卡号剩余流量为0，设置他为流量耗尽
-//     		if($left_flow == 0){
-//     			$sql = "SELECT wifi_info_id FROM wifi_info WHERE wifi_code='$wifi_code'";
-//     			$wifi_info_id = Yii::$app->db->createCommand($sql)->queryOne()['wifi_info_id'];
-//     			$update_sql = "UPDATE wifi_item_status  SET status=1 WHERE wifi_info_id='$wifi_info_id'";
-//     			Yii::$app->db->createCommand($update_sql)->execute();
-//     		}
+    		//认证
+    		$response = WifiConnect::PortalLogin($wifi_code,$wifi_password);
+    		//如果查询的卡号剩余流量为0，设置他为流量耗尽
+    		if($left_flow == 0){
+    			$sql = "SELECT wifi_info_id FROM wifi_info WHERE wifi_code='$wifi_code'";
+    			$wifi_info_id = Yii::$app->db->createCommand($sql)->queryOne()['wifi_info_id'];
+    			$update_sql = "UPDATE wifi_item_status  SET status=1 WHERE wifi_info_id='$wifi_info_id'";
+    			Yii::$app->db->createCommand($update_sql)->execute();
+    		}
 
     		$sql = " SELECT time FROM wifi_info WHERE wifi_code = '$wifi_code'";
     		$turnOnTime = Yii::$app->db->createCommand($sql)->queryOne()['time'];
     		
-    		
-    		$flow_start=100;
-    		$left_flow=90;
-    		$response=2;
     		
     		if($response == 0 || $response==2 ){
     			//连接成功，返回错误代码0
@@ -365,8 +361,8 @@ class WifiController extends Controller
     public function actionLogoutwificonnect()
     {
     	//访问下线接口
-//     	$response = WifiConnect::PortaLogout();
-    	$response=1;
+    	$response = WifiConnect::PortaLogout();
+  
     	if($response == 0){
     		//注销完成
     		$result = '{"status":"OK","errorCode":"'.$response.'"}';

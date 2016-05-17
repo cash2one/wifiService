@@ -51,8 +51,6 @@ window.onload = function(){
 	}
 
 
-
-	
 	$("#button").on("click",function(){
 		location.href ="<?php echo Url::toRoute(['getwifipackage']);?>?Name=<?php echo $Name;?>&PassportNO=<?php echo $PassportNO;?>&TenderType=<?php echo $TenderType?>";
 	});
