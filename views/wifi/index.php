@@ -40,6 +40,7 @@
 </html>
 
 <?=Html::jsFile('@web/js/jquery-2.2.2.min.js')?>
+<?=Html::jsFile('@web/js/buyPackage.js')?>
 
 <script type="text/javascript">
 window.onload = function(){ 
