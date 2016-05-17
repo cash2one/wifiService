@@ -46,6 +46,12 @@ window.onload = function(){
 	
 	$("#button").on("click",function(){
 		
+		var str = "<div class='iconBox'><h2>请稍等</h2>";
+		str+= '<p>正在生成订单中，请耐心等待！</p>';
+		str+='</div>';
+		$(".tabContent").html(str);
+		
+		
 		$.ajax({
 			url:"<?php echo Url::toRoute(['payment']);?>",
 			data:"wifi_id=<?php echo $WifiItemId?>&PassportNO=<?php echo $PassportNO?>&Name=<?php echo $Name?>&TenderType=<?php echo $TenderType?>&iso=<?php echo $iso?>",

@@ -51,8 +51,11 @@
 window.onload = function(){ 
 	
 	$("#button").on("click",function(){
-		var WIfiInfoId = $("input[name='wifi_item_id']:checked").val();
-		location.href ="<?php echo Url::toRoute(['wificonnect']);?>?Name=<?php echo $Name;?>&PassportNO=<?php echo $PassportNO;?>&TenderType=<?php echo $TenderType?>&WIfiInfoId="+WIfiInfoId;
+		var WifiInfoId = $("input[name='wifi_item_id']:checked").val();
+		if(typeof(WifiInfoId) == 'undefined'){
+			WifiInfoId = '';
+		}
+		location.href ="<?php echo Url::toRoute(['wificonnect']);?>?Name=<?php echo $Name;?>&PassportNO=<?php echo $PassportNO;?>&TenderType=<?php echo $TenderType?>&WifiInfoId="+WifiInfoId;
 	});
 
 }

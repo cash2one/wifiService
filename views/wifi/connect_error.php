@@ -24,7 +24,7 @@
 	<div class="tabContent">
 		<div class="iconBox">
 			<span class="icon">无</span>
-			<p>请选择需要联网的套餐。</p>
+			<p>您没有选择上网的套餐，请选择需要联网的套餐。</p>
 		</div>
 		<div class="btnBox">
 			<input type="button" id="button" value="返回"></input>
@@ -38,6 +38,21 @@
 
 <script type="text/javascript">
 window.onload = function(){
+
+	var errorCode = <?php echo $errorCode;?>;
+	if(errorCode == -1){
+		//连接出错,返回错误代码-1
+		var str = '<p>连接出错</p>';
+		$(".iconBox").html(str);
+	}else if(errorCode == 9){
+		//多次连接，返回错误代码9
+		var str = '<p>该套餐已连接</p>';
+		$(".iconBox").html(str);
+	}
+
+
+
+	
 	$("#button").on("click",function(){
 		location.href ="<?php echo Url::toRoute(['getwifipackage']);?>?Name=<?php echo $Name;?>&PassportNO=<?php echo $PassportNO;?>&TenderType=<?php echo $TenderType?>";
 	});
