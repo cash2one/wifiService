@@ -16,17 +16,19 @@
 #selectPackage #packageList { width: 90%; margin: 0 auto; padding: 0; }
 #selectPackage #packageList > li { margin-top: 20px; border: 1px solid #c2c2c2; background-color: #fff; }
 #selectPackage #packageList > li a { display: block; padding: 10px 20px; border-bottom: 1px solid #c2c2c2; font-weight: bolder; font-size: 1.2rem; color: #4d4d4d; }
-#selectPackage #packageList > li a:after { float: right; content: ">"; -webkit-transform: rotate(90deg); transform: rotate(90deg); font-family: sans-serif; }
-#selectPackage #packageList > li ul { display: none; padding: 0 20px; }
+#selectPackage #packageList > li a:after { float: right; /*content: ">"; */-webkit-transform: rotate(90deg); transform: rotate(90deg); font-family: sans-serif; }
+#selectPackage #packageList > li ul { /*display: none;*/ padding: 0 20px; }
 #selectPackage #packageList > li li { display: table; width: 100%; line-height: 20px; padding: 10px 0; }
-#selectPackage #packageList > li li span { display: table-cell; }
+#selectPackage #packageList > li li.selected { color: #000000; background:#ddf6ff ;}
+#selectPackage #packageList > li li > div { display: table-cell; }
+#selectPackage #packageList > li li > div > div { padding: 6px 0; }
 #selectPackage #packageList > li li span:nth-of-type(2) { padding-left:20px; width: 42%; }
 #selectPackage #packageList > li li span:nth-of-type(3) { width: 42%; }
 #selectPackage #packageList > li li + li { border-top: 1px solid #c2c2c2; }
 #selectPackage #packageList > li .num { width: 22px; box-sizing: border-box; border: 1px solid #4d4d4d; border-radius: 100%; text-align: center; }
 #selectPackage #packageList > li .account { margin-right: 20px; }
 #selectPackage #packageList > li input { margin: 0; }
-#selectPackage #packageList .selected a { color: #3b7dd3; }
+#selectPackage #packageList .selected a { color:#168ff3 ; background:#fff ; }
 #selectPackage #packageList .active a:after { -webkit-transform: rotate(-90deg); transform: rotate(-90deg); }
 
 /*无可用套餐*/

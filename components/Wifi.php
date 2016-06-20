@@ -36,7 +36,6 @@ class Wifi
 		return $wifi_info;
 	}
 	
-
 	
 	//查询卡号是否存在，并把卡号设置成售出状态
 	public static function CheckCardAndSetSold($wifi_id)
@@ -61,6 +60,38 @@ class Wifi
 	}
 	
 	
+	//把用户最近使用的id,卡号和密码写入数据库中
+	public static function writeConnectWifiCardToDB($PassportNO,$wifi_info_id,$wifi_code,$wifi_password)
+	{
+		//先查询数据库是否存在记录
+		$sql = " SELECT * FROM `wifi_last_connect` WHERE `passport_number`='$PassportNO'";
+		$query = Yii::$app->db->createCommand($sql)->queryOne();
+		if($query){
+			//如果存在记录,update
+			$sql = " UPDATE `wifi_last_connect` SET `wifi_info_id`='$wifi_info_id',`card_number`='$wifi_code',`card_password`='$wifi_password' WHERE `passport_number`='$PassportNO' ";
+			Yii::$app->db->createCommand($sql)->execute();
+		}else {
+			//如果不存在记录,insert
+			$sql = " INSERT INTO `wifi_last_connect` (`wifi_info_id`,`card_number`,`card_password`,`passport_number`) VALUES ('$wifi_info_id','$wifi_code','$wifi_password','$PassportNO')";
+			Yii::$app->db->createCommand($sql)->execute();
+		}
+	}
+	
+	
+	//查找数据库，获取最近使用的一张卡号的帐号和密码
+	public static function getConnectWifiCardFromDB($PassportNO)
+	{
+		//通过passportNo查找数据库，获取card_number,card_passwd,wifi_info_id
+		$sql = " SELECT * FROM `wifi_last_connect` WHERE `passport_number`='$PassportNO'";
+		$card = Yii::$app->db->createCommand($sql)->queryOne();
+		
+// 		//下面的数据是假数据
+// 		$card['card_number'] = "123456";
+// 		$card['card_password'] = "123456";
+// 		$card['wifi_info_id'] = "1";
+		
+		return $card;
+	}
 	
 	
 	//购买上网卡
@@ -71,7 +102,6 @@ class Wifi
 		self::setWifiInfoTime($wifi_info_id,$time);
 		//把相关信息保存到wifi_item_status
 		self::wifiItemSave($passport,$wifi_info_id,$pay_log_id);
-		
 	}
 	
 	//设置wifi_info表中的开通时间
@@ -89,9 +119,6 @@ class Wifi
 		Yii::$app->db->createCommand($sql)->execute();
 	}
 	
-	
-
-	
 	// 获取游客购买的上网卡
 	// 判断有效期
 	public static function getWifiItemStatus($passport)
@@ -101,17 +128,12 @@ class Wifi
 		//3.对比当前时间和开通时间，如果小于有效时间，显示
 
 		$time = date('Y-m-d H:i:s',time());
-		
 // 		$sql = " SELECT a.*,b.wifi_id FROM wifi_item_status a,wifi_info b,wifi_item c 
 // 					WHERE a.wifi_info_id=b.wifi_info_id AND b.wifi_id = c.wifi_id 
 // 					AND a.passport_num='$passport' AND a.status=0 AND '$time' < DATE_ADD(b.time,INTERVAL b.expiry_day day)";
-		
-		
 		$sql = " SELECT a.*,b.wifi_id FROM wifi_item_status a
 				LEFT JOIN wifi_info b ON a.wifi_info_id=b.wifi_info_id
 				WHERE a.passport_num='$passport' AND a.status=0 AND '$time' < DATE_ADD(b.time,INTERVAL b.expiry_day day)";
-					
-					
 		$wifi_item_status = Yii::$app->db->createCommand($sql)->queryAll();
 		
 		return $wifi_item_status;
@@ -163,7 +185,7 @@ class Wifi
 		curl_setopt($curl, CURLOPT_URL, $url);				// set url
 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
 		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
-		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);		//设置等待时间为10秒
+		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);		//set connect time out : 10's
 		if (!empty($data)){
 			curl_setopt($curl, CURLOPT_POST, 1);
 			curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
@@ -175,7 +197,6 @@ class Wifi
 		return $output;
 	}
 	
-	
 	//通过查找数据库获得url地址
 	public static function selectUrl($name)
 	{
@@ -184,7 +205,6 @@ class Wifi
 		return $url;
 	}
 	
-	
 	//通过数据库获取portal认证时所需要的参数
 	public static function getParamsOfPortal()
 	{
@@ -192,7 +212,6 @@ class Wifi
 		$params = Yii::$app->db->createCommand($sql)->queryAll();
 		return $params;
 	}
-	
 	
 	//判断是不是xml格式
 	public static function xml_parser($str){
@@ -204,6 +223,5 @@ class Wifi
 			return true;
 		}
 	}
-	
 	
 }

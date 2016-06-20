@@ -15,8 +15,8 @@
 	<!-- header start -->
 	<header id="mainHeader">
 		<ul class="tabTitle">
-			<li class="active"><a href="<?php echo Url::toRoute(['index']);?>?Name=<?php echo $Name;?>&PassportNO=<?php echo $PassportNO;?>&TenderType=<?php echo $TenderType?>">上网购买</a></li>
-			<li><a href="<?php echo Url::toRoute(['getwifipackage']);?>?Name=<?php echo $Name;?>&PassportNO=<?php echo $PassportNO;?>&TenderType=<?php echo $TenderType?>">上网连接</a></li>
+			<li class="active"><a href="<?php echo Url::toRoute(['showpaymentpage']);?>?Name=<?php echo $Name;?>&PassportNO=<?php echo $PassportNO;?>&TenderType=<?php echo $TenderType?>">上网购买</a></li>
+			<li><a href="<?php echo Url::toRoute(['checkloginstatus']);?>?Name=<?php echo $Name;?>&PassportNO=<?php echo $PassportNO;?>&TenderType=<?php echo $TenderType?>">上网连接</a></li>
 		</ul>
 	</header>
 	<!-- header end -->
@@ -57,6 +57,7 @@ window.onload = function(){
 			data:"wifi_id=<?php echo $WifiItemId?>&PassportNO=<?php echo $PassportNO?>&Name=<?php echo $Name?>&TenderType=<?php echo $TenderType?>&iso=<?php echo $iso?>",
 			type:'post',
 			dataType:'json', 
+			timeout:20000,
 			success:function(response){
 				if(response.status == "OK"){
 					//显示支付成功页面

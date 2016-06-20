@@ -15,8 +15,8 @@
 	<!-- header start -->
 	<header id="mainHeader">
 		<ul class="tabTitle">
-			<li><a href="<?php echo Url::toRoute(['index']);?>?Name=<?php echo $Name;?>&PassportNO=<?php echo $PassportNO;?>&TenderType=<?php echo $TenderType?>">上网购买</a></li>
-			<li class="active"><a href="<?php echo Url::toRoute(['getwifipackage']);?>?Name=<?php echo $Name;?>&PassportNO=<?php echo $PassportNO;?>&TenderType=<?php echo $TenderType?>">上网连接</a></li>
+			<li><a href="<?php echo Url::toRoute(['showpaymentpage']);?>?Name=<?php echo $Name;?>&PassportNO=<?php echo $PassportNO;?>&TenderType=<?php echo $TenderType?>">上网购买</a></li>
+			<li class="active"><a href="<?php echo Url::toRoute(['checkloginstatus']);?>?Name=<?php echo $Name;?>&PassportNO=<?php echo $PassportNO;?>&TenderType=<?php echo $TenderType?>">上网连接</a></li>
 		</ul>
 	</header>
 	<!-- header end -->
@@ -27,7 +27,7 @@
 			<p>暂无可用套餐，请购买上网套餐。</p>
 		</div>
 		<div class="btnBox">
-			<input type="button" id="button" value="返回"></input>
+			<input type="button" id="button" value="再次购买"></input>
 		</div>
 	</div>
 	<!-- content end -->

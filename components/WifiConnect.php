@@ -8,6 +8,7 @@ class WifiConnect
 	//查询剩余流量
 	public static function getWifiFlow($wifi_code)
 	{
+// 		$json = '{"default_name":"2980元3G每日限流量300M ","base_money":"2980.00","flow_start":"3072.000","left_flow":"3071.541","online_status":"1"}';
 		$flow_url = Wifi::selectUrl('flow_url');
 		$url = $flow_url."?user_name=".$wifi_code;
 		$json = Wifi::httpsRequest($url);
@@ -15,7 +16,6 @@ class WifiConnect
 		return $response;
 	}
 	
-
 	//portal认证，登录
 	public static function PortalLogin($username,$userpasswd)
 	{
